@@ -6,25 +6,46 @@
 --- --- Loading ---
 ---
 
-function OL.load(m, args)
+function OL.load(m, args, callback)
+	if args == nil then args = {} end
 	local from = args.from
-	if from ~= nil then
+	if from then
 		local path = OL.paths
-		if from ~= "root" then
+		if type(from) == "string" and from ~= "root" then
 			path = path[from]
+		else
+			path = from
 		end
 		m = path:module(m)
 	end
 	args.args = {m}
-	OL.debug("Loading %s", m)
-	return OL.try(require, args)
+	OL.log:trace("Loading %s", m)
+	mod = OL.try(require, args)
+	if mod then
+		if callback then
+			args.args = {mod}
+			return OL.try(callback, args)
+		end
+		return mod
+	end
+	return nil
+end
+
+function OL.load_setup(m, args, opts)
+	return OL.load(m, args, function(mod)
+		mod.setup(opts)
+	end)
 end
 
 function OL.loadall(pattern, args)
 	local path = OL.paths
 	local from = args.from
-	if from and from ~= "root" then
-		path = path[from]
+	if from then
+		if type(from) == "string" and from ~= "root" then
+			path = path[from]
+		else
+			path = from
+		end
 	end
 	args.from = nil
 	
@@ -58,7 +79,7 @@ function OL.loadall(pattern, args)
 	end
 
 	for m in path:glob(pattern) do
-		m = path:module(vim.fs.basename(m))
+		m = path:module(vim.fs.basename(m)):gsub("%.lua", "")
 		if filter(m) then
 			OL.load(m, args)
 		end

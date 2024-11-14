@@ -10,7 +10,16 @@
 OL.spec = OLSpec.new()
 OL.lazy = OLConfig.new()
 OL.lazy.opts = OLConfig.new()
+OL.paths.lazy = "lazy"
 local opts = OL.lazy.opts
+
+---
+--- --- Default Spec ---
+---
+
+--- Icons
+OL.spec:add("echasnovski/mini.icons")
+OL.spec:add("nvim-tree/nvim-web-devicons")
 
 ---
 --- --- Lazy Config ---
@@ -21,15 +30,15 @@ opts.root = vim.fn.stdpath("data") .. "/lazy"
 
 --- Plugin spec defaults
 opts.defaults = {
-    -- Set this to `true` to have all your plugins lazy-loaded by default.
-    -- Only do this if you know what you are doing, as it can lead to unexpected behavior.
+    --- Set this to `true` to have all your plugins lazy-loaded by default.
+    --- Only do this if you know what you are doing, as it can lead to unexpected behavior.
     lazy = true, -- should plugins be lazy-loaded?
-    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
-    -- have outdated releases, which may break your Neovim install.
-    version = nil, -- always use the latest git commit
-    -- version = "*", -- try installing the latest stable version for plugins that support semver
-    -- default `cond` you can use to globally disable a lot of plugins
-    -- when running inside vscode for example
+    --- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
+    --- have outdated releases, which may break your Neovim install.
+    version = false, -- always use the latest git commit
+    --- version = "*", -- try installing the latest stable version for plugins that support semver
+    --- default `cond` you can use to globally disable a lot of plugins
+    --- when running inside vscode for example
     cond = nil, ---@type boolean|fun(self:LazyPlugin):boolean|nil
 }
 
@@ -167,7 +176,7 @@ opts.change_detection = {
     enabled = true,
     --- get a notification when changes are found
     notify = true, 
-  }
+}
 
 --- Performance
 opts.performance = {
@@ -218,6 +227,7 @@ opts.profiling = {
     -- Track each new require in the Lazy profiling tab
     require = OL.verbose,
 }
+OL.log:debug("Lazy Profiling set to %s", opts.profiling)
 
 ---
 --- --- Bootstrap ---
