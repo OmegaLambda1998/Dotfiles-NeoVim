@@ -1,7 +1,5 @@
 local index, spec, opts = OL.spec:add("folke/which-key.nvim")
 
-spec.event = "VeryLazy"
-
 OL.g("mapleader", ",")
 OL.g("maplocalleader", ".")
 

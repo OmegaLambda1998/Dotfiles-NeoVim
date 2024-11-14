@@ -5,7 +5,7 @@ spec.cmd = {"ConformInfo"}
 OL.callbacks.conform = OLConfig.new()
 
 OL.callbacks.conform.ft = OLConfig.new()
-spec.ft = OL.callbacks.conform.ft
+spec.event = OL.callbacks.conform.ft
 
 OL.callbacks.conform.formatters_by_ft = OLConfig.new()
 opts.formatters_by_ft = OL.callbacks.conform.formatters_by_ft
