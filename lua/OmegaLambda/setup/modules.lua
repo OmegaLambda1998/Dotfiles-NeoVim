@@ -71,8 +71,10 @@ function OL.loadall(pattern, args)
 
     for m in path:glob(pattern) do
         m = m:gsub("(/[^%.]+)%.lua$", "%1")
-        m = vim.fs.basename(m)
-        m = path:module(m)
-        if filter(m) then OL.load(m, args) end
+        if not string.find(m, "%.[%w]+$") then --- Not a directory or lua file
+            m = vim.fs.basename(m)
+            m = path:module(m)
+            if filter(m) then OL.load(m, args) end
+        end
     end
 end

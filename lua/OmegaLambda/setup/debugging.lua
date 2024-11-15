@@ -7,7 +7,7 @@
 --- Better Inspect
 --- Stolen from Snacks.nvim, but removed the notification
 function OL.inspect(...)
-    local obj = OL.pack(...) ---@type unknown[]
+    local obj = OL.pack(...)
     local len = #obj
     local caller = debug.getinfo(1, "S")
     for level = 2, 10 do
@@ -36,6 +36,7 @@ local ERROR = vim.log.levels.ERROR
 local OFF = vim.log.levels.OFF
 
 function OL.fstring(msg, ...)
+    local title
     if type(msg) == "string" then
         msg = string.format(msg, OL.unpack(OL.flatten(...)))
     end
@@ -43,7 +44,10 @@ function OL.fstring(msg, ...)
     return msg, title
 end
 
-OLLog = OLConfig.new({
+---@class OLLog: OLConfig
+---@field level integer
+---@field min_level integer
+local OLLog = OL.OLConfig.new({
     TRACE = TRACE,
     DEBUG = DEBUG,
     INFO = INFO,
@@ -51,9 +55,12 @@ OLLog = OLConfig.new({
     ERROR = ERROR,
     OFF = OFF
 })
+OL.OLLog = OLLog
 
 function OLLog.new(tbl)
-    if tbl == nil then tbl = {} end
+    if tbl == nil then
+        tbl = {}
+    end
     if tbl.level == nil then
         if OL.verbose then
             tbl.level = INFO
@@ -63,8 +70,10 @@ function OLLog.new(tbl)
             tbl.min_level = INFO
         end
     end
-    if tbl.queue == nil then tbl.queue = {} end
-    return OLConfig.new(tbl, OLLog)
+    if tbl.queue == nil then
+        tbl.queue = {}
+    end
+    return OL.OLConfig.new(tbl, OLLog)
 end
 
 function OLLog:log(level, msg, ...)
@@ -78,7 +87,7 @@ end
 
 function OLLog:flush(all)
     local queue = {}
-    local str, level
+    local str, level, title
     for _, msg in ipairs(self.queue) do
         str = msg.msg
         level = msg.level
@@ -92,17 +101,29 @@ function OLLog:flush(all)
     self.queue = queue
 end
 
-function OLLog:trace(msg, ...) self:log(TRACE, msg, ...) end
+function OLLog:trace(msg, ...)
+    self:log(TRACE, msg, ...)
+end
 
-function OLLog:debug(msg, ...) self:log(DEBUG, msg, ...) end
+function OLLog:debug(msg, ...)
+    self:log(DEBUG, msg, ...)
+end
 
-function OLLog:info(msg, ...) self:log(INFO, msg, ...) end
+function OLLog:info(msg, ...)
+    self:log(INFO, msg, ...)
+end
 
-function OLLog:warn(msg, ...) self:log(WARN, msg, ...) end
+function OLLog:warn(msg, ...)
+    self:log(WARN, msg, ...)
+end
 
-function OLLog:error(msg, ...) self:log(ERROR, msg, ...) end
+function OLLog:error(msg, ...)
+    self:log(ERROR, msg, ...)
+end
 
-function OLLog:off(msg, ...) self:log(OFF, msg, ...) end
+function OLLog:off(msg, ...)
+    self:log(OFF, msg, ...)
+end
 
 OL.log = OLLog.new()
 
@@ -111,9 +132,11 @@ OL.log = OLLog.new()
 ---
 
 function OL.try(fn, args)
-    args.args = table.unpack(args.args or {})
+    args.args = OL.unpack(args.args or {})
     local f = function()
-        if fn == nil then error() end
+        if fn == nil then
+            error("Function is nil")
+        end
         return fn(args.args)
     end
     local ok, result = xpcall(f, debug.traceback)
@@ -122,7 +145,7 @@ function OL.try(fn, args)
             if args.strict then
                 error(result)
             else
-                OL.log:info(result)
+                OL.log:error(result)
             end
         else
             args.callback(result)

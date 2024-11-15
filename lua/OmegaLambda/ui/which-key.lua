@@ -1,4 +1,4 @@
-local index, spec, opts = OL.spec:add("folke/which-key.nvim")
+local spec, opts = OL.spec:add("folke/which-key.nvim")
 
 OL.g("mapleader", ",")
 OL.g("maplocalleader", ".")

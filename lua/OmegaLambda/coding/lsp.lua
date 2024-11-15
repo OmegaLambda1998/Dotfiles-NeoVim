@@ -1,75 +1,83 @@
-OL.spec:add("williamboman/mason-lspconfig.nvim", {config = function() end})
-local lsp_index, lsp_spec, lsp_opts = OL.spec:add("neovim/nvim-lspconfig")
+OL.spec:add("williamboman/mason-lspconfig.nvim", {
+    config = function()
+    end
+})
+local spec, opts = OL.spec:add("neovim/nvim-lspconfig")
 
-OL.callbacks.lsp = OLConfig.new()
-OL.callbacks.lsp.ft = OLConfig.new()
+OL.callbacks.lsp = OL.OLConfig.new()
+OL.callbacks.lsp.ft = OL.OLConfig.new()
 
-lsp_spec.event = OL.callbacks.lsp.ft
+spec.cmd = {"LspInfo"}
+spec.event = OL.callbacks.lsp.ft
 
 --- Diagnostics
+local severity = vim.diagnostic.severity
 local icons = {
-    [vim.diagnostic.severity.ERROR] = " ",
-    [vim.diagnostic.severity.WARN] = " ",
-    [vim.diagnostic.severity.HINT] = " ",
-    [vim.diagnostic.severity.INFO] = " "
+    [severity.ERROR] = " ",
+    [severity.WARN] = " ",
+    [severity.HINT] = " ",
+    [severity.INFO] = " "
 }
 
-lsp_opts.diagnostics = {
+opts.diagnostics = {
     enabled = true,
     underline = true,
     virtual_text = {
-        source = "if_many",
-        spacing = 4,
-        prefix = function(diagnostic) return icons[diagnostic.severity] end
+        source = true,
+        spacing = 2,
+        prefix = function(diagnostic)
+            return icons[diagnostic.severity]
+        end
     },
     signs = {text = icons},
-    float = {severity_sort = true, source = "if_many"},
+    float = {severity_sort = true, source = true},
     update_in_insert = false,
     severity_sort = true,
     jump = {}
 }
 
 --- Inlay Hints
-OL.callbacks.lsp.inlay_hints_exclude = OLConfig.new()
-lsp_opts.inlay_hints = {
+OL.callbacks.lsp.inlay_hints_exclude = OL.OLConfig.new()
+opts.inlay_hints = {
     enabled = true,
     exclude = OL.callbacks.lsp.inlay_hints_exclude
 }
 
 --- Code Lens
-lsp_opts.codelens = {enabled = false}
+opts.codelens = {enabled = false}
 
 --- Document Highlight
-lsp_opts.document_highlight = {enabled = true}
+opts.document_highlight = {enabled = true}
 
 --- Global Capabilities
-lsp_opts.capabilities = {
+opts.capabilities = {
     workspace = {fileOperations = {didRename = true, willRename = true}}
 }
 
 --- Servers
-OL.callbacks.lsp.servers = OLConfig.new()
-lsp_opts.servers = OL.callbacks.lsp.servers
+OL.callbacks.lsp.servers = OL.OLConfig.new()
+opts.servers = OL.callbacks.lsp.servers
 
 ---
 --- --- Setup ---
 ---
 
 --- Diagnostics
-local function setup_diagnostics(opts) vim.diagnostic.config(vim.deepcopy(opts)) end
+local function setup_diagnostics(o)
+    vim.diagnostic.config(vim.deepcopy(o))
+end
 
 --- Inlay Hints
-local function setup_inlay_hints(opts)
+local function setup_inlay_hints(o)
     OL.aucmd("lsp", {
         {
             "LspAttach", function(ctx)
                 local client = vim.lsp.get_client_by_id(ctx.data.client_id)
-                if client.supports_method("textDocument/inlayHint") then
+                if client and client.supports_method("textDocument/inlayHint") then
                     local buffer = ctx.buf
                     if vim.api.nvim_buf_is_valid(buffer) and
                         vim.bo[buffer].buftype == "" and
-                        not vim.tbl_contains(opts.inlay_hints.exclude,
-                                             vim.bo[buffer].filetype) then
+                        not vim.tbl_contains(o.exclude, vim.bo[buffer].filetype) then
                         vim.lsp.inlay_hint.enable(true, {bufnr = buffer})
                     end
                 end
@@ -79,7 +87,7 @@ local function setup_inlay_hints(opts)
 end
 
 --- Code Lens
-local function setup_codelens(opts)
+local function setup_codelens(o)
     if vim.lsp.codelens then
         OL.aucmd("lsp", {
             {
@@ -101,22 +109,24 @@ local function setup_codelens(opts)
 end
 
 --- Capabilities
-local function setup_capabilities(opts)
+local function setup_capabilities(o)
     local blink = OL.load("blink.cmp")
     local capabilities = vim.tbl_deep_extend("force", {}, vim.lsp.protocol
                                                  .make_client_capabilities(),
-                                             blink.get_lsp_capabilities(), opts)
+                                             blink.get_lsp_capabilities(), o)
     return capabilities
 end
 
 --- Servers
 local function setup_server(server, server_opts, capabilities)
-    if server_opts.enabled == false then return end
+    if server_opts.enabled == false then
+        return
+    end
     local lsp = OL.load("lspconfig")
-    local opts = vim.tbl_deep_extend("force", {
-        capabilities = vim.deepcopy(capabilities)
-    }, server_opts)
-    lsp[server].setup(opts)
+    local o = vim.tbl_deep_extend("force",
+                                  {capabilities = vim.deepcopy(capabilities)},
+                                  server_opts)
+    lsp[server].setup(o)
 end
 
 local function setup_servers(servers, capabilities)
@@ -151,10 +161,16 @@ local function setup_servers(servers, capabilities)
     })
 end
 
-function lsp_spec.config(_, opts)
-    if opts.diagnostics.enabled then setup_diagnostics(opts.diganostics) end
-    if opts.inlay_hints.enabled then setup_inlay_hints(opts.inlay_hints) end
-    if opts.codelens.enabled then setup_codelens(opts.codelens) end
-    local capabilities = setup_capabilities(opts.capabilities)
-    setup_servers(opts.servers, capabilities)
+function spec.config(_, o)
+    if o.diagnostics.enabled then
+        setup_diagnostics(o.diagnostics)
+    end
+    if o.inlay_hints.enabled then
+        setup_inlay_hints(o.inlay_hints)
+    end
+    if o.codelens.enabled then
+        setup_codelens(o.codelens)
+    end
+    local capabilities = setup_capabilities(o.capabilities)
+    setup_servers(o.servers, capabilities)
 end

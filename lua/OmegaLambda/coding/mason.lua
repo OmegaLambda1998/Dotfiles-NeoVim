@@ -1,4 +1,4 @@
-local index, spec, opts = OL.spec:add("williamboman/mason.nvim")
+local spec, opts = OL.spec:add("williamboman/mason.nvim")
 
 spec.cmd = {
     "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog",
@@ -7,12 +7,12 @@ spec.cmd = {
 spec.build = ":MasonUpdate"
 spec.dependencies = {"Zeioth/mason-extra-cmds", opts = {}} --- Adds MasonUpdateAll
 
-OL.callbacks.mason = OLConfig.new()
+OL.callbacks.mason = OL.OLConfig.new()
 
-OL.callbacks.mason.ft = OLConfig.new()
+OL.callbacks.mason.ft = OL.OLConfig.new()
 spec.event = OL.callbacks.mason.ft
 
-OL.callbacks.mason.install = OLConfig.new()
+OL.callbacks.mason.install = OL.OLConfig.new()
 opts.ensure_installed = OL.callbacks.mason.install
 
 OL.callbacks.update:add(function()
@@ -26,20 +26,20 @@ opts.log_level = OL.log.DEBUG
 opts.pip = {upgrade_pip = true}
 opts.ui = {border = "single"}
 
-function spec.config(_, opts)
-    OL.log:log(opts.log_level, "Starting Mason")
+function spec.config(_, o)
+    OL.log:log(o.log_level, "Starting Mason")
     for name, linter in pairs(OL.callbacks.lint.linters) do
         if linter.mason ~= false then
-            table.insert(opts.ensure_installed, name)
+            table.insert(o.ensure_installed, name)
         end
     end
     for name, formatter in pairs(OL.callbacks.format.formatters) do
         if formatter.mason ~= false then
-            table.insert(opts.ensure_installed, name)
+            table.insert(o.ensure_installed, name)
         end
     end
 
-    OL.load_setup("mason", {}, opts)
+    OL.load_setup("mason", {}, o)
     local mr = OL.load("mason-registry")
     mr:on("package:install:success", function()
         vim.defer_fn(function()
@@ -51,7 +51,7 @@ function spec.config(_, opts)
     end)
 
     mr.refresh(function()
-        for _, tool in ipairs(opts.ensure_installed) do
+        for _, tool in ipairs(o.ensure_installed) do
             local p = mr.get_package(tool)
             if not p:is_installed() then
                 OL.log:info("Installing %s", p)

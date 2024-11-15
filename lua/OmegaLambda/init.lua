@@ -10,7 +10,9 @@ vim.uv = vim.uv or vim.loop
 vim.loop = vim.uv
 
 --- table
-table.pack = table.pack or function(...) return {...} end
+table.pack = table.pack or function(...)
+    return {...}
+end
 table.unpack = table.unpack or unpack
 
 ---

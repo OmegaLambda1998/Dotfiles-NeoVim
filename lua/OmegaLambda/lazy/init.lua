@@ -5,9 +5,9 @@
 --- --- Setup ---
 ---
 --- Create Lazy config and opts
-OL.spec = OLSpec.new()
-OL.lazy = OLConfig.new()
-OL.lazy.opts = OLConfig.new()
+OL.spec = OL.OLSpec.new()
+OL.lazy = OL.OLConfig.new()
+OL.lazy.opts = OL.OLConfig.new()
 OL.paths.lazy = "lazy"
 local opts = OL.lazy.opts
 
@@ -160,7 +160,7 @@ opts.checker = {
 }
 
 OL.events.update = "OLUpdate"
-OL.callbacks.update = OLCall.new()
+OL.callbacks.update = OL.OLCall.new()
 OL.callbacks.update.event = OL.events.update
 OL.callbacks.update:add(function()
     OL.load("lazy", {}, function(lazy)

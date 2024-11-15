@@ -1,6 +1,6 @@
 OL.paths.colourscheme = "colourscheme"
 
-local index, spec, opts = OL.spec:add("catppuccin/nvim")
+local spec, opts = OL.spec:add("catppuccin/nvim")
 spec.name = "catppuccin"
 spec.main = "catppuccin"
 spec.priority = 1000
@@ -10,7 +10,7 @@ opts.background = {light = "macchiato", dark = "mocha"}
 opts.transparent_background = true
 opts.default_integrations = false
 
-OL.callbacks.colourscheme = OLConfig.new()
+OL.callbacks.colourscheme = OL.OLConfig.new()
 opts.integrations = OL.callbacks.colourscheme
 
 OL.callbacks.post:add(function() vim.cmd.colorscheme("catppuccin") end)

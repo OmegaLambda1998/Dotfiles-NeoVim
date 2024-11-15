@@ -7,6 +7,7 @@ return function(opts)
     --- --- Configs ---
     ---
 
+    ---@class OL
     OL = require("OmegaLambda.setup.configs")
     OL.verbose = opts.verbose or false
 
@@ -32,8 +33,10 @@ return function(opts)
     require("OmegaLambda.setup.paths")
 
     --- Create Paths
-    OL.paths = OLPath.new({root = "OmegaLambda"})
-    OL.paths.setup = "setup"
+    ---@class OLPath
+    ---@field setup OLPath
+    OL.paths = OL.OLPath.new({root = "OmegaLambda"})
+    OL.paths:append("setup")
 
     ---
     --- --- Modules ---
@@ -53,9 +56,10 @@ return function(opts)
     OL.load("callbacks", {from = OL.paths.setup, strict = true})
 
     --- Create Callbacks
-    OL.callbacks = OLConfig.new()
-    OL.callbacks.pre = OLCall.new()
-    OL.callbacks.post = OLCall.new()
+    ---@class OLCallbacks: OLConfig
+    OL.callbacks = OL.OLConfig.new()
+    OL.callbacks.pre = OL.OLCall.new()
+    OL.callbacks.post = OL.OLCall.new()
 
     ---
     --- --- Neovim Integration ---

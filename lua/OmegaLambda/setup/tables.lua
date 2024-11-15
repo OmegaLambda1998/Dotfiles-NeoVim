@@ -2,28 +2,38 @@
 --- === Tables ===
 ---
 function OL.is_array(tbl)
-    if type(tbl) ~= "table" then return false end
+    if type(tbl) ~= "table" then
+        return false
+    end
     local i = 0
     for _ in pairs(tbl) do
         i = i + 1
-        if tbl[i] == nil then return false end
+        if tbl[i] == nil then
+            return false
+        end
     end
     return true
 end
 
 function OL.is_dict(tbl)
-    if type(tbl) ~= "table" then return false end
+    if type(tbl) ~= "table" then
+        return false
+    end
     return not OL.is_array(tbl)
 end
 
 function OL.pack(...)
     local args = table.pack(...)
-    if #args == 1 and type(args[1]) == "table" then return args[1] end
+    if #args == 1 and type(args[1]) == "table" then
+        return args[1]
+    end
     return args
 end
 
 OL.unpack = function(tbl)
-    if not OL.is_array(tbl) then return tbl end
+    if not OL.is_array(tbl) then
+        return tbl
+    end
     return table.unpack(tbl)
 end
 

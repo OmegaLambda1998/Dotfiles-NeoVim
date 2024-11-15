@@ -1,16 +1,28 @@
 ---
 --- === Configs ===
 ---
-OLConfig = {}
+---@class OLConfig
+local OLConfig = {}
 
-function OLConfig.new(tbl, mt)
-    if tbl == nil then tbl = {} end
-    if mt == nil then mt = OLConfig end
-    mt.__index = mt
-    setmetatable(tbl, mt)
-    return tbl
+---@generic class: OLConfig
+---@param tbl table
+---@param meta class
+---@return `class` 
+---@overload fun(): OLConfig
+function OLConfig.new(tbl, meta)
+    if tbl == nil then
+        tbl = {}
+    end
+    if meta == nil then
+        meta = OLConfig
+    end
+    meta.__index = meta
+    local self = setmetatable(tbl, meta)
+    return self
 end
 
-OL = OLConfig.new()
+---@class OL: OLConfig
+local OL = OLConfig.new()
+OL.OLConfig = OLConfig
 
 return OL

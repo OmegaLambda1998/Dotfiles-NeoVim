@@ -1,9 +1,9 @@
 OL.paths.treesitter = "treesitter"
 
-local index, spec, opts = OL.spec:add("nvim-treesitter/nvim-treesitter")
+local spec, opts = OL.spec:add("nvim-treesitter/nvim-treesitter")
 
 --- Setup callbacks
-OL.callbacks.treesitter = OLConfig.new()
+OL.callbacks.treesitter = OL.OLConfig.new()
 
 spec.build = ":TSUpdate"
 spec.event = {"VeryLazy", "BufReadPost", "BufNewFile", "BufWritePre"}
@@ -21,7 +21,7 @@ spec.cmd = {"TSUpdateSync", "TSUpdate", "TSInstall"}
 --- 
 
 --- Highlight
-OL.callbacks.treesitter.exclude = OLConfig.new()
+OL.callbacks.treesitter.exclude = OL.OLConfig.new()
 opts.highlight = {
     enable = true,
     additional_vim_regex_highlighting = OL.callbacks.treesitter.exclude
@@ -31,7 +31,7 @@ opts.highlight = {
 opts.indent = {enable = true}
 
 --- Install
-OL.callbacks.treesitter.include = OLConfig.new()
+OL.callbacks.treesitter.include = OL.OLConfig.new()
 opts.ensure_installed = OL.callbacks.treesitter.include
 
 OL.callbacks.update:add(function()
@@ -50,6 +50,6 @@ OL.opt("foldexpr", "nvim_treesitter#foldexpr()")
 OL.opt("foldlevel", 99)
 
 --- Config
-function spec.config(_, opts) OL.load_setup("nvim-treesitter.configs", {}, opts) end
+function spec.config(_, o) OL.load_setup("nvim-treesitter.configs", {}, o) end
 
 OL.loadall("*", {from = OL.paths.treesitter, exclude = {"init"}})

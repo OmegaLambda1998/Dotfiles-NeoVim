@@ -1,7 +1,7 @@
 ---
 --- === Snacks ===
 ---
-local index, spec, opts = OL.spec:add("folke/snacks.nvim")
+local spec, opts = OL.spec:add("folke/snacks.nvim")
 spec.priority = 1000
 spec.lazy = false
 OL.callbacks.post:add(function() Snacks = OL.load("snacks") end)
@@ -10,14 +10,14 @@ OL.callbacks.post:add(function() Snacks = OL.load("snacks") end)
 --- --- Big Files ---
 ---
 
-OL.callbacks.bigfile = OLCall.new({
+OL.callbacks.bigfile = OL.OLCall.new({
     function(ctx)
         OL.log:trace(ctx)
         OL.log:flush()
     end
 })
 
-opts.bigfile = OLConfig.new({
+opts.bigfile = OL.OLConfig.new({
     notify = true, --- Show notification when bigfile detected
     size = 1.5 * 1024 * 1024, --- 1.5MB
     setup = OL.callbacks.bigfile
@@ -54,11 +54,11 @@ end)
 table.insert(OL.callbacks.colourscheme, {notfiy = true})
 
 OL.callbacks.post:add(function()
-    OL.notify = function(msg, opts)
-        if opts == nil then opts = {} end
-        if opts.title == nil then opts.title = "OmegaLambda" end
-        if opts.level == nil then opts.level = vim.log.levels.INFO end
-        Snacks.notify(msg, opts)
+    OL.notify = function(msg, o)
+        if o == nil then o = {} end
+        if o.title == nil then o.title = "OmegaLambda" end
+        if o.level == nil then o.level = vim.log.levels.INFO end
+        Snacks.notify(msg, o)
     end
 end)
 
