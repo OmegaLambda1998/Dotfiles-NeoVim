@@ -16,8 +16,8 @@ local opts = OL.lazy.opts
 ---
 
 --- Icons
-OL.spec:add("echasnovski/mini.icons")
-OL.spec:add("nvim-tree/nvim-web-devicons")
+OL.spec:add("echasnovski/mini.icons", {opts = {}})
+OL.spec:add("nvim-tree/nvim-web-devicons", {opts = {}})
 
 ---
 --- --- Lazy Config ---
@@ -158,6 +158,16 @@ opts.checker = {
     frequency = 3600, --- Check for updates every hour
     check_pinned = false --- Check for pinned packages that can't be updated
 }
+
+OL.events.update = "OLUpdate"
+OL.callbacks.update = OLCall.new()
+OL.callbacks.update.event = OL.events.update
+OL.callbacks.update:add(function()
+    OL.load("lazy", {}, function(lazy)
+        OL.log:info("Updating Lazy")
+        lazy.sync({wait = false, show = false})
+    end)
+end)
 
 --- Detect config changes
 opts.change_detection = {

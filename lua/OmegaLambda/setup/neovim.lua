@@ -46,6 +46,7 @@ end
 
 OL.events = OLConfig.new()
 function OL.events.trigger(event)
+    OL.log:debug("Triggering %s", event)
     vim.api.nvim_exec_autocmds("User", {pattern = event})
 end
 
@@ -54,10 +55,6 @@ OL.callbacks.pre.event = OL.events.callback_pre
 OL.events.callback_post = "OLCallbackPost"
 OL.callbacks.post.event = OL.events.callback_post
 OL.events.init_end = "OLInitEnd"
-
-OL.aucmd("init", {
-    {"User", function() OL.log:flush() end, pattern = OL.events.init_end}
-})
 
 ---
 --- --- User Commands ---

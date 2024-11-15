@@ -34,6 +34,13 @@ opts.indent = {enable = true}
 OL.callbacks.treesitter.include = OLConfig.new()
 opts.ensure_installed = OL.callbacks.treesitter.include
 
+OL.callbacks.update:add(function()
+    OL.load("nvim-treesitter.install", {}, function(ts)
+        OL.log:info("Updating Treesitter")
+        ts.update()
+    end)
+end)
+
 opts.sync_install = false
 opts.auto_install = true
 

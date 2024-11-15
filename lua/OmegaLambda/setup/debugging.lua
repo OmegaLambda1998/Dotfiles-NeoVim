@@ -20,7 +20,8 @@ function OL.inspect(...)
     end
     local title = vim.fn.fnamemodify(caller.source:sub(2), ":~:.") .. ":" ..
                       caller.linedefined
-    return vim.inspect(len == 1 and obj[1] or obj), title
+    local str = len == 1 and obj[1] or obj
+    return type(str) == "string" and str or vim.inspect(str), title
 end
 
 --- Allow overwriting of notify function
@@ -42,7 +43,15 @@ function OL.fstring(msg, ...)
     return msg, title
 end
 
-OLLog = OLConfig.new()
+OLLog = OLConfig.new({
+    TRACE = TRACE,
+    DEBUG = DEBUG,
+    INFO = INFO,
+    WARN = WARN,
+    ERROR = ERROR,
+    OFF = OFF
+})
+
 function OLLog.new(tbl)
     if tbl == nil then tbl = {} end
     if tbl.level == nil then

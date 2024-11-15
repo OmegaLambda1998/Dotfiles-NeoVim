@@ -1,7 +1,8 @@
 ---
 --- === Omega Lambda ===
 ---
----
+local verbose = false
+
 --- --- Compatability ---
 ---
 --- uv
@@ -17,7 +18,7 @@ table.unpack = table.unpack or unpack
 ---
 
 --- Load Setup
-OL = require("OmegaLambda.setup")({verbose = true})
+OL = require("OmegaLambda.setup")({verbose = verbose})
 OL.log:debug("Verbose: %s", OL.verbose)
 
 --- Load Lazy
@@ -56,4 +57,4 @@ OL.lazy.setup()
 OL.callbacks.post()
 
 OL.log:debug("NeoVim Initialised")
-OL.events.trigger(OL.events.init_end) --- TODO: Make metatable version
+OL.log:flush()
