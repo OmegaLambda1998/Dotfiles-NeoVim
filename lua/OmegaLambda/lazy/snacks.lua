@@ -4,24 +4,32 @@
 local spec, opts = OL.spec:add("folke/snacks.nvim")
 spec.priority = 1000
 spec.lazy = false
-OL.callbacks.post:add(function() Snacks = OL.load("snacks") end)
+OL.callbacks.post:add(
+  function()
+      Snacks = OL.load("snacks")
+  end
+)
 
 ---
 --- --- Big Files ---
 ---
 
-OL.callbacks.bigfile = OL.OLCall.new({
-    function(ctx)
-        OL.log:trace(ctx)
-        OL.log:flush()
-    end
-})
+OL.callbacks.bigfile = OL.OLCall.new(
+                         {
+      function(ctx)
+          OL.log:trace(ctx)
+          OL.log:flush()
+      end,
+  }
+                       )
 
-opts.bigfile = OL.OLConfig.new({
-    notify = true, --- Show notification when bigfile detected
-    size = 1.5 * 1024 * 1024, --- 1.5MB
-    setup = OL.callbacks.bigfile
-})
+opts.bigfile = OL.OLConfig.new(
+                 {
+      notify = true, --- Show notification when bigfile detected
+      size = 1.5 * 1024 * 1024, --- 1.5MB
+      setup = OL.callbacks.bigfile,
+  }
+               )
 
 ---
 --- --- Buf Delete ---
@@ -31,9 +39,13 @@ opts.bigfile = OL.OLConfig.new({
 --- --- Debug ---
 ---
 
-OL.callbacks.post:add(function()
-    vim.print = function(...) Snacks.debug.inspect(...) end
-end)
+OL.callbacks.post:add(
+  function()
+      vim.print = function(...)
+          Snacks.debug.inspect(...)
+      end
+  end
+)
 
 ---
 --- --- Git ---
@@ -51,76 +63,114 @@ end)
 --- --- Notify ---
 ---
 
-table.insert(OL.callbacks.colourscheme, {notfiy = true})
+table.insert(
+  OL.callbacks.colourscheme, {
+      notfiy = true,
+  }
+)
 
-OL.callbacks.post:add(function()
-    OL.notify = function(msg, o)
-        if o == nil then o = {} end
-        if o.title == nil then o.title = "OmegaLambda" end
-        if o.level == nil then o.level = vim.log.levels.INFO end
-        Snacks.notify(msg, o)
-    end
-end)
+OL.callbacks.post:add(
+  function()
+      OL.notify = function(msg, o)
+          if o == nil then
+              o = {}
+          end
+          if o.title == nil then
+              o.title = "OmegaLambda"
+          end
+          if o.level == nil then
+              o.level = vim.log.levels.INFO
+          end
+          Snacks.notify(msg, o)
+      end
+  end
+)
 
 ---
 --- --- Notifier ---
 ---
 
-table.insert(OL.callbacks.colourscheme, {notfier = true})
+table.insert(
+  OL.callbacks.colourscheme, {
+      notfier = true,
+  }
+)
 
-opts.notifier = {style = "compact"}
+opts.notifier = {
+    style = "compact",
+}
 
-OL.aucmd("lsp", {
-    {
-        "LspProgress", function(ev)
-            local progress = vim.defaulttable()
-            local client = vim.lsp.get_client_by_id(ev.data.client_id)
-            local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
-            if not client or type(value) ~= "table" then return end
-            local p = progress[client.id]
+OL.aucmd(
+  "LspProgress", {
+      {
+          "LspProgress",
+          function(ev)
+              local progress = vim.defaulttable()
+              local client = vim.lsp.get_client_by_id(ev.data.client_id)
+              local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+              if not client or type(value) ~= "table" then
+                  return
+              end
+              local p = progress[client.id]
 
-            for i = 1, #p + 1 do
-                if i == #p + 1 or p[i].token == ev.data.params.token then
-                    p[i] = {
-                        token = ev.data.params.token,
-                        msg = ("[%3d%%] %s%s"):format(
+              for i = 1, #p + 1 do
+                  if i == #p + 1 or p[i].token == ev.data.params.token then
+                      p[i] = {
+                          token = ev.data.params.token,
+                          msg = ("[%3d%%] %s%s"):format(
                             value.kind == "end" and 100 or value.percentage or
-                                100, value.title or "", value.message and
-                                (" **%s**"):format(value.message) or ""),
-                        done = value.kind == "end"
-                    }
-                    break
-                end
-            end
+                              100, value.title or "", value.message and
+                              (" **%s**"):format(value.message) or ""
+                          ),
+                          done = value.kind == "end",
+                      }
+                      break
+                  end
+              end
 
-            local msg = {} ---@type string[]
-            progress[client.id] = vim.tbl_filter(function(v)
-                return table.insert(msg, v.msg) or not v.done
-            end, p)
+              local msg = {} ---@type string[]
+              progress[client.id] = vim.tbl_filter(
+                                      function(v)
+                    return table.insert(msg, v.msg) or not v.done
+                end, p
+                                    )
 
-            local spinner = {
-                "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇",
-                "⠏"
-            }
-            vim.notify(table.concat(msg, "\n"), "info", {
-                id = "lsp_progress",
-                title = client.name,
-                opts = function(notif)
-                    notif.icon = #progress[client.id] == 0 and " " or
-                                     spinner[math.floor(
-                                         vim.uv.hrtime() / (1e6 * 80)) %
-                                         #spinner + 1]
-                end
-            })
-        end
-    }
-})
+              local spinner = {
+                  "⠋",
+                  "⠙",
+                  "⠹",
+                  "⠸",
+                  "⠼",
+                  "⠴",
+                  "⠦",
+                  "⠧",
+                  "⠇",
+                  "⠏",
+              }
+              vim.notify(
+                table.concat(msg, "\n"), "info", {
+                    id = "lsp_progress",
+                    title = client.name,
+                    opts = function(notif)
+                        notif.icon = #progress[client.id] == 0 and " " or
+                                       spinner[math.floor(
+                                         vim.uv.hrtime() / (1e6 * 80)
+                                       ) % #spinner + 1]
+                    end,
+                }
+              )
+          end,
+      },
+  }
+)
 
 ---
 --- --- Quick File ---
 ---
 
-opts.quickfile = {exclude = OL.callbacks.treesitter.exclude}
+opts.quickfile = {
+    exclude = OL.callbacks.treesitter.exclude,
+}
 
 ---
 --- --- Rename ---
@@ -134,11 +184,23 @@ OL.opt("number")
 OL.opt("relativenumber")
 OL.opt("signcolumn", "yes")
 opts.statuscolumn = {
-    left = {"sign"},
-    right = {"fold", "git"},
-    folds = {open = true, git_hl = true},
-    git = {patterns = {"GitSign"}},
-    refresh = 50
+    left = {
+        "sign",
+    },
+    right = {
+        "fold",
+        "git",
+    },
+    folds = {
+        open = true,
+        git_hl = true,
+    },
+    git = {
+        patterns = {
+            "GitSign",
+        },
+    },
+    refresh = 50,
 }
 
 ---
@@ -154,9 +216,15 @@ opts.toggle = {
     which_key = true,
     notify = true,
     --- icons for enabled/disabled states
-    icon = {enabled = " ", disabled = " "},
+    icon = {
+        enabled = " ",
+        disabled = " ",
+    },
     --- colors for enabled/disabled states
-    color = {enabled = "green", disabled = "yellow"}
+    color = {
+        enabled = "green",
+        disabled = "yellow",
+    },
 }
 
 ---
@@ -174,5 +242,9 @@ opts.words = {
     notify_end = true, -- show a notification when reaching the end
     foldopen = true, -- open folds after jumping
     jumplist = true, -- set jump point before jumping
-    modes = {"n", "i", "c"} -- modes to show references
+    modes = {
+        "n",
+        "i",
+        "c",
+    }, -- modes to show references
 }

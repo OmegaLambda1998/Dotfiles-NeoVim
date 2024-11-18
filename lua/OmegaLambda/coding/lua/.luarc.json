@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+
+  "addonManager.enable": false,
+
+  "completion.enable": true,
+  "completion.autoRequire": true,
+  "completion.callSnippet": "Both",
+  "completion.displayContext": 3,
+  "completion.keywordSnippet": "Both",
+  "completion.postfix": "@",
+  "completion.requireSeparator": ".",
+  "completion.showParams": true,
+  "completion.showWord": "Fallback",
+  "completion.workspaceWord": true,
+
+  "diagnostics.enable": true,
+  "diagnostics.disable": [],
+  "diagnostics.disableScheme": ["git"],
+  "diagnostics.globals": [],
+  "diagnostics.ignoredFiles": "Opened",
+  "diagnostics.libraryFiles": "Always",
+  "diagnostics.unusedLocalExclude": [],
+  "diagnostics.workspaceDelay": 500,
+  "diagnotiscs.workspaceEvent": "onChange",
+  "diagnotiscs.workspaceRate": 100,
+
+  "doc.packageName": [],
+  "doc.privateName": [],
+  "doc.protectedName": [],
+
+  "format.enable": false,
+  "format.defaultConfig": {},
+
+  "hint.enable": true,
+  "hint.arrayIndex": "Auto",
+  "hint.await": true,
+  "hint.paramName": "all",
+  "hint.paramType": true,
+  "hint.semicolon": "SameLine",
+  "hint.setType": true,
+  
+  "hover.enable": true,
+  "hover.enumsLimit": 5,
+  "hover.expandAlias": true,
+  "hover.previewFields": 50,
+  "hover.viewNumber": true,
+  "hover.viewString": true,
+  "hover.viewStringMax": 1000,
+
+  "semantic.enable": true,
+  "semantic.annotation": true,
+  "semantic.keyword": true,
+  "semantic.variable": true,
+
+  "signatureHelp.enable": true,
+
+  "spell.dict": [],
+
+  "telemetry.enable": false,
+
+  "type.castNumberToInteger": false,
+  "type.weakNilCheck": false,
+  "type.weakUnionCheck": false,
+
+  "window.progressBar": true,
+  "window.statusBar": true,
+}
+

@@ -5,7 +5,10 @@
 --- --- Loading ---
 ---
 function OL.load(m, args, callback)
-    if args == nil then args = {} end
+
+    if args == nil then
+        args = {}
+    end
     local from = args.from
     if from then
         local path = OL.paths
@@ -16,12 +19,16 @@ function OL.load(m, args, callback)
         end
         m = path:module(m)
     end
-    args.args = {m}
+    args.args = {
+        m,
+    }
     OL.log:trace("Loading %s", m)
-    mod = OL.try(require, args)
+    local mod = OL.try(require, args)
     if mod then
         if callback then
-            args.args = {mod}
+            args.args = {
+                mod,
+            }
             return OL.try(callback, args)
         end
         return mod
@@ -30,7 +37,11 @@ function OL.load(m, args, callback)
 end
 
 function OL.load_setup(m, args, opts)
-    return OL.load(m, args, function(mod) mod.setup(opts) end)
+    return OL.load(
+             m, args, function(mod)
+          mod.setup(opts)
+      end
+           )
 end
 
 function OL.loadall(pattern, args)
@@ -49,23 +60,37 @@ function OL.loadall(pattern, args)
     local exclude = args.exclude
 
     if not exclude then
-        filters = {function(m) return false end}
+        filters = {
+            function(_)
+                return false
+            end,
+        }
     else
-        if exclude and type(exclude) ~= "table" then exclude = {exclude} end
+        if exclude and type(exclude) ~= "table" then
+            exclude = {
+                exclude,
+            }
+        end
         for _, ex in ipairs(exclude) do
             if type(ex) == "function" then
                 table.insert(filters, ex)
             elseif type(ex) == "string" then
-                table.insert(filters,
-                             function(m)
-                    return string.find(m, "^.*" .. ex)
-                end)
+                table.insert(
+                  filters, function(m)
+                      local ptn = OL.fstring("^.*%s$", ex)
+                      return string.find(m, ptn)
+                  end
+                )
             end
         end
     end
 
     local function filter(m)
-        for _, f in ipairs(filters) do if f(m) then return false end end
+        for _, f in ipairs(filters) do
+            if f(m) then
+                return false
+            end
+        end
         return true
     end
 
@@ -74,7 +99,9 @@ function OL.loadall(pattern, args)
         if not string.find(m, "%.[%w]+$") then --- Not a directory or lua file
             m = vim.fs.basename(m)
             m = path:module(m)
-            if filter(m) then OL.load(m, args) end
+            if filter(m) then
+                OL.load(m, args)
+            end
         end
     end
 end

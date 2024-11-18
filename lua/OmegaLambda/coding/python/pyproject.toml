@@ -1,0 +1,131 @@
+#
+# === Ruff ===
+#
+
+# --- Linting ---
+[tool.ruff]
+line-length = 80
+
+[tool.ruff.lint]
+select = [
+    "F", # Pyflakes
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "C90", # McCabe
+    "I", # I-sort
+    "N", # pep8-naming
+    "D", # pydocstype
+    "UP", # pyupgrade
+	
+    # flake8
+    "YTT", # 2020
+    "ANN", # annotations
+    "ASYNC", # async
+    "S", # bandit
+    "BLE", # blind-except
+    "FBT", # boolean-trap
+    "B", # bugbear
+    "A", # builtins
+    "COM", # commas
+    "CPY", # copyright
+    "C4", # comprehensions
+    "DTZ", # datetimes
+    "T10", # debugger
+    "DJ", # django
+    "EM", # ermsg
+    "EXE", # executable
+    "FA", # future-annotations
+    "FA", # future-annotations
+    "ISC", # implicit-str-concat
+    "ICN", # import-conventions
+    "LOG", # logging
+    "G", # logging-format
+    "INP", # no-pep420
+	"PIE", # pie
+	"PT", # pytest-style
+	"Q", # quotes
+	"RSE", # raise
+	"RET", # return
+	"SLF", # self
+	"SLOT", # slots
+	"SIM", # simplify
+	"TID", # tidy-imports
+	"TCH", # type-checking
+	"INT", # gettext
+	"ARG", # unused-arguments
+	"PTH", # use-pathlib
+	"TD", # todos
+	"FIX", # fixme
+
+	"ERA", # eradicate
+	"PD", # pandas-vet
+	"PGH", # pygrep-hooks
+	"PL", # PyLint
+	"TRY", # Tryceratops
+	"FLY", # flynt
+	"NPY", # NumPy
+	"FAST", # FastAPI
+	"AIR", # Airflow
+	"PERF", # Perflint
+	"FURB", # refurb
+	"DOC", # pydoclint
+	"RUF" # Ruff-specific rules
+    
+]
+preview = true
+
+[tool.ruff.lint.flake8-copyright]
+author = "Patrick Armstrong"
+
+[tool.ruff.lint.flake8-type-checking]
+# Add quotes around type annotations, if doing so would allow
+# an import to be moved into a type-checking block.
+quote-annotations = true
+strict = true
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+force-single-line = true
+force-sort-within-sections = true
+from-first = true
+length-sort = true
+length-sort-straight = true
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 100
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+# --- Formatting ---
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+preview = true
+skip-magic-trailing-comma = false
+
+#
+# === Based PyRight
+#
+
+[basedpyright]
+disableLanguageServices = false
+disableOrganizeImports = true
+disableTaggedHints = false
+openFilesOnly = false
+
+
+[basedpyright.analysis]
+autoImportCompletions = true
+autoSearchPaths = true
+diagnosticMode = "workspace"
+useLibraryCodeForTypes = true
+typeCheckingMode = "recommended"
+
+
+[tool.basedpyright.analysis.inlayHints]
+variableTypes = true
+callArgumentNames = true
+functionReturnTypes = true
+genericTypes = true

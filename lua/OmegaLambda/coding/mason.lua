@@ -44,8 +44,10 @@ function spec.config(_, o)
     mr:on("package:install:success", function()
         vim.defer_fn(function()
             OL.load("lazy.core.handler.event", {}, function(l)
-                l.trigger(
-                    {event = "FileType", buf = vim.api.nvim_get_current_buf()})
+                l.trigger({
+                    event = "FileType",
+                    buf = vim.api.nvim_get_current_buf()
+                })
             end)
         end, 100)
     end)

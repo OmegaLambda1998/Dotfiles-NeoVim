@@ -3,12 +3,14 @@
 ---
 ---@class OLCall: OLConfig
 ---@field event OLEvent
+---@field triggered boolean
 local OLCall = OL.OLConfig.new()
 OL.OLCall = OLCall
 function OLCall.new(tbl)
     if tbl == nil then
         tbl = {}
     end
+    tbl.triggered = false
     tbl = OL.OLConfig.new(tbl)
     return OL.OLConfig.new(tbl, OLCall)
 end
@@ -21,6 +23,7 @@ function OLCall:__call(...)
     if self.event then
         OL.events.trigger(self.event)
     end
+    self.triggered = true
 end
 
 function OLCall:add(fn)
