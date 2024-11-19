@@ -146,7 +146,11 @@ OL.map(
           {
               "<leader>ol",
               function()
-                  OL.Snacks.notifier.show_history()
+                  OL.load(
+                    "snacks", {}, function(snacks)
+                        snacks.notifier.show_history()
+                    end
+                  )
               end,
               desc = "Log History",
           },

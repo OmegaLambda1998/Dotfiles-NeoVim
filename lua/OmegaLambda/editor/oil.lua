@@ -16,9 +16,9 @@ opts.default_file_explorer = true
 -- See :help oil-columns
 opts.columns = {
     "icon",
-    -- "permissions",
-    -- "size",
-    -- "mtime",
+    "permissions",
+    "size",
+    "mtime",
 }
 -- Buffer-local options to use for oil buffers
 opts.buf_options = {
@@ -28,7 +28,7 @@ opts.buf_options = {
 -- Window-local options to use for oil buffers
 opts.win_options = {
     wrap = false,
-    signcolumn = "no",
+    signcolumn = "yes",
     cursorcolumn = false,
     foldcolumn = "0",
     spell = false,
@@ -49,7 +49,7 @@ opts.prompt_save_on_select_new_entry = true
 opts.cleanup_delay_ms = 2000
 opts.lsp_file_methods = {
     -- Enable or disable LSP file operations
-    enabled = true,
+    enabled = false,
     -- Time to wait for LSP file operations to complete before skipping
     timeout_ms = 1000,
     -- Set to true to autosave buffers that are updated with LSP willRenameFiles
@@ -177,9 +177,21 @@ opts.preview_win = {
     -- Whether the preview window is automatically updated when the cursor is moved
     update_on_cursor_moved = true,
     -- Maximum file size in megabytes to preview
-    max_file_size_mb = 100,
+    max_file_size_mb = 1,
     -- Window-local options to use for preview window buffers
-    win_options = {},
+    win_options = {
+        wrap = false,
+        signcolumn = "no",
+        statuscolumn = "",
+        cursorcolumn = false,
+        foldcolumn = "0",
+        spell = false,
+        list = false,
+        conceallevel = 3,
+        concealcursor = "nvic",
+        number = false,
+        relativenumber = false,
+    },
 }
 -- Configuration for the floating action confirmation window
 opts.confirmation = {

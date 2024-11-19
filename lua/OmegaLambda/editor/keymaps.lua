@@ -122,7 +122,11 @@ OL.map(
           {
               "<C-d>",
               function()
-                  Snacks.bufdelete()
+                  OL.load(
+                    "snacks", {}, function(snacks)
+                        snacks.bufdelete()
+                    end
+                  )
               end,
               desc = "Delete Buffer",
           },
@@ -130,7 +134,11 @@ OL.map(
           {
               "<leader>bd",
               function()
-                  Snacks.bufdelete.other()
+                  OL.load(
+                    "snacks", {}, function(snacks)
+                        snacks.bufdelete.other()
+                    end
+                  )
               end,
               desc = "Delete Other Buffers",
           },

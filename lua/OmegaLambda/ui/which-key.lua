@@ -71,7 +71,7 @@ opts.win = {
     -- Additional vim.wo and vim.bo options
     bo = {},
     wo = {
-        winblend = 80, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+        winblend = 0, -- value between 0-100 0 for fully opaque and 100 for fully transparent
     },
 }
 opts.layout = {
@@ -269,13 +269,6 @@ OL.map(
       {
           {
               "<leader><leader>",
-              function()
-                  keyhelp(true)
-              end,
-              desc = "Global keymaps",
-          },
-          {
-              "<C-Space>",
               function()
                   keyhelp(true)
               end,

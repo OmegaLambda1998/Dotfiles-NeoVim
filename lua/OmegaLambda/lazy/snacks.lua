@@ -4,11 +4,6 @@
 local spec, opts = OL.spec:add("folke/snacks.nvim")
 spec.priority = 1000
 spec.lazy = false
-OL.callbacks.post:add(
-  function()
-      OL.Snacks = OL.load("snacks")
-  end
-)
 
 ---
 --- --- Big Files ---
@@ -60,14 +55,6 @@ opts.dashboard.sections = sections
 --- --- Debug ---
 ---
 
-OL.callbacks.post:add(
-  function()
-      vim.print = function(...)
-          OL.Snacks.debug.inspect(...)
-      end
-  end
-)
-
 ---
 --- --- Git ---
 ---
@@ -88,23 +75,6 @@ table.insert(
   OL.callbacks.colourscheme, {
       notfiy = true,
   }
-)
-
-OL.callbacks.post:add(
-  function()
-      OL.notify = function(msg, o)
-          if o == nil then
-              o = {}
-          end
-          if o.title == nil then
-              o.title = "OmegaLambda"
-          end
-          if o.level == nil then
-              o.level = vim.log.levels.INFO
-          end
-          OL.Snacks.notify(msg, o)
-      end
-  end
 )
 
 ---
@@ -316,4 +286,45 @@ function spec.config(_, o)
     o.dashboard.preset.header = table.concat(header, "\n")
 
     OL.load_setup("snacks", {}, o)
+
+    OL.load(
+      "snacks", {}, function(snacks)
+
+          OL.notify = function(msg, o)
+              if o == nil then
+                  o = {}
+              end
+              if o.title == nil then
+                  o.title = "OmegaLambda"
+              end
+              if o.level == nil then
+                  o.level = vim.log.levels.INFO
+              end
+              snacks.notify(msg, o)
+          end
+
+          vim.print = function(...)
+              snacks.debug.inspect(...)
+          end
+
+          local function overwrite_msg(level, ...)
+              local print_safe_args = {}
+              local _ = {
+                  ...,
+              }
+              for i = 1, #_ do
+                  table.insert(print_safe_args, tostring(_[i]))
+              end
+              snacks.notify(
+                table.concat(print_safe_args, ' '), {
+                    level = level,
+                }
+              )
+          end
+
+          print = function(...)
+              return overwrite_msg(OL.log.INFO, ...)
+          end
+      end
+    )
 end

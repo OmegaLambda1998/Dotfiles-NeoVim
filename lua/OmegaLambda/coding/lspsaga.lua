@@ -142,18 +142,6 @@ for d, diagnostic in pairs(diagnostics) do
     )
 end
 
---- Hover Docs ---
-OL.map(
-  {
-      'K',
-      function()
-          vim.cmd('Lspsaga hover_doc')
-      end,
-      mode = 'n',
-      desc = "LSP Hover Docs",
-  }
-)
-
 spec.keys = {
     {
         "<leader>dc",
@@ -224,6 +212,24 @@ spec.keys = {
             vim.cmd("Lspsaga code_action")
         end,
         desc = "Code Action",
+    },
+
+    {
+        'K',
+        function()
+            vim.cmd('Lspsaga hover_doc')
+        end,
+        mode = 'n',
+        desc = "Hover Docs",
+    },
+
+    {
+        '<C-space>',
+        function()
+            vim.cmd('Lspsaga show_cursor_diagnostics ++unfocus')
+        end,
+        mode = 'n',
+        desc = "Cursor Diagnostics",
     },
 
 }
