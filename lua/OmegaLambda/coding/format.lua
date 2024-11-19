@@ -1,6 +1,8 @@
 local spec, opts = OL.spec:add("stevearc/conform.nvim")
 
-spec.cmd = {"ConformInfo"}
+spec.cmd = {
+    "ConformInfo",
+}
 
 OL.callbacks.format = OL.OLConfig.new()
 
@@ -17,11 +19,17 @@ opts.default_format_opts = {
     timeout_ms = 3000,
     lsp_format = "fallback",
     async = false,
-    quiet = false
+    quiet = false,
 }
 
-opts.format_on_save = {lsp_format = "fallback"}
+opts.format_on_save = {
+    lsp_format = "fallback",
+}
 
 opts.log_level = vim.log.levels.INFO
 opts.notify_on_error = true
 opts.notify_no_formatters = false
+
+OL.opt("formatoptions", "jcroqlnt") -- tcqj
+OL.opt("grepformat", "%f:%l:%c:%m")
+OL.opt("grepprg", "rg --vimgrep")

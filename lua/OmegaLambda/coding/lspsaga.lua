@@ -57,7 +57,7 @@ opts.lightbulb = {
     enable = true,
     sign = false,
     virtual_text = true,
-    sign_priority = 20,
+    sign_priority = 200,
 }
 
 --- Outline ---
@@ -126,17 +126,6 @@ for d, diagnostic in pairs(diagnostics) do
                   end,
                   desc = OL.fstring(desc, "previous", name),
               },
-              -- {
-              --     "[" .. string.upper(d),
-              --     function()
-              --         OL.load(
-              --           "lspsaga.diagnostic", {}, function(lspsaga)
-              --               lspsaga:goto_first(severity)
-              --           end
-              --         )
-              --     end,
-              --     desc = OL.fstring(desc, "first", name),
-              -- },
               {
                   "]" .. d,
                   function()
@@ -148,17 +137,6 @@ for d, diagnostic in pairs(diagnostics) do
                   end,
                   desc = OL.fstring(desc, "next", name),
               },
-              -- {
-              --     "]" .. string.upper(d),
-              --     function()
-              --         OL.load(
-              --           "lspsaga.diagnostic", {}, function(lspsaga)
-              --               lspsaga:goto_last(severity)
-              --           end
-              --         )
-              --     end,
-              --     desc = OL.fstring(desc, "last", name),
-              -- },
           },
       }
     )
@@ -175,3 +153,87 @@ OL.map(
       desc = "LSP Hover Docs",
   }
 )
+
+spec.keys = {
+    {
+        "<leader>dc",
+        function()
+            vim.cmd("Lspsaga show_cursor_diagnostics")
+        end,
+        desc = "Cursor Diagnostics",
+    },
+    {
+        "<leader>dl",
+        function()
+            vim.cmd("Lspsaga show_line_diagnostics")
+        end,
+        desc = "Line Diagnostics",
+    },
+    {
+        "<leader>db",
+        function()
+            vim.cmd("Lspsaga show_buf_diagnostics")
+        end,
+        desc = "Buffer Diagnostics",
+    },
+    {
+        "<leader>dw",
+        function()
+            vim.cmd("Lspsaga show_workspace_diagnostics")
+        end,
+        desc = "Workspace Diagnostics",
+    },
+    {
+        "<leader>df",
+        function()
+            vim.cmd("Lspsaga finder")
+        end,
+        desc = "LSP Finder",
+    },
+    {
+        "<leader>dpd",
+        function()
+            vim.cmd("Lspsaga peek_definition")
+        end,
+        desc = "Peek Definition",
+    },
+    {
+        "<leader>dpt",
+        function()
+            vim.cmd("Lspsaga peek_type_definition")
+        end,
+        desc = "Peek Type Definition",
+    },
+    {
+        "<leader>dgd",
+        function()
+            vim.cmd("Lspsaga goto_definition")
+        end,
+        desc = "Goto Definition",
+    },
+    {
+        "<leader>dgt",
+        function()
+            vim.cmd("Lspsaga goto_type_definition")
+        end,
+        desc = "Goto Type Definition",
+    },
+    {
+        "<leader>da",
+        function()
+            vim.cmd("Lspsaga code_action")
+        end,
+        desc = "Code Action",
+    },
+
+}
+
+OL.map(
+  {
+      "<leader>d",
+      group = "LSP / Diagnostics",
+      desc = "LSP / Diagnostics",
+      { spec.keys },
+  }
+)
+

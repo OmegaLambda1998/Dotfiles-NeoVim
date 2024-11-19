@@ -209,7 +209,7 @@ opts.windows = {
         min_width = 15,
         max_height = 10,
         border = 'none',
-        winblend = 80,
+        winblend = 0,
         winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
         -- keep the cursor X lines away from the top/bottom of the window
         scrolloff = 2,
@@ -356,7 +356,7 @@ opts.windows = {
         max_width = 60,
         max_height = 20,
         border = 'padded',
-        winblend = 80,
+        winblend = 0,
         winhighlight = 'Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None',
         -- note that the gutter will be disabled when border ~= 'none'
         scrollbar = true,

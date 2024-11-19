@@ -101,11 +101,11 @@ opts.label = {
     ---@field hl_group string
     ---@field after boolean
     ---@type fun(opts:Flash.Format): string[][]
-    format = function(opts)
+    format = function(o)
         return {
             {
-                opts.match.label,
-                opts.hl_group,
+                o.match.label,
+                o.hl_group,
             },
         }
     end,
@@ -314,105 +314,61 @@ spec.keys = {
     {
         "/",
         desc = "Flash Search Forward",
-
-        mode = {
-            "n",
-            "v",
-            "x",
-            "o",
-            "s",
-        },
     },
     {
         "?",
         desc = "Flash Search Backward",
-        mode = {
-            "n",
-            "v",
-            "x",
-            "o",
-            "s",
-        },
-
     },
     {
         "f",
         desc = "Flash Jump Forward",
-        mode = {
-            "n",
-            "v",
-            "x",
-            "o",
-            "s",
-        },
-
     },
     {
         "F",
         desc = "Flash Jump Backward",
-        mode = {
-            "n",
-            "v",
-            "x",
-            "o",
-            "s",
-        },
-
     },
     {
         "t",
         desc = "Flash Jump Forward",
-        mode = {
-            "n",
-            "v",
-            "x",
-            "o",
-            "s",
-        },
-
     },
     {
         "T",
         desc = "Flash Jump Backward",
-        mode = {
-            "n",
-            "v",
-            "x",
-            "o",
-            "s",
-        },
-
     },
     {
         ';',
-        desc = "Flash Next",
         mode = {
             "v",
             "x",
             "o",
             "s",
         },
+        desc = "Flash Next",
     },
     {
+
         ',',
-        desc = "Flash Prev",
         mode = {
             "v",
             "x",
             "o",
             "s",
         },
+        desc = "Flash Prev",
     },
 }
 
 local keys = {
     {
         "s",
+
         function()
             require("flash").treesitter_search()
         end,
+
         mode = {
             "n",
+            "v",
             "x",
             "o",
             "s",
@@ -424,12 +380,15 @@ local keys = {
         function()
             require("flash").treesitter()
         end,
+        desc = "Flash Treesitter Select",
+
         mode = {
             "n",
+            "v",
             "x",
             "o",
+            "s",
         },
-        desc = "Flash Treesitter Select",
     },
 }
 vim.list_extend(spec.keys, keys)
@@ -440,3 +399,6 @@ OL.map(
       keys,
   }
 )
+
+OL.opt("ignorecase")
+OL.opt("smartcase")

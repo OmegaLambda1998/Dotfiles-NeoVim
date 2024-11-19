@@ -16,8 +16,11 @@ local opts = OL.lazy.opts
 ---
 
 --- Icons
-OL.spec:add("echasnovski/mini.icons", {opts = {}})
-OL.spec:add("nvim-tree/nvim-web-devicons", {opts = {}})
+OL.spec:add("echasnovski/mini.icons")
+OL.spec:add("nvim-tree/nvim-web-devicons")
+local pspec, popts = OL.spec:add("nvim-lua/plenary.nvim")
+function pspec.config(_, o)
+end
 
 ---
 --- --- Lazy Config ---
@@ -37,7 +40,7 @@ opts.defaults = {
     --- version = "*", -- try installing the latest stable version for plugins that support semver
     --- default `cond` you can use to globally disable a lot of plugins
     --- when running inside vscode for example
-    cond = nil ---@type boolean|fun(self:LazyPlugin):boolean|nil
+    cond = nil, ---@type boolean|fun(self:LazyPlugin):boolean|nil
 }
 
 --- Load project specific .lazy.lua spec files. They will be added at the end of the spec.
@@ -52,14 +55,16 @@ opts.concurrency = nil
 --- Lazy git options
 opts.git = {
     --- Defaults for the `Lazy log` command
-    log = {"--since=3 days ago"}, --- Show commits from the last 3 days
+    log = {
+        "--since=3 days ago",
+    }, --- Show commits from the last 3 days
     -- log = { "-8" }, --- Show the last 8 commits
     timeout = 120, --- Kill processes that take more than 2 minutes
     url_format = "https://github.com/%s.git",
     --- Lazy.nvim requires git >=2.19.0. If you really want to use lazy with an older version,
     --- then set the below to false. This should work, but is NOT supported and will
     --- increase downloads a lot.
-    filter = true
+    filter = true,
 }
 
 --- Lazy package sources
@@ -68,13 +73,17 @@ opts.pkg = {
     cache = vim.fn.stdpath("state") .. "/lazy/pkg-cache.lua",
     versions = true, -- Honor versions in pkg sources
     --- Fhe first package source that is found for a plugin will be used.
-    sources = {"lazy", "rockspec", "packspec"}
+    sources = {
+        "lazy",
+        "rockspec",
+        "packspec",
+    },
 }
 
 --- LuaRocks package source
 opts.rocks = {
     root = vim.fn.stdpath("data") .. "/lazy-rocks",
-    server = "https://nvim-neorocks.github.io/rocks-binaries/"
+    server = "https://nvim-neorocks.github.io/rocks-binaries/",
 }
 
 --- Local package source
@@ -83,7 +92,7 @@ opts.dev = {
     path = "~/projects",
     --- Plugins that match these patterns will use your local versions instead of being fetched from GitHub
     patterns = {}, --- For example {"folke"}
-    fallback = false --- Fallback to git when local plugin doesn't exist
+    fallback = false, --- Fallback to git when local plugin doesn't exist
 }
 
 --- Install options
@@ -91,13 +100,18 @@ opts.install = {
     --- Install missing plugins on startup. This doesn't increase startup time.
     missing = true,
     --- Try to load one of these colorschemes when starting an installation during startup
-    colorscheme = {"habamax"}
+    colorscheme = {
+        "habamax",
+    },
 }
 
 --- UI
 opts.ui = {
     --- A number <1 is a percentage., >1 is a fixed size
-    size = {width = 0.8, height = 0.8},
+    size = {
+        width = 0.8,
+        height = 0.8,
+    },
     --- wrap the lines in the ui
     wrap = true,
     --- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
@@ -128,14 +142,19 @@ opts.ui = {
         source = " ",
         start = " ",
         task = "✔ ",
-        list = {"●", "➜", "★", "‒"}
+        list = {
+            "●",
+            "➜",
+            "★",
+            "‒",
+        },
     },
     -- Leave nil, to automatically select a browser depending on your OS.
     -- If you want to use a specific browser, you can define it here
     browser = nil,
     --- how frequently should the ui process render events
     throttle = 20,
-    custom_keys = {}
+    custom_keys = {},
 }
 
 --- Diff Command
@@ -146,7 +165,7 @@ opts.diff = {
     -- * git: will run git diff and open a buffer with filetype git
     -- * terminal_git: will open a pseudo terminal with git diff
     -- * diffview.nvim: will open Diffview to show the diff
-    cmd = "diffview.nvim"
+    cmd = "diffview.nvim",
 }
 
 --- Update checker
@@ -156,30 +175,41 @@ opts.checker = {
     concurrency = nil, --- Set to 1 to check for updates very slowly
     notify = true, --- Get a notification when new updates are found
     frequency = 3600, --- Check for updates every hour
-    check_pinned = false --- Check for pinned packages that can't be updated
+    check_pinned = false, --- Check for pinned packages that can't be updated
 }
 
 OL.events.update = "OLUpdate"
 OL.callbacks.update = OL.OLCall.new()
 OL.callbacks.update.event = OL.events.update
-OL.callbacks.update:add(function()
-    OL.load("lazy", {}, function(lazy)
-        OL.log:info("Updating Lazy")
-        lazy.sync({wait = false, show = false})
-    end)
-end)
+OL.callbacks.update:add(
+  function()
+      OL.load(
+        "lazy", {}, function(lazy)
+            OL.log:info("Updating Lazy")
+            lazy.sync(
+              {
+                  wait = false,
+                  show = false,
+              }
+            )
+        end
+      )
+  end
+)
 
 --- Detect config changes
 opts.change_detection = {
     --- Automatically check for config file changes and reload the ui
     enabled = true,
     --- get a notification when changes are found
-    notify = true
+    notify = true,
 }
 
 --- Performance
 opts.performance = {
-    cache = {enabled = true},
+    cache = {
+        enabled = true,
+    },
     --- Reset the package path to improve startup time
     reset_packpath = true,
     rtp = {
@@ -189,16 +219,21 @@ opts.performance = {
         paths = {},
         --- List any plugins you want to disable here
         disabled_plugins = {
+            "editorconfig",
             -- "gzip",
-            -- "matchit",
+            -- "man",
+            "matchit",
             -- "matchparen",
-            -- "netrwPlugin",
+            "netrwPlugin",
+            "osc52",
+            -- "shada",
+            "spellfile",
             -- "tarPlugin",
-            -- "tohtml",
-            -- "tutor",
+            "tohtml",
+            "tutor",
             -- "zipPlugin",
-        }
-    }
+        },
+    },
 }
 
 --- Lazy can generate helptags from the headings in markdown readme files,
@@ -207,9 +242,12 @@ opts.performance = {
 opts.readme = {
     enabled = true,
     root = vim.fn.stdpath("state") .. "/lazy/readme",
-    files = {"README.md", "lua/**/README.md"},
+    files = {
+        "README.md",
+        "lua/**/README.md",
+    },
     --- Only generate markdown helptags for plugins that dont have docs
-    skip_if_doc_exists = true
+    skip_if_doc_exists = true,
 }
 
 --- State info for checker and other things
@@ -222,7 +260,7 @@ opts.profiling = {
     -- Additionally gathers stats about all package.loaders
     loader = OL.verbose,
     -- Track each new require in the Lazy profiling tab
-    require = OL.verbose
+    require = OL.verbose,
 }
 OL.log:debug("Lazy Profiling set to %s", opts.profiling)
 
@@ -234,15 +272,32 @@ function OL.lazy.bootstrap()
     local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
     if not vim.uv.fs_stat(lazypath) then
         local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-        local out = vim.fn.system({
-            "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo,
-            lazypath
-        })
+        local out = vim.fn.system(
+                      {
+              "git",
+              "clone",
+              "--filter=blob:none",
+              "--branch=stable",
+              lazyrepo,
+              lazypath,
+          }
+                    )
         if vim.v.shell_error ~= 0 then
-            vim.api.nvim_echo({
-                {"Failed to clone lazy.nvim:\n", "ErrorMsg"},
-                {out, "WarningMsg"}, {"\nPress any key to exit..."}
-            }, true, {})
+            vim.api.nvim_echo(
+              {
+                  {
+                      "Failed to clone lazy.nvim:\n",
+                      "ErrorMsg",
+                  },
+                  {
+                      out,
+                      "WarningMsg",
+                  },
+                  {
+                      "\nPress any key to exit...",
+                  },
+              }, true, {}
+            )
             vim.fn.getchar()
             os.exit(1)
         end

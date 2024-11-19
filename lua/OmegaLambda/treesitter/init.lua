@@ -74,6 +74,9 @@ OL.opt("foldlevel", 99)
 
 --- Config
 function spec.config(_, o)
+    if OL.is_man() then
+        return
+    end
     OL.load_setup("nvim-treesitter.configs", {}, o)
 end
 

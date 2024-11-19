@@ -130,6 +130,30 @@ function OL.map(...)
     end
 end
 
+OL.map(
+  {
+      "<leader>o",
+      group = "OLUtils",
+      desc = "OLUtils",
+      {
+          {
+              "<leader>ou",
+              function()
+                  OL.callbacks.update()
+              end,
+              desc = "Update",
+          },
+          {
+              "<leader>ol",
+              function()
+                  OL.Snacks.notifier.show_history()
+              end,
+              desc = "Log History",
+          },
+      },
+  }
+)
+
 ---
 --- --- Settings ---
 ---

@@ -6,7 +6,7 @@ spec.priority = 1000
 spec.lazy = false
 OL.callbacks.post:add(
   function()
-      Snacks = OL.load("snacks")
+      OL.Snacks = OL.load("snacks")
   end
 )
 
@@ -36,13 +36,34 @@ opts.bigfile = OL.OLConfig.new(
 ---
 
 ---
+--- --- Dashboard ---
+---
+opts.dashboard = {
+    preset = {},
+}
+
+local sections = {}
+function sections:add(tbl)
+    if type(tbl) == "string" then
+        tbl = {
+            section = tbl,
+        }
+    end
+    table.insert(self, tbl)
+end
+
+sections:add("header")
+
+opts.dashboard.sections = sections
+
+---
 --- --- Debug ---
 ---
 
 OL.callbacks.post:add(
   function()
       vim.print = function(...)
-          Snacks.debug.inspect(...)
+          OL.Snacks.debug.inspect(...)
       end
   end
 )
@@ -81,7 +102,7 @@ OL.callbacks.post:add(
           if o.level == nil then
               o.level = vim.log.levels.INFO
           end
-          Snacks.notify(msg, o)
+          OL.Snacks.notify(msg, o)
       end
   end
 )
@@ -183,10 +204,9 @@ opts.quickfile = {
 OL.opt("number")
 OL.opt("relativenumber")
 OL.opt("signcolumn", "yes")
+OL.opt("statuscolumn", [[%!v:lua.require'snacks.statuscolumn'.get()]])
 opts.statuscolumn = {
-    left = {
-        "sign",
-    },
+    left = { "sign" },
     right = {
         "fold",
         "git",
@@ -248,3 +268,52 @@ opts.words = {
         "c",
     }, -- modes to show references
 }
+
+function OL.is_man()
+    for _, v in ipairs(vim.v.argv) do
+        if v:find("neovim-page", 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
+function spec.config(_, o)
+    if OL.is_man() then
+        return
+    end
+
+    local job = OL.load("plenary.job")
+    local path = OL.load("plenary.path")
+
+    --- Get Font
+    local fonts = path:new(OL.paths.lazy:abs("figlet")):readlines()
+    math.randomseed(os.time())
+    local font = fonts[math.random(#fonts)]
+    OL.font = font
+
+    --- Get root
+    local cwd = vim.fs.normalize(vim.fn.getcwd())
+    local root
+    for dir in vim.fs.parents(cwd) do
+        if vim.fn.isdirectory(dir .. "/.git") == 1 then
+            root = dir
+            break
+        end
+    end
+    cwd = vim.fs.basename(root and vim.fs.normalize(root) or cwd)
+    local header, _ = job:new(
+                        {
+          command = "figlet",
+          args = {
+              "-f",
+              font,
+              "/" .. cwd,
+          },
+          enable_recording = true,
+      }
+                      ):sync()
+    o.dashboard.preset.header = table.concat(header, "\n")
+
+    OL.load_setup("snacks", {}, o)
+end

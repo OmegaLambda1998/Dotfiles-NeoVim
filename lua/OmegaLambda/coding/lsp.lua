@@ -105,7 +105,7 @@ local function setup_inlay_hints(o)
 end
 
 --- Code Lens
-local function setup_codelens(o)
+local function setup_codelens(_)
     if vim.lsp.codelens then
         OL.aucmd(
           "LspAttach", {
@@ -122,7 +122,7 @@ local function setup_codelens(o)
                                 "CursorHold",
                                 "InsertLeave",
                             }, {
-                                buffer = buffer,
+                                buffer = 0,
                                 callback = vim.lsp.codelens.refresh,
                             }
                           )

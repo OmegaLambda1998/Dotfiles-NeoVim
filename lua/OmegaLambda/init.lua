@@ -17,8 +17,6 @@ table.pack = table.pack or function(...)
 end
 table.unpack = table.unpack or unpack
 
---- validate ---
-
 ---
 --- --- Setup ---
 ---
