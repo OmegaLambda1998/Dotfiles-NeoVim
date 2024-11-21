@@ -39,9 +39,9 @@ end
 
 OL.callbacks.autocommands = OL.OLCall.new()
 OL.callbacks.post:add(
-  function()
-      OL.callbacks.autocommands()
-  end
+    function()
+        OL.callbacks.autocommands()
+    end
 )
 function OL.aucmd(name, ...)
     local cmds = OL.pack(...)
@@ -60,12 +60,12 @@ function OL.aucmd(name, ...)
         opts = {}
         for k, v in pairs(cmd) do
             if not vim.tbl_contains(
-              {
-                  "events",
-                  "callback",
-                  1,
-                  2,
-              }, k
+                {
+                    "events",
+                    "callback",
+                    1,
+                    2,
+                }, k
             ) then
                 opts[k] = v
             end
@@ -75,9 +75,9 @@ function OL.aucmd(name, ...)
         end
         if not OL.callbacks.post.triggered then
             OL.callbacks.autocommands:add(
-              function()
-                  OL.autocmd(events, callback, opts)
-              end
+                function()
+                    OL.autocmd(events, callback, opts)
+                end
             )
         else
             OL.autocmd(events, callback, opts)
@@ -90,9 +90,9 @@ OL.events = OL.OLConfig.new()
 function OL.events.trigger(event)
     OL.log:debug("Triggering %s", event)
     vim.api.nvim_exec_autocmds(
-      "User", {
-          pattern = event,
-      }
+        "User", {
+            pattern = event,
+        }
     )
 end
 
@@ -124,63 +124,63 @@ function OL.map(...)
     local args = OL.pack(...)
     if not OL.callbacks.post.triggered then
         OL.callbacks.post:add(
-          function()
-              OL.load(
-                "which-key", {}, function(wk)
-                    wk.add(OL.unpack(args))
-                end
-              )
-          end
+            function()
+                OL.load(
+                    "which-key", {}, function(wk)
+                        wk.add(OL.unpack(args))
+                    end
+                )
+            end
         )
     else
         OL.load(
-          "which-key", {}, function(wk)
-              wk.add(OL.unpack(args))
-          end
+            "which-key", {}, function(wk)
+                wk.add(OL.unpack(args))
+            end
         )
     end
 end
 
 OL.map(
-  {
-      "<leader>o",
-      group = "OLUtils",
-      desc = "OLUtils",
-      {
-          {
-              "<leader>ou",
-              function()
-                  OL.callbacks.update()
-              end,
-              desc = "Update",
-          },
-          {
-              "<leader>ol",
-              function()
-                  OL.log:flush()
-                  OL.load(
-                    "snacks", {}, function(snacks)
-                        snacks.notifier.show_history()
-                    end
-                  )
-              end,
-              desc = "Log History",
-          },
-          {
-              "<leader>ov",
-              function()
-                  OL.log:flush(true)
-                  OL.load(
-                    "snacks", {}, function(snacks)
-                        snacks.notifier.show_history()
-                    end
-                  )
-              end,
-              desc = "Verbose Log History",
-          },
+    {
+        "<leader>o",
+        group = "OLUtils",
+        desc = "OLUtils",
+        {
+            {
+                "<leader>ou",
+                function()
+                    OL.callbacks.update()
+                end,
+                desc = "Update",
+            },
+            {
+                "<leader>ol",
+                function()
+                    OL.log:flush()
+                    OL.load(
+                        "snacks", {}, function(snacks)
+                            snacks.notifier.show_history()
+                        end
+                    )
+                end,
+                desc = "Log History",
+            },
+            {
+                "<leader>ov",
+                function()
+                    OL.log:flush(true)
+                    OL.load(
+                        "snacks", {}, function(snacks)
+                            snacks.notifier.show_history()
+                        end
+                    )
+                end,
+                desc = "Verbose Log History",
+            },
 
-      },
-  }
+        },
+    }
 )
 
 ---
@@ -203,32 +203,32 @@ function OL.opt(key, val, opts)
         set = vim.g
     end
     OL.callbacks.post:add(
-      function()
-          set[key] = val
-      end
+        function()
+            set[key] = val
+        end
     )
 end
 
 function OL.gopt(key, val)
     OL.opt(
-      key, val, {
-          gopt = true,
-      }
+        key, val, {
+            gopt = true,
+        }
     )
 end
 
 function OL.lopt(key, val)
     OL.opt(
-      key, val, {
-          lopt = true,
-      }
+        key, val, {
+            lopt = true,
+        }
     )
 end
 
 function OL.g(key, val)
     OL.opt(
-      key, val, {
-          g = true,
-      }
+        key, val, {
+            g = true,
+        }
     )
 end

@@ -36,9 +36,9 @@ return function(opts)
     ---@class OLPath
     ---@field setup OLPath
     OL.paths = OL.OLPath.new(
-                 {
-          root = "OmegaLambda",
-      }
+                   {
+            root = "OmegaLambda",
+        }
                )
     OL.paths:append("setup")
 
@@ -53,20 +53,20 @@ return function(opts)
     --- --- Plugin Specs ---
     ---
     OL.load(
-      "specs", {
-          from = OL.paths.setup,
-          strict = true,
-      }
+        "specs", {
+            from = OL.paths.setup,
+            strict = true,
+        }
     )
 
     ---
     --- --- Callback Functions ---
     ---
     OL.load(
-      "callbacks", {
-          from = OL.paths.setup,
-          strict = true,
-      }
+        "callbacks", {
+            from = OL.paths.setup,
+            strict = true,
+        }
     )
 
     --- Create Callbacks
@@ -79,10 +79,10 @@ return function(opts)
     --- --- Neovim Integration ---
     ---
     OL.load(
-      "neovim", {
-          from = OL.paths.setup,
-          strict = true,
-      }
+        "neovim", {
+            from = OL.paths.setup,
+            strict = true,
+        }
     )
 
     return OL

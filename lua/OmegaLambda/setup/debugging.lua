@@ -13,13 +13,13 @@ function OL.inspect(...)
     for level = 2, 10 do
         local info = debug.getinfo(level, "S")
         if info and info.source ~= caller.source and info.what == "Lua" and
-          info.source ~= "lua" and info.source ~= "@" .. vim.env.MYVIMRC then
+            info.source ~= "lua" and info.source ~= "@" .. vim.env.MYVIMRC then
             caller = info
             break
         end
     end
     local title = vim.fn.fnamemodify(caller.source:sub(2), ":~:.") .. ":" ..
-                    caller.linedefined
+                      caller.linedefined
     local str = len == 1 and obj[1] or obj
     return type(str) == "string" and str or vim.inspect(str), title
 end
@@ -48,22 +48,22 @@ end
 ---@field level integer
 ---@field min_level integer
 local OLLog = OL.OLConfig.new(
-                {
-      TRACE = TRACE,
-      DEBUG = DEBUG,
-      INFO = INFO,
-      WARN = WARN,
-      ERROR = ERROR,
-      OFF = OFF,
-      levels = {
-          TRACE = "trace",
-          DEBUG = "debug",
-          INFO = "info",
-          WARN = "warn",
-          ERROR = "error",
-          OFF = "off",
-      },
-  }
+                  {
+        TRACE = TRACE,
+        DEBUG = DEBUG,
+        INFO = INFO,
+        WARN = WARN,
+        ERROR = ERROR,
+        OFF = OFF,
+        levels = {
+            TRACE = "trace",
+            DEBUG = "debug",
+            INFO = "info",
+            WARN = "warn",
+            ERROR = "error",
+            OFF = "off",
+        },
+    }
               )
 OL.OLLog = OLLog
 
@@ -90,10 +90,10 @@ function OLLog:log(level, msg, ...)
     local str, title = OL.fstring(msg, ...)
     if self.level <= level then
         OL.notify(
-          str, {
-              level = level,
-              title = title,
-          }
+            str, {
+                level = level,
+                title = title,
+            }
         )
     else
         self.queue[#self.queue + 1] = {
@@ -113,10 +113,10 @@ function OLLog:flush(all)
         title = msg.title
         if all or self.min_level <= level then
             OL.notify(
-              str, {
-                  level = level,
-                  title = title,
-              }
+                str, {
+                    level = level,
+                    title = title,
+                }
             )
         else
             queue[#queue + 1] = {

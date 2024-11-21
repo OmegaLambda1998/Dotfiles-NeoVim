@@ -42,8 +42,8 @@ local formatter = "yq"
 local yq_opts = '(.. |= (\
     with(select(kind == "map"); . style="") |\
     with(select(kind == "seq"); . style="") |\
-    with(select((kind == "map") and (path | length > 1) and (. | has("<<") | not)); sort_keys(.) style="") |\
-    with(select(kind == "seq" and all_c(kind == "scalar" or "anchor")); . style="flow") |\
+    with(select((kind == "map") and (path | length >= 1) and (. | has("<<") | not)); sort_keys(.) style="") |\
+    with(select(kind == "seq" and ((. | all_c(kind == "scalar")) or (. | key == "<<"))); . style="flow") |\
     with(select(kind == "scalar" and tag == "!!str"); . style="double") \
 ))'
 --     select(kind == "map"); . style = ""\

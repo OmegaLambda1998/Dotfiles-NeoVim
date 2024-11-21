@@ -23,18 +23,18 @@ table.unpack = table.unpack or unpack
 
 --- Load Setup
 OL = require("OmegaLambda.setup")(
-       {
-      verbose = verbose,
-  }
+         {
+        verbose = verbose,
+    }
      )
 OL.log:debug("Verbose: %s", OL.verbose)
 
 --- Load Lazy
 OL.load(
-  "lazy", {
-      from = OL.paths,
-      strict = true,
-  }
+    "lazy", {
+        from = OL.paths,
+        strict = true,
+    }
 )
 
 --- Bootstrap Lazy
@@ -42,26 +42,26 @@ OL.lazy.bootstrap()
 
 --- Setup Colourscheme
 OL.load(
-  "colourscheme", {
-      from = OL.paths,
-      strict = true,
-  }
+    "colourscheme", {
+        from = OL.paths,
+        strict = true,
+    }
 )
 
 --- Setup Treesitter
 OL.load(
-  "treesitter", {
-      from = OL.paths,
-      strict = true,
-  }
+    "treesitter", {
+        from = OL.paths,
+        strict = true,
+    }
 )
 
 --- Setup Snacks
 OL.load(
-  "snacks", {
-      from = OL.paths.lazy,
-      strict = true,
-  }
+    "snacks", {
+        from = OL.paths.lazy,
+        strict = true,
+    }
 )
 
 ---
@@ -69,14 +69,14 @@ OL.load(
 ---
 
 OL.loadall(
-  "*", {
-      exclude = {
-          "init",
-          "setup",
-          "lazy",
-          "treesitter",
-      },
-  }
+    "*", {
+        exclude = {
+            "init",
+            "setup",
+            "lazy",
+            "treesitter",
+        },
+    }
 )
 
 ---

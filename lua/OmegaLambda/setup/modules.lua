@@ -19,9 +19,7 @@ function OL.load(m, args, callback)
         end
         m = path:module(m)
     end
-    args.args = {
-        m,
-    }
+    args.args = { m }
     OL.log:trace("Loading %s", m)
     local mod = OL.try(require, args)
     if mod then
@@ -38,9 +36,9 @@ end
 
 function OL.load_setup(m, args, opts)
     return OL.load(
-             m, args, function(mod)
-          mod.setup(opts)
-      end
+               m, args, function(mod)
+            mod.setup(opts)
+        end
            )
 end
 
@@ -76,10 +74,10 @@ function OL.loadall(pattern, args)
                 table.insert(filters, ex)
             elseif type(ex) == "string" then
                 table.insert(
-                  filters, function(m)
-                      local ptn = OL.fstring("^.*%s$", ex)
-                      return string.find(m, ptn)
-                  end
+                    filters, function(m)
+                        local ptn = OL.fstring("^.*%s$", ex)
+                        return string.find(m, ptn)
+                    end
                 )
             end
         end

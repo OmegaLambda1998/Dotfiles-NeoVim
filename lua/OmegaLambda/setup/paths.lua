@@ -6,7 +6,15 @@ local stdpath = vim.fn.stdpath
 local norm = vim.fs.normalize
 local glob = vim.fn.glob
 
-local config_path = joinpath(OL.unpack(OL.flatten({stdpath("config")})), "lua")
+local config_path = joinpath(
+                        OL.unpack(
+                            OL.flatten(
+                                {
+                stdpath("config"),
+            }
+                            )
+                        ), "lua"
+                    )
 
 ---@class OLPath: OLConfig
 ---@field root string
@@ -35,7 +43,13 @@ end
 ---@param to string
 function OLPath:__newindex(from, to)
     local root = joinpath(self.root, to)
-    rawset(self, from, OLPath.new({root = root}))
+    rawset(
+        self, from, OLPath.new(
+            {
+                root = root,
+            }
+        )
+    )
 end
 
 function OLPath:append(path)
@@ -45,15 +59,19 @@ end
 
 function OLPath:module(...)
     local paths = OL.flatten(...)
-    local modpath = joinpath(tostring(self.root), OL.unpack(paths)):gsub("/",
-                                                                         ".")
+    local modpath = joinpath(tostring(self.root), OL.unpack(paths)):gsub(
+                        "/", "."
+                    )
     return modpath
 end
 
 function OLPath:abs(...)
     local paths = OL.flatten(...)
-    local abspath = norm(joinpath(config_path, tostring(self.root),
-                                  OL.unpack(paths)))
+    local abspath = norm(
+                        joinpath(
+                            config_path, tostring(self.root), OL.unpack(paths)
+                        )
+                    )
     return abspath
 end
 
@@ -64,5 +82,10 @@ function OLPath:glob(pattern, greedy)
     end
     local abs_pattern = self:abs(pattern)
     local matches = glob(abs_pattern)
-    return split(matches, "\n", {trimempty = true, plain = true})
+    return split(
+               matches, "\n", {
+            trimempty = true,
+            plain = true,
+        }
+           )
 end

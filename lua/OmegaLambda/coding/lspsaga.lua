@@ -122,35 +122,35 @@ for d, diagnostic in pairs(diagnostics) do
         desc = "Jump to %s %s diagnostic"
     end
     OL.map(
-      {
-          mode = {
-              "n",
-          },
-          {
-              {
-                  "[" .. d,
-                  function()
-                      OL.load(
-                        "lspsaga.diagnostic", {}, function(lspsaga)
-                            lspsaga:goto_prev(severity)
-                        end
-                      )
-                  end,
-                  desc = OL.fstring(desc, "previous", name),
-              },
-              {
-                  "]" .. d,
-                  function()
-                      OL.load(
-                        "lspsaga.diagnostic", {}, function(lspsaga)
-                            lspsaga:goto_next(severity)
-                        end
-                      )
-                  end,
-                  desc = OL.fstring(desc, "next", name),
-              },
-          },
-      }
+        {
+            mode = {
+                "n",
+            },
+            {
+                {
+                    "[" .. d,
+                    function()
+                        OL.load(
+                            "lspsaga.diagnostic", {}, function(lspsaga)
+                                lspsaga:goto_prev(severity)
+                            end
+                        )
+                    end,
+                    desc = OL.fstring(desc, "previous", name),
+                },
+                {
+                    "]" .. d,
+                    function()
+                        OL.load(
+                            "lspsaga.diagnostic", {}, function(lspsaga)
+                                lspsaga:goto_next(severity)
+                            end
+                        )
+                    end,
+                    desc = OL.fstring(desc, "next", name),
+                },
+            },
+        }
     )
 end
 
@@ -175,13 +175,6 @@ spec.keys = {
             vim.cmd("Lspsaga show_buf_diagnostics")
         end,
         desc = "Buffer Diagnostics",
-    },
-    {
-        "<leader>dw",
-        function()
-            vim.cmd("Lspsaga show_workspace_diagnostics")
-        end,
-        desc = "Workspace Diagnostics",
     },
     {
         "<leader>df",
@@ -247,11 +240,11 @@ spec.keys = {
 }
 
 OL.map(
-  {
-      "<leader>d",
-      group = "LSP / Diagnostics",
-      desc = "LSP / Diagnostics",
-      { spec.keys },
-  }
+    {
+        "<leader>d",
+        group = "LSP / Diagnostics",
+        desc = "LSP / Diagnostics",
+        { spec.keys },
+    }
 )
 

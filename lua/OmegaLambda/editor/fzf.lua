@@ -28,13 +28,27 @@ spec.keys = {
         end,
         desc = "Grep Project",
     },
+    {
+        "<leader>dw",
+        function()
+            vim.cmd("FzfLua diagnostics_workspace")
+        end,
+        desc = "Workspace Diagnostics",
+    },
+    {
+        "<leader>dd",
+        function()
+            vim.cmd("FzfLua diagnostics_document")
+        end,
+        desc = "Document Diagnostics",
+    },
 }
 
 OL.map(
-  {
-      "<leader>z",
-      group = "FzF",
-      desc = "FzF",
-      { spec.keys },
-  }
+    {
+        "<leader>z",
+        group = "FzF",
+        desc = "FzF",
+        { spec.keys },
+    }
 )
