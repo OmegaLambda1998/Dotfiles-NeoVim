@@ -45,19 +45,19 @@ OL.map(
       {
           {
               "<A-h>",
-              "<A-w>h",
+              "<C-w>h",
               desc = "Go to Left Window",
               remap = true,
           },
           {
               "<A-j>",
-              "<A-w>j",
+              "<C-w>j",
               desc = "Go to Lower Window",
               remap = true,
           },
           {
               "<A-k>",
-              "<A-w>k",
+              "<C-w>k",
               desc = "Go to Upper Window",
               remap = true,
           },
@@ -65,7 +65,7 @@ OL.map(
           -- Resize window using <alt> arrow keys
           {
               "<A-l>",
-              "<A-w>l",
+              "<C-w>l",
               desc = "Go to Right Window",
               remap = true,
           },

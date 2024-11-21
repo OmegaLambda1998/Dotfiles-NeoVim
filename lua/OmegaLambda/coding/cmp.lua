@@ -1,6 +1,16 @@
+local fspec, fopts = OL.spec:add("rafamadriz/friendly-snippets")
+function fspec.config()
+end
+
 local spec, opts = OL.spec:add("Saghen/blink.cmp")
 
+spec.dependencies = {
+    "rafamadriz/friendly-snippets",
+}
+
 OL.paths.coding:append("snippets")
+
+OL.callbacks.colourscheme.blink_cmp = true
 
 spec.version = false
 spec.build = "cargo build --release"
@@ -468,20 +478,49 @@ opts.keymap = {
         "fallback",
     },
 
-    ["<Tab>"] = {
-        "select_next",
+    ["<S-Tab>"] = {
+        function(cmp)
+            if cmp.is_in_snippet() then
+                return cmp.select_prev()
+            end
+        end,
+        "select_prev",
         "fallback",
     },
-    ["<S-Tab>"] = {
-        "select_prev",
+    ["<Tab>"] = {
+        "select_next",
+        function(cmp)
+            if cmp.is_in_snippet() then
+                return cmp.select_next()
+            end
+        end,
         "fallback",
     },
 
     ['<Up>'] = {
+        function(cmp)
+            if cmp.is_in_snippet() then
+                return cmp.select_prev()
+            end
+        end,
+        "select_prev",
+        'fallback',
+    },
+    ['<C-Up>'] = {
         'scroll_documentation_up',
         'fallback',
     },
+
     ['<Down>'] = {
+        function(cmp)
+            if cmp.is_in_snippet() then
+                return cmp.select_next()
+            end
+        end,
+        "select_next",
+        'fallback',
+    },
+    ['<C-Down>'] = {
         'scroll_documentation_down',
         'fallback',
     },

@@ -1,11 +1,21 @@
 local spec, opts = OL.spec:add("williamboman/mason.nvim")
 
+OL.callbacks.colourscheme.mason = true
+
 spec.cmd = {
-    "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog",
-    "MasonUpdate", "MasonUpdateAll" -- this cmd is provided by mason-extra-cmds
+    "Mason",
+    "MasonInstall",
+    "MasonUninstall",
+    "MasonUninstallAll",
+    "MasonLog",
+    "MasonUpdate",
+    "MasonUpdateAll", -- this cmd is provided by mason-extra-cmds
 }
 spec.build = ":MasonUpdate"
-spec.dependencies = {"Zeioth/mason-extra-cmds", opts = {}} --- Adds MasonUpdateAll
+spec.dependencies = {
+    "Zeioth/mason-extra-cmds",
+    opts = {},
+} --- Adds MasonUpdateAll
 
 OL.callbacks.mason = OL.OLConfig.new()
 
@@ -15,16 +25,24 @@ spec.event = OL.callbacks.mason.ft
 OL.callbacks.mason.install = OL.OLConfig.new()
 opts.ensure_installed = OL.callbacks.mason.install
 
-OL.callbacks.update:add(function()
-    OL.load("masonextracmds.mason", {}, function(m)
-        OL.log:info("Updating Mason")
-        m.update_all()
-    end)
-end)
+OL.callbacks.update:add(
+    function()
+        OL.load(
+            "masonextracmds.mason", {}, function(m)
+                OL.log:info("Updating Mason")
+                m.update_all()
+            end
+        )
+    end
+)
 
 opts.log_level = OL.log.DEBUG
-opts.pip = {upgrade_pip = true}
-opts.ui = {border = "single"}
+opts.pip = {
+    upgrade_pip = true,
+}
+opts.ui = {
+    border = "single",
+}
 
 function spec.config(_, o)
     OL.log:log(o.log_level, "Starting Mason")
@@ -41,24 +59,34 @@ function spec.config(_, o)
 
     OL.load_setup("mason", {}, o)
     local mr = OL.load("mason-registry")
-    mr:on("package:install:success", function()
-        vim.defer_fn(function()
-            OL.load("lazy.core.handler.event", {}, function(l)
-                l.trigger({
-                    event = "FileType",
-                    buf = vim.api.nvim_get_current_buf()
-                })
-            end)
-        end, 100)
-    end)
+    mr:on(
+        "package:install:success", function()
+            vim.defer_fn(
+                function()
+                    OL.load(
+                        "lazy.core.handler.event", {}, function(l)
+                            l.trigger(
+                                {
+                                    event = "FileType",
+                                    buf = vim.api.nvim_get_current_buf(),
+                                }
+                            )
+                        end
+                    )
+                end, 100
+            )
+        end
+    )
 
-    mr.refresh(function()
-        for _, tool in ipairs(o.ensure_installed) do
-            local p = mr.get_package(tool)
-            if not p:is_installed() then
-                OL.log:info("Installing %s", p)
-                p:install()
+    mr.refresh(
+        function()
+            for _, tool in ipairs(o.ensure_installed) do
+                local p = mr.get_package(tool)
+                if not p:is_installed() then
+                    OL.log:info("Installing %s", p)
+                    p:install()
+                end
             end
         end
-    end)
+    )
 end

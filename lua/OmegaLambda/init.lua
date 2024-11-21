@@ -85,7 +85,6 @@ OL.loadall(
 
 --- Pre-setup callbacks
 OL.callbacks.pre()
-table.insert(OL.callbacks.treesitter.exclude, "latex")
 
 --- Setup
 OL.lazy.setup()

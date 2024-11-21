@@ -1,5 +1,7 @@
 local spec, opts = OL.spec:add("folke/which-key.nvim")
 
+OL.callbacks.colourscheme.which_key = true
+
 ---@class wk.Opts
 ---@type false | "classic" | "modern" | "helix"
 opts.preset = "helix"

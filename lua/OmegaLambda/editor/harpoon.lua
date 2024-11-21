@@ -1,4 +1,7 @@
 local spec, opts = OL.spec:add("ThePrimeagen/harpoon")
+
+OL.callbacks.colourscheme.harpoon = true
+
 spec.branch = "harpoon2"
 
 spec.dependencies = {

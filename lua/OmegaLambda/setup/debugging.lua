@@ -76,7 +76,7 @@ function OLLog.new(tbl)
             tbl.level = INFO
             tbl.min_level = DEBUG
         else
-            tbl.level = INFO
+            tbl.level = WARN
             tbl.min_level = INFO
         end
     end

@@ -2,13 +2,6 @@ local spec, opts = OL.spec:add("stevearc/oil.nvim")
 spec.lazy = false
 spec.cmd = { "Oil" }
 
-function spec.config(_, o)
-    if OL.is_man() then
-        return
-    end
-    OL.load_setup("oil", {}, o)
-end
-
 -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
 -- Set to false if you want some other plugin (e.g. netrw) to open when you edit directories.
 opts.default_file_explorer = true
@@ -30,6 +23,7 @@ opts.win_options = {
     wrap = false,
     signcolumn = "yes",
     cursorcolumn = false,
+    cursorline = true,
     foldcolumn = "0",
     spell = false,
     list = false,
@@ -48,12 +42,12 @@ opts.prompt_save_on_select_new_entry = true
 -- Note that the cleanup process only starts when none of the oil buffers are currently displayed
 opts.cleanup_delay_ms = 2000
 opts.lsp_file_methods = {
-    -- Enable or disable LSP file operations
+    --- Enable or disable LSP file operations
     enabled = false,
-    -- Time to wait for LSP file operations to complete before skipping
+    --- Time to wait for LSP file operations to complete before skipping
     timeout_ms = 1000,
-    -- Set to true to autosave buffers that are updated with LSP willRenameFiles
-    -- Set to "unmodified" to only save unmodified buffers
+    --- Set to true to autosave buffers that are updated with LSP willRenameFiles
+    --- Set to "unmodified" to only save unmodified buffers
     autosave_changes = false,
 }
 -- Constrain the cursor to the editable parts of the oil buffer
@@ -113,20 +107,20 @@ opts.keymaps = {
 -- Set to false to disable all of the above keymaps
 opts.use_default_keymaps = true
 opts.view_options = {
-    -- Show files and directories that start with "."
+    --- Show files and directories that start with "."
     show_hidden = true,
-    -- This function defines what will never be shown, even when `show_hidden` is set
+    --- This function defines what will never be shown, even when `show_hidden` is set
     is_always_hidden = function(name, bufnr)
         return false
     end,
-    -- Sort file names with numbers in a more intuitive order for humans.
-    -- Can be "fast", true, or false. "fast" will turn it off for large directories.
+    --- Sort file names with numbers in a more intuitive order for humans.
+    --- Can be "fast", true, or false. "fast" will turn it off for large directories.
     natural_order = "fast",
-    -- Sort file and directory names case insensitive
+    --- Sort file and directory names case insensitive
     case_insensitive = false,
     sort = {
-        -- sort order can be "asc" or "desc"
-        -- see :help oil-columns to see which columns are sortable
+        --- sort order can be "asc" or "desc"
+        --- see :help oil-columns to see which columns are sortable
         {
             "type",
             "asc",
@@ -141,7 +135,7 @@ opts.view_options = {
 opts.extra_scp_args = {}
 -- EXPERIMENTAL support for performing file operations with git
 opts.git = {
-    -- Return true to automatically git add/mv/rm files
+    --- Return true to automatically git add/mv/rm files
     add = function(path)
         return false
     end,
@@ -154,7 +148,7 @@ opts.git = {
 }
 -- Configuration for the floating window in oil.open_float
 opts.float = {
-    -- Padding around the floating window
+    --- Padding around the floating window
     padding = 2,
     max_width = 0,
     max_height = 0,
@@ -162,23 +156,25 @@ opts.float = {
     win_options = {
         winblend = 0,
     },
-    -- optionally override the oil buffers window title with custom function: fun(winid: integer): string
+    --- optionally override the oil buffers window title with custom function: fun(winid: integer): string
     get_win_title = nil,
-    -- preview_split: Split direction: "auto", "left", "right", "above", "below".
+    --- preview_split: Split direction: "auto", "left", "right", "above", "below".
     preview_split = "auto",
-    -- This is the config that will be passed to nvim_open_win.
-    -- Change values here to customize the layout
+    --- This is the config that will be passed to nvim_open_win.
+    --- Change values here to customize the layout
     override = function(conf)
         return conf
     end,
 }
 -- Configuration for the file preview window
 opts.preview_win = {
-    -- Whether the preview window is automatically updated when the cursor is moved
+    --- Whether the preview window is automatically updated when the cursor is moved
     update_on_cursor_moved = true,
-    -- Maximum file size in megabytes to preview
+    --- How to open the preview window "load"|"scratch"|"fast_scratch"
+    preview_method = "fast_scratch",
+    --- Maximum file size in megabytes to preview
     max_file_size_mb = 1,
-    -- Window-local options to use for preview window buffers
+    --- Window-local options to use for preview window buffers
     win_options = {
         wrap = false,
         signcolumn = "no",
@@ -195,27 +191,27 @@ opts.preview_win = {
 }
 -- Configuration for the floating action confirmation window
 opts.confirmation = {
-    -- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-    -- min_width and max_width can be a single value or a list of mixed integer/float types.
-    -- max_width = {100, 0.8} means "the lesser of 100 columns or 80% of total"
+    --- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+    --- min_width and max_width can be a single value or a list of mixed integer/float types.
+    --- max_width = {100, 0.8} means "the lesser of 100 columns or 80% of total"
     max_width = 0.9,
-    -- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
+    --- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
     min_width = {
         40,
         0.4,
     },
-    -- optionally define an integer/float for the exact width of the preview window
+    --- optionally define an integer/float for the exact width of the preview window
     width = nil,
-    -- Height dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-    -- min_height and max_height can be a single value or a list of mixed integer/float types.
-    -- max_height = {80, 0.9} means "the lesser of 80 columns or 90% of total"
+    --- Height dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+    --- min_height and max_height can be a single value or a list of mixed integer/float types.
+    --- max_height = {80, 0.9} means "the lesser of 80 columns or 90% of total"
     max_height = 0.9,
-    -- min_height = {5, 0.1} means "the greater of 5 columns or 10% of total"
+    --- min_height = {5, 0.1} means "the greater of 5 columns or 10% of total"
     min_height = {
         5,
         0.1,
     },
-    -- optionally define an integer/float for the exact height of the preview window
+    --- optionally define an integer/float for the exact height of the preview window
     height = nil,
     border = "rounded",
     win_options = {

@@ -4,6 +4,7 @@ OL.opt("inccommand", "nosplit") -- preview incremental substitute
 OL.opt("jumpoptions", "view")
 
 OL.opt("linebreak")
+OL.opt("breakindent")
 OL.opt("list")
 OL.opt("number")
 OL.opt("relativenumber")
@@ -15,6 +16,8 @@ OL.opt("smartindent")
 OL.opt("splitbelow")
 OL.opt("splitright")
 OL.opt("splitkeep", "screen")
+
+OL.opt("cursorline")
 
 OL.opt("termguicolors")
 OL.opt("smoothscroll")

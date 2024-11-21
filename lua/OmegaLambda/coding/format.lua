@@ -26,6 +26,15 @@ opts.format_on_save = {
     lsp_format = "fallback",
 }
 
+function spec.config(_, o)
+    for fmt, fmt_opts in pairs(o.formatters) do
+        if type(fmt_opts[1]) == "function" then
+            o.formatters[fmt] = fmt_opts[1]()
+        end
+    end
+    OL.load_setup("conform", {}, o)
+end
+
 opts.log_level = vim.log.levels.INFO
 opts.notify_on_error = true
 opts.notify_no_formatters = false

@@ -5,8 +5,6 @@ spec.event = {
 }
 
 function spec.config(_, o)
-    if OL.is_man() then
-        return
-    end
+    opts.highlights = OL.load("catppuccin.groups.integrations.bufferline").get()
     OL.load_setup("bufferline", {}, o)
 end

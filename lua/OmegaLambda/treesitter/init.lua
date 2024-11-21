@@ -1,6 +1,9 @@
 OL.paths.treesitter = "treesitter"
-
 local spec, opts = OL.spec:add("nvim-treesitter/nvim-treesitter")
+
+OL.callbacks.colourscheme.treesitter = true
+
+spec.main = "nvim-treesitter.configs"
 
 --- Setup callbacks
 OL.callbacks.treesitter = OL.OLConfig.new()
@@ -71,14 +74,6 @@ opts.auto_install = true
 OL.opt("foldmethod", "expr")
 OL.opt("foldexpr", "nvim_treesitter#foldexpr()")
 OL.opt("foldlevel", 99)
-
---- Config
-function spec.config(_, o)
-    if OL.is_man() then
-        return
-    end
-    OL.load_setup("nvim-treesitter.configs", {}, o)
-end
 
 OL.loadall(
   "*", {

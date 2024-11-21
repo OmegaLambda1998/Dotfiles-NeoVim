@@ -71,21 +71,13 @@ opts.dashboard.sections = sections
 --- --- Notify ---
 ---
 
-table.insert(
-  OL.callbacks.colourscheme, {
-      notfiy = true,
-  }
-)
+OL.callbacks.colourscheme.notify = true
 
 ---
 --- --- Notifier ---
 ---
 
-table.insert(
-  OL.callbacks.colourscheme, {
-      notfier = true,
-  }
-)
+OL.callbacks.colourscheme.notifier = true
 
 opts.notifier = {
     style = "compact",
@@ -239,20 +231,7 @@ opts.words = {
     }, -- modes to show references
 }
 
-function OL.is_man()
-    for _, v in ipairs(vim.v.argv) do
-        if v:find("neovim-page", 1, true) then
-            return true
-        end
-    end
-    return false
-end
-
 function spec.config(_, o)
-    if OL.is_man() then
-        return
-    end
-
     local job = OL.load("plenary.job")
     local path = OL.load("plenary.path")
 

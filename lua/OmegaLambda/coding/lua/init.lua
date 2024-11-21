@@ -3,7 +3,7 @@ table.insert(OL.callbacks.mason.ft, "BufReadPre *." .. filetype)
 
 --- LSP
 local lsp = "lua_ls"
-local lsp_config = ".luarc.json"
+local lsp_config = "luarc.json"
 table.insert(OL.callbacks.lsp.ft, "BufReadPost *." .. filetype)
 OL.callbacks.lsp.servers[lsp] = {
     cmd = {

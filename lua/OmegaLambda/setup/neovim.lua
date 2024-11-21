@@ -105,6 +105,17 @@ OL.callbacks.post.event = OL.events.callback_post
 --- --- User Commands ---
 ---
 
+function OL.usrcmd(name, fn, ...)
+    local args = OL.pack(...)
+    name = name:gsub("^%l", string.upper)
+    if type(fn) == "string" then
+        fn = function()
+            vim.cmd(fn)
+        end
+    end
+    vim.api.nvim_create_user_command(name, fn, args)
+end
+
 ---
 --- --- Keymaps ---
 ---
@@ -146,6 +157,7 @@ OL.map(
           {
               "<leader>ol",
               function()
+                  OL.log:flush()
                   OL.load(
                     "snacks", {}, function(snacks)
                         snacks.notifier.show_history()
@@ -154,6 +166,19 @@ OL.map(
               end,
               desc = "Log History",
           },
+          {
+              "<leader>ov",
+              function()
+                  OL.log:flush(true)
+                  OL.load(
+                    "snacks", {}, function(snacks)
+                        snacks.notifier.show_history()
+                    end
+                  )
+              end,
+              desc = "Verbose Log History",
+          },
+
       },
   }
 )

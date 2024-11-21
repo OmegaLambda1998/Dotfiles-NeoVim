@@ -1,5 +1,7 @@
 local spec, opts = OL.spec:add("folke/flash.nvim")
 
+OL.callbacks.colourscheme.flash = true
+
 opts.labels = "asdfghjklqwetyuiopzvbnm"
 opts.search = {
     --- search/jump in all windows

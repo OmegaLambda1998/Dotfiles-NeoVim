@@ -1,4 +1,1 @@
-std="/home/patricka/.config/nvim/lua/OmegaLambda/coding/lua/vim"
-
-[lints]
-mixed_table = "allow"
+std = "luajit"

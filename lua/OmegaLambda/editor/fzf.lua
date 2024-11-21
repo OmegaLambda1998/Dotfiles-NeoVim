@@ -1,4 +1,7 @@
 local spec, opts = OL.spec:add("ibhagwan/fzf-lua")
+
+OL.callbacks.colourscheme.fzf = true
+
 spec.cmd = {
     "FzfLua",
 }

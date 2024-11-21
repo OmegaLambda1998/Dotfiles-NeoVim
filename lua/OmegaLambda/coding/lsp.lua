@@ -5,11 +5,60 @@ OL.spec:add(
   }
 )
 
+OL.callbacks.colourscheme.semantic_tokens = true
+
+OL.callbacks.colourscheme.native_lsp = {
+    enabled = true,
+    virtual_text = {
+        errors = {
+            "italic",
+        },
+        hints = {
+            "italic",
+        },
+        warnings = {
+            "italic",
+        },
+        information = {
+            "italic",
+        },
+        ok = {
+            "italic",
+        },
+    },
+    underlines = {
+        errors = {
+            "underline",
+        },
+        hints = {
+            "underline",
+        },
+        warnings = {
+            "underline",
+        },
+        information = {
+            "underline",
+        },
+        ok = {
+            "underline",
+        },
+    },
+    inlay_hints = {
+        background = true,
+    },
+}
+
 OL.callbacks.mason_lsp = OL.OLConfig.new()
 OL.callbacks.mason_lsp.install = OL.OLConfig.new()
 
 local spec, opts = OL.spec:add("neovim/nvim-lspconfig")
+
 vim.lsp.set_log_level(OL.log.level)
+OL.load(
+  'vim.lsp.log', {}, function(lsp_log)
+      lsp_log.set_format_func(vim.inspect)
+  end
+)
 
 OL.callbacks.lsp = OL.OLConfig.new()
 OL.callbacks.lsp.ft = OL.OLConfig.new()

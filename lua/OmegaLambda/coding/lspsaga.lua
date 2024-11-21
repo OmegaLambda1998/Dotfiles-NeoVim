@@ -1,4 +1,7 @@
 local spec, opts = OL.spec:add("nvimdev/lspsaga.nvim")
+
+OL.callbacks.colourscheme.lsp_saga = true
+
 spec.event = {
     "LspAttach",
 }
@@ -71,6 +74,15 @@ opts.scroll_preview = {}
 
 --- UI ---
 opts.ui = {}
+
+---
+--- === Config ===
+---
+
+function spec.config(_, o)
+    o.ui.kind = OL.load("catppuccin.groups.integrations.lsp_saga").custom_kind()
+    OL.load_setup("lspsaga", {}, o)
+end
 
 ---
 --- === Keys ===

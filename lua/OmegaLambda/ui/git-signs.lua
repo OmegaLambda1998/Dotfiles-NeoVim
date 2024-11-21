@@ -1,15 +1,10 @@
 local spec, opts = OL.spec:add("lewis6991/gitsigns.nvim")
 
+OL.callbacks.colourscheme.gitsigns = true
+
 spec.event = {
     "VeryLazy",
 }
-
-function spec.config(_, o)
-    if OL.is_man() then
-        return
-    end
-    OL.load_setup("gitsigns", {}, o)
-end
 
 opts.signs = {
     add = {
