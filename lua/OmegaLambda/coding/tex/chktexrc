@@ -240,6 +240,9 @@ UserWarnRegex
     # Use cleveref
     (?!#-2:Use! \cref)\\ref
 
+    # Use texttilde
+    (?!#-2:Use! \texttidle)\$\\sim\$
+
     # Pretty tables--see http://texdoc.net/texmf-dist/doc/latex/booktabs/booktabs.pdf
     (?!#-2:Use! \toprule,! midrule,! or! \bottomrule! from! booktabs)\\hline
     # This relies on it being on a single line, and not having anything
@@ -368,7 +371,7 @@ Silent
     \\start.* \\stop.*
 
     # if elif else
-    \ifcase
+    \ifcase \ifcsname
 ]
 
 
@@ -556,7 +559,7 @@ TextCmd
 VerbEnvir
 {
     verbatim comment listing verbatimtab rawhtml errexam picture texdraw
-    filecontents pgfpicture tikzpicture minted lstlisting IPA
+    filecontents pgfpicture tikzpicture minted lstlisting IPA yamlcode textcode pythoncode
 }
 
 
@@ -588,22 +591,22 @@ Abbrev
     Mr. Mrs. Miss. Ms. Dr. Prof. St.
     #
     # Days
-    # Mon. Tue. Wed. Thu. Fri. Sat. Sun.
+    Mon. Tue. Wed. Thu. Fri. Sat. Sun.
     #
     # Months
-    # Jan. Feb. Mar. Apr. May. Jun. Jul. Aug. Sep. Oct. Nov. Dec.
+    Jan. Feb. Mar. Apr. May. Jun. Jul. Aug. Sep. Oct. Nov. Dec.
     #
     # Letters
-    # Kt. Jr.
+    Kt. Jr.
     #
     # Corporate
-    # Co. Ltd.
+    Co. Ltd.
     #
     # Addresses
-    # Rd. Dr. St. Ave. Cres. Gdns. Sq. Circ. Terr. Pl. Arc. La. Clo. Ho. Est. Gn.
+    Rd. Dr. St. Ave. Cres. Gdns. Sq. Circ. Terr. Pl. Arc. La. Clo. Ho. Est. Gn.
     #
     # Misc.
-    # oe. pbab. ps. rsvp. Tx.
+    oe. pbab. ps. rsvp. Tx.
 }
 [
     # The first letter is case-insensitive in the abbrevs in this
@@ -612,13 +615,13 @@ Abbrev
     # silently ignored.
     #
     # Latin
-    # cf. "et al." etc. qed. qv. viz.
+    cf. "et al." etc. qed. qv. viz. e.g. i.e.
     #
     # Corporate
-    # inc. plc.
+    inc. plc.
     #
     # Misc
-    # fax. pcs. qty. tel. misc.
+    fax. pcs. qty. tel. misc.
 ]
 
 
@@ -701,7 +704,7 @@ NotPreSpaced
 #
 Linker
 {
-    \ref \vref \pageref \eqref \cite
+    \ref \vref \pageref \eqref \cite \cref
 }
 
 

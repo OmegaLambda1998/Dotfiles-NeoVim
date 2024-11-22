@@ -3,6 +3,7 @@
 ---
 local spec, opts = OL.spec:add("folke/snacks.nvim")
 spec.priority = 1000
+spec.cond = true
 spec.lazy = false
 
 ---
@@ -10,20 +11,21 @@ spec.lazy = false
 ---
 
 OL.callbacks.bigfile = OL.OLCall.new(
-                         {
-      function(ctx)
-          OL.log:trace(ctx)
-          OL.log:flush()
-      end,
-  }
+                           {
+        function(ctx)
+            OL.log:trace(ctx)
+            OL.log:flush()
+        end,
+    }
                        )
 
 opts.bigfile = OL.OLConfig.new(
-                 {
-      notify = true, --- Show notification when bigfile detected
-      size = 1.5 * 1024 * 1024, --- 1.5MB
-      setup = OL.callbacks.bigfile,
-  }
+                   {
+        enabled = not OL.is_pager(),
+        notify = true, --- Show notification when bigfile detected
+        size = 1.5 * 1024 * 1024, --- 1.5MB
+        setup = OL.callbacks.bigfile,
+    }
                )
 
 ---
@@ -34,6 +36,7 @@ opts.bigfile = OL.OLConfig.new(
 --- --- Dashboard ---
 ---
 opts.dashboard = {
+    enabled = not OL.is_pager(),
     preset = {},
 }
 
@@ -80,72 +83,77 @@ OL.callbacks.colourscheme.notify = true
 OL.callbacks.colourscheme.notifier = true
 
 opts.notifier = {
-    style = "compact",
+    style = "fancy",
 }
 
-OL.aucmd(
-  "LspProgress", {
-      {
-          "LspProgress",
-          function(ev)
-              local progress = vim.defaulttable()
-              local client = vim.lsp.get_client_by_id(ev.data.client_id)
-              local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
-              if not client or type(value) ~= "table" then
-                  return
-              end
-              local p = progress[client.id]
+if not OL.is_pager() then
+    OL.aucmd(
+        "LspProgress", {
+            {
+                "LspProgress",
+                function(ev)
+                    local progress = vim.defaulttable()
+                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                    local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+                    if not client or type(value) ~= "table" then
+                        return
+                    end
+                    local p = progress[client.id]
 
-              for i = 1, #p + 1 do
-                  if i == #p + 1 or p[i].token == ev.data.params.token then
-                      p[i] = {
-                          token = ev.data.params.token,
-                          msg = ("[%3d%%] %s%s"):format(
-                            value.kind == "end" and 100 or value.percentage or
-                              100, value.title or "", value.message and
-                              (" **%s**"):format(value.message) or ""
-                          ),
-                          done = value.kind == "end",
-                      }
-                      break
-                  end
-              end
+                    for i = 1, #p + 1 do
+                        if i == #p + 1 or p[i].token == ev.data.params.token then
+                            p[i] = {
+                                token = ev.data.params.token,
+                                msg = ("[%3d%%] %s%s"):format(
+                                    value.kind == "end" and 100 or
+                                        value.percentage or 100,
+                                    value.title or "", value.message and
+                                        (" **%s**"):format(value.message) or ""
+                                ),
+                                done = value.kind == "end",
+                            }
+                            break
+                        end
+                    end
 
-              local msg = {} ---@type string[]
-              progress[client.id] = vim.tbl_filter(
-                                      function(v)
-                    return table.insert(msg, v.msg) or not v.done
-                end, p
-                                    )
+                    local msg = {} ---@type string[]
+                    progress[client.id] = vim.tbl_filter(
+                                              function(v)
+                            return table.insert(msg, v.msg) or not v.done
+                        end, p
+                                          )
 
-              local spinner = {
-                  "⠋",
-                  "⠙",
-                  "⠹",
-                  "⠸",
-                  "⠼",
-                  "⠴",
-                  "⠦",
-                  "⠧",
-                  "⠇",
-                  "⠏",
-              }
-              vim.notify(
-                table.concat(msg, "\n"), "info", {
-                    id = "lsp_progress",
-                    title = client.name,
-                    opts = function(notif)
-                        notif.icon = #progress[client.id] == 0 and " " or
-                                       spinner[math.floor(
-                                         vim.uv.hrtime() / (1e6 * 80)
-                                       ) % #spinner + 1]
-                    end,
-                }
-              )
-          end,
-      },
-  }
-)
+                    local spinner = {
+                        "⠋",
+                        "⠙",
+                        "⠹",
+                        "⠸",
+                        "⠼",
+                        "⠴",
+                        "⠦",
+                        "⠧",
+                        "⠇",
+                        "⠏",
+                    }
+                    vim.notify(
+                        table.concat(msg, "\n"), "info", {
+                            id = "lsp_progress",
+                            title = client.name,
+                            opts = function(notif)
+                                notif.icon = #progress[client.id] == 0 and
+                                                 " " or
+                                                 spinner[math.floor(
+                                                     vim.uv.hrtime() /
+                                                         (1e6 * 80)
+                                                 ) % #spinner + 1]
+                            end,
+                        }
+                    )
+                end,
+            },
+        }
+    )
+end
 
 ---
 --- --- Quick File ---
@@ -168,6 +176,7 @@ OL.opt("relativenumber")
 OL.opt("signcolumn", "yes")
 OL.opt("statuscolumn", [[%!v:lua.require'snacks.statuscolumn'.get()]])
 opts.statuscolumn = {
+    enabled = not OL.is_pager(),
     left = { "sign" },
     right = {
         "fold",
@@ -188,6 +197,27 @@ opts.statuscolumn = {
 ---
 --- --- Terminal ---
 ---
+OL.map(
+    {
+        "<leader>t",
+        group = "Terminal",
+        desc = "Terminal",
+        mode = { "n" },
+        {
+            {
+                "<leader>tt",
+                function()
+                    OL.load(
+                        "snacks", {}, function(snacks)
+                            snacks.terminal()
+                        end
+                    )
+                end,
+                desc = "Toggle Terminal",
+            },
+        },
+    }
+)
 
 ---
 --- --- Toggle ---
@@ -218,7 +248,7 @@ opts.toggle = {
 ---
 
 opts.words = {
-    enabled = true, -- enable/disable the plugin
+    enabled = not OL.is_pager(), -- enable/disable the plugin
     debounce = 200, -- time in ms to wait before updating
     notify_jump = false, -- show a notification when jumping
     notify_end = true, -- show a notification when reaching the end
@@ -232,78 +262,79 @@ opts.words = {
 }
 
 function spec.config(_, o)
-    local job = OL.load("plenary.job")
-    local path = OL.load("plenary.path")
+    if not OL.is_pager() then
+        local job = OL.load("plenary.job")
+        local path = OL.load("plenary.path")
 
-    --- Get Font
-    local fonts = path:new(OL.paths.lazy:abs("figlet")):readlines()
-    math.randomseed(os.time())
-    local font = fonts[math.random(#fonts)]
-    OL.font = font
+        --- Get Font
+        local fonts = path:new(OL.paths.lazy:abs("figlet")):readlines()
+        math.randomseed(os.time())
+        local font = fonts[math.random(#fonts)]
+        OL.font = font
 
-    --- Get root
-    local cwd = vim.fs.normalize(vim.fn.getcwd())
-    local root
-    for dir in vim.fs.parents(cwd) do
-        if vim.fn.isdirectory(dir .. "/.git") == 1 then
-            root = dir
-            break
+        --- Get root
+        local cwd = vim.fs.normalize(vim.fn.getcwd())
+        local root
+        for dir in vim.fs.parents(cwd) do
+            if vim.fn.isdirectory(dir .. "/.git") == 1 then
+                root = dir
+                break
+            end
         end
+        cwd = vim.fs.basename(root and vim.fs.normalize(root) or cwd)
+        local header, _ = job:new(
+                              {
+                command = "figlet",
+                args = {
+                    "-f",
+                    font,
+                    "/" .. cwd,
+                },
+                enable_recording = true,
+            }
+                          ):sync()
+        o.dashboard.preset.header = table.concat(header, "\n")
     end
-    cwd = vim.fs.basename(root and vim.fs.normalize(root) or cwd)
-    local header, _ = job:new(
-                        {
-          command = "figlet",
-          args = {
-              "-f",
-              font,
-              "/" .. cwd,
-          },
-          enable_recording = true,
-      }
-                      ):sync()
-    o.dashboard.preset.header = table.concat(header, "\n")
-
-    OL.load_setup("snacks", {}, o)
 
     OL.load(
-      "snacks", {}, function(snacks)
+        "snacks", {}, function(snacks)
+            snacks.setup(o)
 
-          OL.notify = function(msg, o)
-              if o == nil then
-                  o = {}
-              end
-              if o.title == nil then
-                  o.title = "OmegaLambda"
-              end
-              if o.level == nil then
-                  o.level = vim.log.levels.INFO
-              end
-              snacks.notify(msg, o)
-          end
+            OL.notify = function(msg, o)
+                if o == nil then
+                    o = {}
+                end
+                if o.title == nil then
+                    o.title = "OmegaLambda"
+                end
+                if o.level == nil then
+                    o.level = vim.log.levels.INFO
+                end
+                snacks.notify(msg, o)
+            end
 
-          vim.print = function(...)
-              snacks.debug.inspect(...)
-          end
+            vim.print = function(...)
+                snacks.debug.inspect(...)
+            end
 
-          local function overwrite_msg(level, ...)
-              local print_safe_args = {}
-              local _ = {
-                  ...,
-              }
-              for i = 1, #_ do
-                  table.insert(print_safe_args, tostring(_[i]))
-              end
-              snacks.notify(
-                table.concat(print_safe_args, ' '), {
-                    level = level,
+            local function overwrite_msg(level, ...)
+                local print_safe_args = {}
+                local _ = {
+                    ...,
                 }
-              )
-          end
+                for i = 1, #_ do
+                    table.insert(print_safe_args, tostring(_[i]))
+                end
+                snacks.notify(
+                    table.concat(print_safe_args, ' '), {
+                        level = level,
+                    }
+                )
+            end
 
-          print = function(...)
-              return overwrite_msg(OL.log.INFO, ...)
-          end
-      end
+            print = function(...)
+                return overwrite_msg(OL.log.INFO, ...)
+            end
+        end
     )
 end

@@ -202,11 +202,15 @@ function OL.opt(key, val, opts)
     elseif opts.g then
         set = vim.g
     end
-    OL.callbacks.post:add(
-        function()
-            set[key] = val
-        end
-    )
+    if not OL.callbacks.post.triggered then
+        OL.callbacks.post:add(
+            function()
+                set[key] = val
+            end
+        )
+    else
+        set[key] = val
+    end
 end
 
 function OL.gopt(key, val)

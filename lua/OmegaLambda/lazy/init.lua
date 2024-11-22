@@ -19,6 +19,7 @@ local opts = OL.lazy.opts
 OL.spec:add("echasnovski/mini.icons")
 OL.spec:add("nvim-tree/nvim-web-devicons")
 local pspec, popts = OL.spec:add("nvim-lua/plenary.nvim")
+pspec.cond = true
 function pspec.config(_, o)
 end
 
@@ -182,19 +183,19 @@ OL.events.update = "OLUpdate"
 OL.callbacks.update = OL.OLCall.new()
 OL.callbacks.update.event = OL.events.update
 OL.callbacks.update:add(
-  function()
-      OL.load(
-        "lazy", {}, function(lazy)
-            OL.log:info("Updating Lazy")
-            lazy.sync(
-              {
-                  wait = false,
-                  show = false,
-              }
-            )
-        end
-      )
-  end
+    function()
+        OL.load(
+            "lazy", {}, function(lazy)
+                OL.log:info("Updating Lazy")
+                lazy.sync(
+                    {
+                        wait = false,
+                        show = false,
+                    }
+                )
+            end
+        )
+    end
 )
 
 --- Detect config changes
@@ -273,30 +274,30 @@ function OL.lazy.bootstrap()
     if not vim.uv.fs_stat(lazypath) then
         local lazyrepo = "https://github.com/folke/lazy.nvim.git"
         local out = vim.fn.system(
-                      {
-              "git",
-              "clone",
-              "--filter=blob:none",
-              "--branch=stable",
-              lazyrepo,
-              lazypath,
-          }
+                        {
+                "git",
+                "clone",
+                "--filter=blob:none",
+                "--branch=stable",
+                lazyrepo,
+                lazypath,
+            }
                     )
         if vim.v.shell_error ~= 0 then
             vim.api.nvim_echo(
-              {
-                  {
-                      "Failed to clone lazy.nvim:\n",
-                      "ErrorMsg",
-                  },
-                  {
-                      out,
-                      "WarningMsg",
-                  },
-                  {
-                      "\nPress any key to exit...",
-                  },
-              }, true, {}
+                {
+                    {
+                        "Failed to clone lazy.nvim:\n",
+                        "ErrorMsg",
+                    },
+                    {
+                        out,
+                        "WarningMsg",
+                    },
+                    {
+                        "\nPress any key to exit...",
+                    },
+                }, true, {}
             )
             vim.fn.getchar()
             os.exit(1)

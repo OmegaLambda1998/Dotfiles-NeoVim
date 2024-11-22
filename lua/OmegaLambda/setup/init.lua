@@ -11,6 +11,16 @@ return function(opts)
     OL = require("OmegaLambda.setup.configs")
     OL.verbose = opts.verbose or false
 
+    --- Pager Compatability
+    function OL.is_pager()
+        for _, arg in ipairs(vim.v.argv) do
+            if arg:find("neovim-page", 0, true) then
+                return true
+            end
+        end
+        return false
+    end
+
     ---
     --- --- Debugging ---
     ---

@@ -1,5 +1,6 @@
 local spec, opts = OL.spec:add("folke/which-key.nvim")
 
+spec.cond = true
 OL.callbacks.colourscheme.which_key = true
 
 ---@class wk.Opts
@@ -240,42 +241,42 @@ OL.g("maplocalleader", ".")
 
 local function keyhelp(global)
     OL.load(
-      "which-key", {}, function(wk)
-          wk.show(
-            {
-                global = global,
-            }
-          )
-      end
+        "which-key", {}, function(wk)
+            wk.show(
+                {
+                    global = global,
+                }
+            )
+        end
     )
 end
 
 OL.map(
-  {
-      group = "Local Leader",
-      mode = { "n" },
-      {
-          "<localleader><localleader>",
-          function()
-              keyhelp(false)
-          end,
-          desc = "Buffer Local keymaps",
-      },
-  }
+    {
+        group = "Local Leader",
+        mode = { "n" },
+        {
+            "<localleader><localleader>",
+            function()
+                keyhelp(false)
+            end,
+            desc = "Buffer Local keymaps",
+        },
+    }
 )
 
 OL.map(
-  {
-      mode = { "n" },
-      group = "Leader",
-      {
-          {
-              "<leader><leader>",
-              function()
-                  keyhelp(true)
-              end,
-              desc = "Global keymaps",
-          },
-      },
-  }
+    {
+        mode = { "n" },
+        group = "Leader",
+        {
+            {
+                "<leader><leader>",
+                function()
+                    keyhelp(true)
+                end,
+                desc = "Global keymaps",
+            },
+        },
+    }
 )
