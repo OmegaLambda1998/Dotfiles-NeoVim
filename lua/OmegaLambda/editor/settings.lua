@@ -9,6 +9,7 @@ OL.opt("shiftwidth", 4)
 
 OL.opt("undofile")
 OL.opt("undolevels", 10000)
-OL.opt("updatetime", 200)
+OL.opt("updatetime", 300)
+OL.opt("timeoutlen", 300)
 
 OL.opt("virtualedit", "block")

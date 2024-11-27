@@ -13,15 +13,13 @@
   "completion.workspaceWord": true,
   "diagnostics.enable": true,
   "diagnostics.disable": [],
-  "diagnostics.disableScheme": [
-    "git"
-  ],
+  "diagnostics.disableScheme": [],
   "diagnostics.globals": [],
   "diagnostics.ignoredFiles": "Opened",
   "diagnostics.libraryFiles": "Opened",
   "diagnostics.unusedLocalExclude": [],
   "diagnostics.workspaceDelay": 500,
-  "diagnotiscs.workspaceEvent": "onChange",
+  "diagnotiscs.workspaceEvent": "onSave",
   "diagnotiscs.workspaceRate": 100,
   "doc.packageName": [],
   "doc.privateName": [],

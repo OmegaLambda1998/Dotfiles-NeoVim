@@ -202,7 +202,7 @@ function OL.opt(key, val, opts)
     elseif opts.g then
         set = vim.g
     end
-    if not OL.callbacks.post.triggered then
+    if not OL.callbacks.post.triggered and not opts.force then
         OL.callbacks.post:add(
             function()
                 set[key] = val
@@ -213,26 +213,20 @@ function OL.opt(key, val, opts)
     end
 end
 
-function OL.gopt(key, val)
-    OL.opt(
-        key, val, {
-            gopt = true,
-        }
-    )
+function OL.gopt(key, val, opts)
+    opts = opts or {}
+    opts.gopt = true
+    OL.opt(key, val, opts)
 end
 
-function OL.lopt(key, val)
-    OL.opt(
-        key, val, {
-            lopt = true,
-        }
-    )
+function OL.lopt(key, val, opts)
+    opts = opts or {}
+    opts.lopt = true
+    OL.opt(key, val, opts)
 end
 
-function OL.g(key, val)
-    OL.opt(
-        key, val, {
-            g = true,
-        }
-    )
+function OL.g(key, val, opts)
+    opts = opts or {}
+    opts.g = true
+    OL.opt(key, val, opts)
 end

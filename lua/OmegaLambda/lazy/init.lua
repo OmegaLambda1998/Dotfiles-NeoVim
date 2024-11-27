@@ -18,9 +18,9 @@ local opts = OL.lazy.opts
 --- Icons
 OL.spec:add("echasnovski/mini.icons")
 OL.spec:add("nvim-tree/nvim-web-devicons")
-local pspec, popts = OL.spec:add("nvim-lua/plenary.nvim")
-pspec.cond = true
-function pspec.config(_, o)
+local s, _ = OL.spec:add("nvim-lua/plenary.nvim")
+s.cond = true
+function s.config(_, _)
 end
 
 ---
@@ -41,7 +41,9 @@ opts.defaults = {
     --- version = "*", -- try installing the latest stable version for plugins that support semver
     --- default `cond` you can use to globally disable a lot of plugins
     --- when running inside vscode for example
-    cond = nil, ---@type boolean|fun(self:LazyPlugin):boolean|nil
+    cond = function()
+        return not OL.is_pager()
+    end,
 }
 
 --- Load project specific .lazy.lua spec files. They will be added at the end of the spec.

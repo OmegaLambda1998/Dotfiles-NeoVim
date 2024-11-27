@@ -15,12 +15,38 @@ function OL.is_array(tbl)
     return true
 end
 
+
 function OL.is_dict(tbl)
     if type(tbl) ~= "table" then
         return false
     end
     return not OL.is_array(tbl)
 end
+
+
+function OL.iter(tbl)
+    if OL.is_array(tbl) then
+        return ipairs(tbl)
+    elseif OL.is_dict(tbl) then
+        return pairs(tbl)
+    end
+    return tbl
+end
+
+
+function OL.contains(tbl, key, val)
+    local function _contains(v)
+        if OL.is_array(tbl) then
+            return vim.list_contains(tbl, val)
+        elseif OL.is_dict(tbl) then
+            return vim.tbl_contains(tbl, val)
+        end
+        return false
+    end
+
+    return _contains(key) and (val ~= nil and _contains(val))
+end
+
 
 function OL.pack(...)
     local args = table.pack(...)
@@ -30,12 +56,14 @@ function OL.pack(...)
     return args
 end
 
+
 OL.unpack = function(tbl)
     if not OL.is_array(tbl) then
         return tbl
     end
     return table.unpack(tbl)
 end
+
 
 function OL.flatten(...)
     local flat = {}
@@ -54,5 +82,19 @@ function OL.flatten(...)
         end
     end
     return flat
+end
+
+
+function OL.unique(tbl)
+    local is_array = OL.is_array(tbl)
+    local rtn = {}
+    for key, val in OL.iter(tbl) do
+        if is_array and not OL.contains(rtn, val) then
+            table.insert(rtn, val)
+        elseif not OL.contains(rtn, key) then
+            rtn[key] = val
+        end
+    end
+    return rtn
 end
 

@@ -1,4 +1,4 @@
-local spec, opts = OL.spec:add("ibhagwan/fzf-lua")
+local spec, opts = OL.spec:add("ibhagwan/fzf-lua", {})
 
 OL.callbacks.colourscheme.fzf = true
 
@@ -6,40 +6,67 @@ spec.cmd = {
     "FzfLua",
 }
 
+opts[1] = "default-title"
+
+opts.winopts = {
+    fullscreen = true,
+    preview = {
+        wrap = "wrap",
+    },
+}
+
+opts.diagnostics = {
+    multiline = true,
+}
+
+local function fzf_cmd(cmd, use_cwd)
+    return function()
+        local roots = OL.get_roots()
+        local cwd
+        if use_cwd then
+            cwd = roots.cwd
+        else
+            cwd = roots.lsp or roots.root or roots.cwd
+        end
+        if type(cwd) == "table" then
+            cwd = cwd[1]
+        end
+        OL.load(
+            "fzf-lua", {}, function(fzf)
+                fzf[cmd](
+                    {
+                        cwd = cwd,
+                    }
+                )
+            end
+        )
+    end
+end
+
 spec.keys = {
     {
         "<leader>zf",
-        function()
-            vim.cmd("FzfLua files")
-        end,
+        fzf_cmd("files"),
         desc = "Open Files",
     },
     {
         "<leader>zh",
-        function()
-            vim.cmd("FzfLua oldfiles")
-        end,
+        fzf_cmd("oldfiles"),
         desc = "Open Recent Files",
     },
     {
         "<leader>zg",
-        function()
-            vim.cmd("FzfLua live_grep_native")
-        end,
+        fzf_cmd("live_grep_native"),
         desc = "Grep Project",
     },
     {
         "<leader>dw",
-        function()
-            vim.cmd("FzfLua diagnostics_workspace")
-        end,
+        fzf_cmd("diagnostics_workspace"),
         desc = "Workspace Diagnostics",
     },
     {
         "<leader>dd",
-        function()
-            vim.cmd("FzfLua diagnostics_document")
-        end,
+        fzf_cmd("diagnostics_document"),
         desc = "Document Diagnostics",
     },
 }

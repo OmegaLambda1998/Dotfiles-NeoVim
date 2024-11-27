@@ -5,9 +5,9 @@ table.insert(
         "HiPhish/rainbow-delimiters.nvim",
     }
 )
+
 OL.callbacks.colourscheme.rainbow_delimiters = true
 
-spec.event = "VeryLazy"
 spec.main = "rainbow-delimiters.setup"
 
 opts.strategy = {
@@ -38,10 +38,12 @@ function spec.config(_, o)
                     o.strategy[ft] = rb.strategy[strategy]
                 end
             end
-
             OL.g(
-                "rainbow_delimiters",
-                vim.tbl_deep_extend("force", vim.g.rainbow_delimiters or {}, o)
+                "rainbow_delimiters", vim.tbl_deep_extend(
+                    "force", vim.g.rainbow_delimiters or {}, o
+                ), {
+                    force = true,
+                }
             )
         end
     )

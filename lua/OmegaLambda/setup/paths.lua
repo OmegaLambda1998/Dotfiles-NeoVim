@@ -89,3 +89,20 @@ function OLPath:glob(pattern, greedy)
         }
            )
 end
+
+function OL.get_roots()
+    local roots = {lsp = vim.lsp.buf.list_workspace_folders()}
+    local cwd = vim.fs.normalize(vim.fn.getcwd())
+    roots.cwd = cwd
+    local root
+    for dir in vim.fs.parents(cwd) do
+        if vim.fn.isdirectory(dir .. "/.git") == 1 then
+            root = dir
+            break
+        end
+    end
+    if root then
+        roots.root = vim.fs.normalize(root)
+    end
+    return roots
+end

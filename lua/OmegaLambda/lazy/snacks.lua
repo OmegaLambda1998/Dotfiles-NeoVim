@@ -5,32 +5,32 @@ local spec, opts = OL.spec:add("folke/snacks.nvim")
 spec.priority = 1000
 spec.cond = true
 spec.lazy = false
+spec.dependencies = {}
+
+OL.callbacks.colourscheme.snacks = true
 
 ---
 --- --- Big Files ---
 ---
 
 OL.callbacks.bigfile = OL.OLCall.new(
-                           {
+    {
         function(ctx)
             OL.log:trace(ctx)
             OL.log:flush()
-        end,
+        end
+,
     }
-                       )
+)
 
 opts.bigfile = OL.OLConfig.new(
-                   {
+    {
         enabled = not OL.is_pager(),
         notify = true, --- Show notification when bigfile detected
         size = 1.5 * 1024 * 1024, --- 1.5MB
         setup = OL.callbacks.bigfile,
     }
-               )
-
----
---- --- Buf Delete ---
----
+)
 
 ---
 --- --- Dashboard ---
@@ -49,6 +49,7 @@ function sections:add(tbl)
     end
     table.insert(self, tbl)
 end
+
 
 sections:add("header")
 
@@ -107,8 +108,9 @@ if not OL.is_pager() then
                                 msg = ("[%3d%%] %s%s"):format(
                                     value.kind == "end" and 100 or
                                         value.percentage or 100,
-                                    value.title or "", value.message and
-                                        (" **%s**"):format(value.message) or ""
+                                        value.title or "", value.message and
+                                            (" **%s**"):format(value.message) or
+                                            ""
                                 ),
                                 done = value.kind == "end",
                             }
@@ -118,10 +120,11 @@ if not OL.is_pager() then
 
                     local msg = {} ---@type string[]
                     progress[client.id] = vim.tbl_filter(
-                                              function(v)
+                        function(v)
                             return table.insert(msg, v.msg) or not v.done
-                        end, p
-                                          )
+                        end
+, p
+                    )
 
                     local spinner = {
                         "⠋",
@@ -136,20 +139,21 @@ if not OL.is_pager() then
                         "⠏",
                     }
                     vim.notify(
-                        table.concat(msg, "\n"), "info", {
+                        table.concat(msg, "\n"), OL.log.INFO, {
                             id = "lsp_progress",
                             title = client.name,
                             opts = function(notif)
                                 notif.icon = #progress[client.id] == 0 and
                                                  " " or
                                                  spinner[math.floor(
-                                                     vim.uv.hrtime() /
-                                                         (1e6 * 80)
-                                                 ) % #spinner + 1]
-                            end,
+                                        vim.uv.hrtime() / (1e6 * 80)
+                                    ) % #spinner + 1]
+                            end
+,
                         }
                     )
-                end,
+                end
+,
             },
         }
     )
@@ -173,7 +177,7 @@ opts.quickfile = {
 
 OL.opt("number")
 OL.opt("relativenumber")
-OL.opt("signcolumn", "yes")
+OL.opt("signcolumn", "yes:3")
 OL.opt("statuscolumn", [[%!v:lua.require'snacks.statuscolumn'.get()]])
 opts.statuscolumn = {
     enabled = not OL.is_pager(),
@@ -193,6 +197,13 @@ opts.statuscolumn = {
     },
     refresh = 50,
 }
+if opts.statuscolumn.enabled then
+    table.insert(
+        spec.dependencies, {
+            "lewis6991/gitsigns.nvim",
+        }
+    )
+end
 
 ---
 --- --- Terminal ---
@@ -211,8 +222,11 @@ OL.map(
                         "snacks", {}, function(snacks)
                             snacks.terminal()
                         end
+
+
                     )
-                end,
+                end
+,
                 desc = "Toggle Terminal",
             },
         },
@@ -248,9 +262,9 @@ opts.toggle = {
 ---
 
 opts.words = {
-    enabled = not OL.is_pager(), -- enable/disable the plugin
+    enabled = false, -- enable/disable the plugin
     debounce = 200, -- time in ms to wait before updating
-    notify_jump = false, -- show a notification when jumping
+    notify_jump = true, -- show a notification when jumping
     notify_end = true, -- show a notification when reaching the end
     foldopen = true, -- open folds after jumping
     jumplist = true, -- set jump point before jumping
@@ -272,27 +286,19 @@ function spec.config(_, o)
         local font = fonts[math.random(#fonts)]
         OL.font = font
 
-        --- Get root
-        local cwd = vim.fs.normalize(vim.fn.getcwd())
-        local root
-        for dir in vim.fs.parents(cwd) do
-            if vim.fn.isdirectory(dir .. "/.git") == 1 then
-                root = dir
-                break
-            end
-        end
-        cwd = vim.fs.basename(root and vim.fs.normalize(root) or cwd)
+        local cwd = OL.get_roots().cwd
+
         local header, _ = job:new(
-                              {
+            {
                 command = "figlet",
                 args = {
                     "-f",
                     font,
-                    "/" .. cwd,
+                    "/" .. vim.fs.basename(cwd),
                 },
                 enable_recording = true,
             }
-                          ):sync()
+        ):sync()
         o.dashboard.preset.header = table.concat(header, "\n")
     end
 
@@ -300,22 +306,24 @@ function spec.config(_, o)
         "snacks", {}, function(snacks)
             snacks.setup(o)
 
-            OL.notify = function(msg, o)
-                if o == nil then
-                    o = {}
+            OL.notify = function(msg, msg_opts)
+                if msg_opts == nil then
+                    msg_opts = {}
                 end
-                if o.title == nil then
-                    o.title = "OmegaLambda"
+                if msg_opts.title == nil then
+                    msg_opts.title = "OmegaLambda"
                 end
-                if o.level == nil then
-                    o.level = vim.log.levels.INFO
+                if msg_opts.level == nil then
+                    msg_opts.level = vim.log.levels.INFO
                 end
                 snacks.notify(msg, o)
             end
 
+
             vim.print = function(...)
                 snacks.debug.inspect(...)
             end
+
 
             local function overwrite_msg(level, ...)
                 local print_safe_args = {}
@@ -326,15 +334,22 @@ function spec.config(_, o)
                     table.insert(print_safe_args, tostring(_[i]))
                 end
                 snacks.notify(
-                    table.concat(print_safe_args, ' '), {
+                    table.concat(print_safe_args, " "), {
                         level = level,
                     }
                 )
             end
 
+
             print = function(...)
                 return overwrite_msg(OL.log.INFO, ...)
             end
+
+
         end
+
+
     )
 end
+
+

@@ -8,12 +8,23 @@ OL.callbacks.format = OL.OLConfig.new()
 
 OL.callbacks.format.ft = OL.OLConfig.new()
 spec.event = OL.callbacks.format.ft
+function OL.callbacks.format.ft:add(ft)
+    table.insert(self, "BufWritePre *." .. ft)
+end
 
 OL.callbacks.format.formatters_by_ft = OL.OLConfig.new()
 opts.formatters_by_ft = OL.callbacks.format.formatters_by_ft
 
 OL.callbacks.format.formatters = OL.OLConfig.new()
 opts.formatters = OL.callbacks.format.formatters
+
+function OL.callbacks.format:add(filetype, formatter, formatter_opts)
+    if OL.callbacks.format.formatters_by_ft[filetype] == nil then
+        OL.callbacks.format.formatters_by_ft[filetype] = {}
+    end
+    table.insert(OL.callbacks.format.formatters_by_ft[filetype], formatter)
+    OL.callbacks.format.formatters[formatter] = formatter_opts
+end
 
 opts.default_format_opts = {
     timeout_ms = 3000,

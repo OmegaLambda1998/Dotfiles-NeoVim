@@ -15,6 +15,8 @@ vim.loop = vim.uv
 table.pack = table.pack or function(...)
     return { ... }
 end
+
+
 table.unpack = table.unpack or unpack
 
 ---
@@ -23,10 +25,10 @@ table.unpack = table.unpack or unpack
 
 --- Load Setup
 OL = require("OmegaLambda.setup")(
-         {
+    {
         verbose = verbose,
     }
-     )
+)
 OL.log:debug("Verbose: %s", OL.verbose)
 
 --- Load Lazy

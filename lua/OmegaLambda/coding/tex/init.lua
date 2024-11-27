@@ -1,5 +1,9 @@
 local filetype = "tex"
-table.insert(OL.callbacks.mason.ft, "BufReadPre *." .. filetype)
+
+local function enabled()
+    return vim.bo.filetype == filetype
+end
+
 
 vim.filetype.add(
     {
@@ -9,12 +13,75 @@ vim.filetype.add(
     }
 )
 
---- LSP
+---
+--- --- Conceals ---
+--- 
+local spec, opts = OL.spec:add("mathjiajia/latex.nvim")
+spec.event = {
+    "BufReadPost *." .. filetype,
+}
+spec.init = function()
+    OL.map(
+        {
+            "<localleader>l",
+            group = "Latex",
+            desc = "Latex",
+        }
+    )
+    vim.g.latex_conf = {
+        conceals = {
+            enabled = {
+                "amssymb",
+                "core",
+                "delim",
+                "font",
+                "greek",
+                "math",
+                "mleftright",
+                "script",
+            },
+            add = {},
+        },
+        imaps = {
+            enabled = false,
+            add = {},
+            default_leader = ";",
+        },
+        surrounds = {
+            enabled = false,
+            command = "c",
+            math = "$",
+            quotation = "\"",
+        },
+        texlab = {
+            enabled = true,
+            build = "<localleader>ll",
+            forward = "<localleader>gf",
+            cancel_build = "<localleader>lc",
+        },
+    }
+end
+
+
+---
+--- --- LSP ---
+---
 local lsp = "texlab"
-table.insert(OL.callbacks.lsp.ft, "BufReadPost *." .. filetype)
+OL.callbacks.lsp.ft:add(filetype)
 
 local settings = {}
 
+--- Disable, handled by linter
+settings.chktex = {
+    onOpenAndSave = false,
+    onEdit = false,
+}
+
+--- Disable, handled by formatter
+settings.bibtexFormatter = "none"
+settings.latexFormatter = "none"
+
+--- Compile PDF
 settings.build = {
     executable = "tectonic",
     args = {
@@ -28,29 +95,32 @@ settings.build = {
         "%f",
     },
     forwardSearchAfter = false,
-    onSave = false,
-    useFileList = true,
+    onSave = true,
+    useFileList = false,
 }
 
+--- Forward Search
 settings.forwardSearch = {
     executable = "sioyek",
     args = {
         "--reuse-window",
         "--execute-command",
-        "toggle_synctex",
+        "turn_on_synctex",
+        "--inverse-search",
+        OL.fstring(
+            "\"nvim --headless --server %s --remote-send %s\"",
+                vim.v.servername, "\"<C-\\><C-N>:e %1<CR><C-\\><C-N>:%2<CR>\""
+        ),
         "--forward-search-file",
         "%f",
         "--forward-search-line",
         "%l",
+        "--forward-search-column",
         "%p",
     },
 }
 
-settings.chktex = {
-    onOpenAndSave = false,
-    onEdit = false,
-}
-
+--- Diagnostics
 settings.diagnostics = {
     ignoredPatterns = {
         "Unused",
@@ -59,17 +129,17 @@ settings.diagnostics = {
     },
 }
 
+--- TOC / Document Symbols
 settings.symbols = {
     ignoredPatterns = {},
 }
 
-settings.bibtexFormatter = "none"
-settings.latexFormatter = "none"
-
+--- Completion
 settings.completion = {
     matcher = "fuzzy-ignore-case",
 }
 
+--- Inlay hints
 settings.inlayHints = {
     labelDefinitions = true,
     labelReferences = true,
@@ -79,60 +149,67 @@ settings.inlayHints = {
 settings.experimental = {
     followPackageLinks = true,
 
-    -- mathEnvironments = {},
-    -- enumEnvironments = {},
+    --- Extend Environments
+    mathEnvironments = {},
+    enumEnvironments = {},
     verbatimEnvironments = {
         "yamlcode",
         "textcode",
         "pythoncode",
     },
-    verbatimCommands = {
-        "texinline",
-        "refinline",
-    },
-    -- citationCommands = {},
-    -- labelDefinitionCommands = {},
+
+    --- Extend Commands
+    citationCommands = {},
+    labelDefinitionCommands = {},
     labelReferenceCommands = {
         "refinline",
     },
 
+    --- Extend Prefixes
+    labelDefinitionPrefixes = {},
+    labelReferencePrefixes = {},
 }
 
-OL.callbacks.lsp.servers[lsp] = {
-    settings = {
-        texlab = settings,
-    },
-}
+OL.callbacks.lsp:add(
+    lsp, {
+        settings = {
+            texlab = settings,
+        },
+    }
+)
 
---- Format
+---
+--- --- Formatter ---
+---
 local formatter = "latexindent"
 local formatter_config = "latexindent.yaml"
-table.insert(OL.callbacks.format.ft, "BufWritePre *." .. filetype)
-OL.callbacks.format.formatters_by_ft[filetype] = {
-    formatter,
-}
-OL.callbacks.format.formatters[formatter] = {
-    args = {
-        "-m",
-        "-rv",
-        "-l",
-        OL.paths.coding:abs(filetype, formatter_config),
-        "-",
-    },
-}
+OL.callbacks.format.ft:add(filetype)
 
---- Link
+OL.callbacks.format:add(
+    filetype, formatter, {
+        prepend_args = {
+            "-m",
+            "-rv",
+            "-l",
+            OL.paths.coding:abs(filetype, formatter_config),
+        },
+    }
+)
+
+---
+--- --- Linter ---
+---
 local linter = "chktex"
 local linter_config = "chktexrc"
-table.insert(OL.callbacks.lint.ft, "BufReadPost *." .. filetype)
-OL.callbacks.lint.linters_by_ft[filetype] = {
-    linter,
-}
-OL.callbacks.lint.linters[linter] = {
-    mason = false,
-    prepend_args = {
-        "-g",
-        "-l",
-        OL.paths.coding:abs(filetype, linter_config),
-    },
-}
+OL.callbacks.lint.ft:add(filetype)
+
+OL.callbacks.lint:add(
+    filetype, linter, {
+        mason = false,
+        prepend_args = {
+            "-g",
+            "-l",
+            OL.paths.coding:abs(filetype, linter_config),
+        },
+    }
+)

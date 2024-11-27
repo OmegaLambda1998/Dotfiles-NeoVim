@@ -24,9 +24,6 @@ function OLSpec:add(url, opts)
     local spec = OL.OLConfig.new(
                      {
             url,
-            cond = function()
-                return not OL.is_pager()
-            end,
         }
                  )
     if opts then

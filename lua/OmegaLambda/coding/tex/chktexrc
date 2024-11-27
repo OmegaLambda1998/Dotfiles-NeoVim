@@ -238,7 +238,7 @@ UserWarnRegex
     # POSIX:([^[:alnum:]]|^)intro([^[:alnum:]]|$)
 
     # Use cleveref
-    (?!#-2:Use! \cref)\\ref
+    (?!#-2:Use! \cref)\\ref\{
 
     # Use texttilde
     (?!#-2:Use! \texttidle)\$\\sim\$
