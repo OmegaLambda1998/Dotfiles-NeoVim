@@ -20,7 +20,7 @@ extra_sep_at_table_end: true
 indent_width: 4
 keep_simple_control_block_one_line: false
 keep_simple_function_one_line: false
-line_breaks_after_function_body: 2
+line_breaks_after_function_body: 1
 line_separator: "input"
 single_quote_to_double_quote: true
 spaces_around_equals_in_field: true

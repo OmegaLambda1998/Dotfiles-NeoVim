@@ -19,13 +19,30 @@ local function barbecue()
 
     OL.spec:add("SmiteshP/nvim-navic")
     local spec, opts = OL.spec:add("utilyre/barbecue.nvim")
+    opts.create_autocmd = false
     spec.event = {
         "LspAttach",
     }
 
+    function spec.config(_, o)
+        OL.load_setup("barbecue", {}, o)
+        vim.api.nvim_create_autocmd(
+            {
+                "WinResized", -- or WinResized on NVIM-v0.9 and higher
+                "BufWinEnter",
+                "CursorHold",
+                "InsertLeave",
+            }, {
+                group = vim.api.nvim_create_augroup("barbecue.updater", {}),
+                callback = function()
+                    require("barbecue.ui").update()
+                end,
+            }
+        )
+    end
+
     opts.theme = "catppuccin"
 end
-
 
 barbecue()
 
@@ -37,8 +54,7 @@ local function action_preview()
     OL.spec:add(
         "MunifTanjim/nui.nvim", {
             config = function(_, o)
-            end
-,
+            end,
         }
     )
 
@@ -52,10 +68,8 @@ local function action_preview()
                         return ap.code_actions()
                     end
 
-
                 )
-            end
-,
+            end,
             desc = "Code Action",
         },
         {
@@ -66,10 +80,8 @@ local function action_preview()
                         return ap.code_actions()
                     end
 
-
                 )
-            end
-,
+            end,
             desc = "Code Action",
         },
     }
@@ -81,7 +93,6 @@ local function action_preview()
         }
     )
 end
-
 
 action_preview()
 
@@ -100,10 +111,8 @@ local function hover()
                         hvr.hover()
                     end
 
-
                 )
-            end
-,
+            end,
             desc = "Hover",
         },
         {
@@ -113,8 +122,7 @@ local function hover()
                 if hover_win and vim.api.nvim_win_is_valid(hover_win) then
                     vim.api.nvim_set_current_win(hover_win)
                 end
-            end
-,
+            end,
             desc = "Next Source",
         },
     }
@@ -124,7 +132,6 @@ local function hover()
 
     opts.providers = {
         "diagnostic",
-        "dictionary",
         "fold_preview",
         "gh",
         "gh_user",
@@ -144,8 +151,6 @@ local function hover()
         )
     end
 
-
 end
-
 
 hover()

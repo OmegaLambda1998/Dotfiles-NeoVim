@@ -1,4 +1,4 @@
--- better up/down
+--- better up/down
 OL.map(
     {
         mode = {
@@ -251,25 +251,6 @@ OL.map(
             {
                 ">",
                 ">gv",
-            },
-        },
-    }
-)
-
--- commenting
-OL.map(
-    {
-        mode = { "n" },
-        {
-            {
-                "gco",
-                "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>",
-                desc = "Add Comment Below",
-            },
-            {
-                "gcO",
-                "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>",
-                desc = "Add Comment Above",
             },
         },
     }

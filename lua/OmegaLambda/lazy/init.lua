@@ -6,8 +6,9 @@
 ---
 --- Create Lazy config and opts
 OL.spec = OL.OLSpec.new()
+---@class OLLazy: OLConfig
 OL.lazy = OL.OLConfig.new()
-OL.lazy.opts = OL.OLConfig.new()
+OL.lazy.opts = {}
 OL.paths.lazy = "lazy"
 local opts = OL.lazy.opts
 
@@ -276,7 +277,7 @@ function OL.lazy.bootstrap()
     if not vim.uv.fs_stat(lazypath) then
         local lazyrepo = "https://github.com/folke/lazy.nvim.git"
         local out = vim.fn.system(
-                        {
+            {
                 "git",
                 "clone",
                 "--filter=blob:none",
@@ -284,7 +285,7 @@ function OL.lazy.bootstrap()
                 lazyrepo,
                 lazypath,
             }
-                    )
+        )
         if vim.v.shell_error ~= 0 then
             vim.api.nvim_echo(
                 {
@@ -313,6 +314,7 @@ end
 ---
 
 function OL.lazy.setup()
+    vim.filetype.add({extension = {snacks_notif = "markdown"}})
     OL.lazy.opts.spec = OL.spec
     require("lazy").setup(OL.lazy.opts)
 end

@@ -5,7 +5,6 @@ local function enabled()
     return vim.bo.filetype == filetype
 end
 
-
 --- LSP
 local lsp = "lua_ls"
 local lsp_config = "luarc.json"
@@ -22,6 +21,7 @@ OL.callbacks.lsp:add(
 
 --- CMP
 local spec, opts = OL.spec:add("folke/lazydev.nvim")
+spec.ft = { "lua" }
 opts.integrations = {
     lspconfig = true,
     blink = true,
@@ -36,8 +36,7 @@ OL.callbacks.cmp:add(
         fallback = "lsp",
         enabled = function(ctx)
             return (ctx == nil) or enabled()
-        end
-,
+        end,
     }
 )
 
@@ -62,6 +61,7 @@ local linter_config = "selene.toml"
 OL.callbacks.lint.ft:add(filetype)
 OL.callbacks.lint:add(
     filetype, linter, {
+        mason = "OL-selene",
         prepend_args = {
             "--config",
             OL.paths.coding:abs(_ft, linter_config),

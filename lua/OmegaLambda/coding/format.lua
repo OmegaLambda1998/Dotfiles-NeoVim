@@ -4,13 +4,17 @@ spec.cmd = {
     "ConformInfo",
 }
 
+---@class OLFormat: OLConfig
 OL.callbacks.format = OL.OLConfig.new()
+OL.callbacks.format.ft = OL.OLConfig.new(
+    {
+        add = function(self, ft)
+            table.insert(self, "BufWritePre *." .. ft)
+        end,
+    }
+)
 
-OL.callbacks.format.ft = OL.OLConfig.new()
 spec.event = OL.callbacks.format.ft
-function OL.callbacks.format.ft:add(ft)
-    table.insert(self, "BufWritePre *." .. ft)
-end
 
 OL.callbacks.format.formatters_by_ft = OL.OLConfig.new()
 opts.formatters_by_ft = OL.callbacks.format.formatters_by_ft
@@ -50,6 +54,6 @@ opts.log_level = vim.log.levels.INFO
 opts.notify_on_error = true
 opts.notify_no_formatters = false
 
-OL.opt("formatoptions", "jcroqlnt") -- tcqj
+OL.opt("formatoptions", "jcroqln") -- tcqj
 OL.opt("grepformat", "%f:%l:%c:%m")
 OL.opt("grepprg", "rg --vimgrep")

@@ -1,52 +1,29 @@
 ---
 --- === Tables ===
 ---
-function OL.is_array(tbl)
-    if type(tbl) ~= "table" then
-        return false
-    end
-    local i = 0
-    for _ in pairs(tbl) do
-        i = i + 1
-        if tbl[i] == nil then
-            return false
-        end
-    end
-    return true
-end
-
-
-function OL.is_dict(tbl)
-    if type(tbl) ~= "table" then
-        return false
-    end
-    return not OL.is_array(tbl)
-end
-
-
 function OL.iter(tbl)
-    if OL.is_array(tbl) then
-        return ipairs(tbl)
-    elseif OL.is_dict(tbl) then
+    if type(tbl) == "table" then
+        if vim.islist(tbl) then
+            return ipairs(tbl)
+        end
         return pairs(tbl)
     end
     return tbl
 end
 
-
 function OL.contains(tbl, key, val)
-    local function _contains(v)
-        if OL.is_array(tbl) then
-            return vim.list_contains(tbl, val)
-        elseif OL.is_dict(tbl) then
-            return vim.tbl_contains(tbl, val)
+    if type(tbl) == "table" then
+        local function _contains(v)
+            if vim.islist(tbl) then
+                return vim.list_contains(tbl, v)
+            else
+                return vim.tbl_contains(tbl, v)
+            end
         end
-        return false
+        return _contains(key) and (val ~= nil and _contains(val))
     end
-
-    return _contains(key) and (val ~= nil and _contains(val))
+    return false
 end
-
 
 function OL.pack(...)
     local args = table.pack(...)
@@ -56,21 +33,19 @@ function OL.pack(...)
     return args
 end
 
-
 OL.unpack = function(tbl)
-    if not OL.is_array(tbl) then
+    if not vim.islist(tbl) then
         return tbl
     end
     return table.unpack(tbl)
 end
-
 
 function OL.flatten(...)
     local flat = {}
     local args = OL.pack(...)
     for _, arg in pairs(args) do
         if type(arg) == "table" then
-            if OL.is_array(arg) then
+            if vim.islist(arg) then
                 vim.list_extend(flat, OL.flatten(arg))
             else
                 for _, v in ipairs(arg) do
@@ -84,12 +59,11 @@ function OL.flatten(...)
     return flat
 end
 
-
 function OL.unique(tbl)
-    local is_array = OL.is_array(tbl)
+    local islist = vim.islist(tbl)
     local rtn = {}
     for key, val in OL.iter(tbl) do
-        if is_array and not OL.contains(rtn, val) then
+        if islist and not OL.contains(rtn, val) then
             table.insert(rtn, val)
         elseif not OL.contains(rtn, key) then
             rtn[key] = val

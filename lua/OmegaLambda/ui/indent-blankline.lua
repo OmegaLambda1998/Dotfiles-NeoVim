@@ -83,13 +83,17 @@ opts.scope = {
     highlight = highlight,
 }
 
+opts.exclude = {
+    filetypes = OL.callbacks.treesitter.exclude,
+}
+
 function spec.config(_, o)
     OL.load_setup("ibl", {}, o)
     OL.load(
         "ibl.hooks", {}, function(hooks)
             hooks.register(
                 hooks.type.SCOPE_HIGHLIGHT,
-                hooks.builtin.scope_highlight_from_extmark
+                    hooks.builtin.scope_highlight_from_extmark
             )
         end
     )

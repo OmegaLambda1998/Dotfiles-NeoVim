@@ -17,9 +17,9 @@ spec.dependencies = {
     opts = {},
 } --- Adds MasonUpdateAll
 
+---@class OLMason: OLConfig
 OL.callbacks.mason = OL.OLConfig.new()
-
-OL.callbacks.mason.install = OL.OLConfig.new()
+OL.callbacks.mason.install = {}
 opts.ensure_installed = OL.callbacks.mason.install
 
 OL.callbacks.update:add(
@@ -41,6 +41,11 @@ opts.pip = {
 }
 opts.ui = {
     border = "single",
+}
+
+opts.registries = {
+    "lua:_registry",
+    "github:mason-org/mason-registry",
 }
 
 function spec.config(_, o)
@@ -81,8 +86,7 @@ function spec.config(_, o)
                             end
 
                         )
-                    end
-, 100
+                    end, 100
                 )
             end
 
@@ -98,7 +102,6 @@ function spec.config(_, o)
                     end
                 end
             end
-
         )
     end
 end

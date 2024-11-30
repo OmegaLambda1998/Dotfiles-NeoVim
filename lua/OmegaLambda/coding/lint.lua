@@ -1,13 +1,15 @@
 local spec, opts = OL.spec:add("mfussenegger/nvim-lint")
 
+---@class OLLint: OLConfig
 OL.callbacks.lint = OL.OLConfig.new()
-
-OL.callbacks.lint.ft = OL.OLConfig.new()
+OL.callbacks.lint.ft = OL.OLConfig.new(
+    {
+        add = function(self, ft)
+            table.insert(self, "BufReadPost *." .. ft)
+        end,
+    }
+)
 spec.event = OL.callbacks.lint.ft
-function OL.callbacks.lint.ft:add(ft)
-    table.insert(self, "BufReadPost *." .. ft)
-end
-
 
 OL.callbacks.lint.linters_by_ft = OL.OLConfig.new()
 opts.linters_by_ft = OL.callbacks.lint.linters_by_ft
@@ -22,7 +24,6 @@ function OL.callbacks.lint:add(filetype, linter, linter_opts)
     table.insert(OL.callbacks.lint.linters_by_ft[filetype], linter)
     OL.callbacks.lint.linters[linter] = linter_opts
 end
-
 
 --- When to trigger linter
 opts.events = {
@@ -43,13 +44,10 @@ local function debounce(ms, fn)
                 vim.schedule_wrap(fn)(unpack(argv))
             end
 
-
         )
     end
 
-
 end
-
 
 local function run()
     local lint = OL.load("lint")
@@ -82,8 +80,7 @@ local function run()
                 return linter and
                            not (type(linter) == "table" and linter.condition and
                                not linter.condition(ctx))
-            end
-, names
+            end, names
         )
 
         -- Run linters.
@@ -92,7 +89,6 @@ local function run()
         end
     end
 end
-
 
 OL.aucmd("lint", opts.events, debounce(100, run))
 
@@ -104,7 +100,6 @@ OL.usrcmd(
             "lint", {}, function(lint)
                 return lint.linters_by_ft[filetype]
             end
-
 
         )
         if linters then
@@ -119,8 +114,7 @@ OL.usrcmd(
                     OL.fstring("No linters configured for filetype: ", filetype)
             )
         end
-    end
-, {}
+    end, {}
 )
 
 function spec.config(_, o)
@@ -135,8 +129,9 @@ function spec.config(_, o)
                     }, linter
                 )
                 if type(linter.prepend_args) == "table" then
-                    lint.linters[name].args = lint.linters[name].args or {}
-                    vim.list_extend(lint.linters[name].args, linter.prepend_args)
+                    lint.linters[name].args = vim.list_extend(
+                        linter.prepend_args, lint.linters[name].args or {}
+                    )
                 end
             else
                 lint.linters[name] = linter
@@ -145,5 +140,4 @@ function spec.config(_, o)
         lint.linters_by_ft = o.linters_by_ft
     end
 end
-
 

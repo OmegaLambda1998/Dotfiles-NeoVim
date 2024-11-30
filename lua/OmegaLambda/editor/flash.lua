@@ -10,7 +10,6 @@ opts.search = {
     forward = true,
     --- when `false`, find only matches in the given direction
     wrap = true,
-    ---@type Flash.Pattern.Mode
     --- Each mode will take ignorecase and smartcase into account.
     --- * exact: exact match
     --- * search: regular search
@@ -24,7 +23,6 @@ opts.search = {
     --- behave like `incsearch`
     incremental = true,
     --- Excluded filetypes and custom window filters
-    ---@type (string|fun(win:window))[]
     exclude = {
         "notify",
         "cmp_menu",
@@ -97,12 +95,6 @@ opts.label = {
     },
     --- With `format`, you can change how the label is rendered.
     --- Should return a list of `[text, highlight]` tuples.
-    ---@class Flash.Format
-    ---@field state Flash.State
-    ---@field match Flash.Match
-    ---@field hl_group string
-    ---@field after boolean
-    ---@type fun(opts:Flash.Format): string[][]
     format = function(o)
         return {
             {
@@ -128,17 +120,15 @@ opts.highlight = {
 }
 -- action to perform when picking a label.
 -- defaults to the jumping logic depending on the mode.
----@type fun(match:Flash.Match, state:Flash.State)|nil
 opts.action = nil
 -- initial pattern to use when opening flash
 opts.pattern = ""
 -- When `true`, flash will try to continue the last search
 opts.continue = false
 -- Set config to a function to dynamically change the config
-opts.config = nil ---@type fun(opts:Flash.Config)|nil
+opts.config = nil
 -- You can override the default options for a specific mode.
 -- Use it with `require("flash").jump({mode = "forward"})`
----@type table<string, Flash.Config>
 opts.modes = {
     --- options used when flash is activated through
     --- a regular search with `/` or `?`
@@ -168,14 +158,14 @@ opts.modes = {
         config = function(o)
             --- autohide flash when in operator-pending mode
             o.autohide = o.autohide or
-                           (vim.fn.mode(true):find("no") and vim.v.operator ==
-                             "y")
+                             (vim.fn.mode(true):find("no") and vim.v.operator ==
+                                 "y")
 
             --- disable jump labels when not enabled, when using a count,
             --- or when recording/executing registers
             o.jump_labels = o.jump_labels and vim.v.count == 0 and
-                              vim.fn.reg_executing() == "" and
-                              vim.fn.reg_recording() == ""
+                                vim.fn.reg_executing() == "" and
+                                vim.fn.reg_recording() == ""
 
             --- Show jump labels only in operator-pending mode
             --- opts.jump_labels = vim.v.count == 0 and vim.fn.mode(true):find("o")
@@ -338,7 +328,7 @@ spec.keys = {
         desc = "Flash Jump Backward",
     },
     {
-        ';',
+        ";",
         mode = {
             "v",
             "x",
@@ -349,7 +339,7 @@ spec.keys = {
     },
     {
 
-        ',',
+        ",",
         mode = {
             "v",
             "x",
@@ -396,10 +386,10 @@ local keys = {
 vim.list_extend(spec.keys, keys)
 
 OL.map(
-  {
-      group = "Flash",
-      keys,
-  }
+    {
+        group = "Flash",
+        keys,
+    }
 )
 
 OL.opt("ignorecase")

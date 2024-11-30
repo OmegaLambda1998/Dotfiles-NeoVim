@@ -46,7 +46,7 @@ OL.callbacks.post:add(
 function OL.aucmd(name, ...)
     local cmds = OL.pack(...)
     for _, cmd in ipairs(cmds) do
-        if not OL.is_array(cmd) then
+        if not vim.islist(cmd) then
             cmds = {
                 cmds,
             }

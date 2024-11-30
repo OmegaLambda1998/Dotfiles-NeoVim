@@ -142,7 +142,7 @@ settings.completion = {
 --- Inlay hints
 settings.inlayHints = {
     labelDefinitions = true,
-    labelReferences = true,
+    labelReferences = false,
     maxLength = 20,
 }
 

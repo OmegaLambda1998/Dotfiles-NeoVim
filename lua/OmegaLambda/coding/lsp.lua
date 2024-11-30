@@ -3,6 +3,7 @@
 ---
 OL.spec:add("williamboman/mason-lspconfig.nvim")
 
+---@class OLMasonLSP: OLConfig
 OL.callbacks.mason_lsp = OL.OLConfig.new()
 OL.callbacks.mason_lsp.install = OL.OLConfig.new()
 
@@ -18,15 +19,17 @@ OL.load(
         lsp_log.set_format_func(vim.inspect)
     end
 
-
 )
 
+---@class OLLSP: OLConfig
 OL.callbacks.lsp = OL.OLConfig.new()
-OL.callbacks.lsp.ft = OL.OLConfig.new()
-function OL.callbacks.lsp.ft:add(ft)
-    table.insert(self, "BufReadPost *." .. ft)
-end
-
+OL.callbacks.lsp.ft = OL.OLConfig.new(
+    {
+        add = function(self, ft)
+            table.insert(self, "BufReadPost *." .. ft)
+        end,
+    }
+)
 
 spec.cmd = {
     "LspInfo",
@@ -135,7 +138,6 @@ function OL.callbacks.lsp:add(server, o)
     OL.callbacks.lsp.servers[server] = o
 end
 
-
 ---
 --- --- Setup ---
 ---
@@ -144,7 +146,6 @@ end
 local function setup_diagnostics(o)
     vim.diagnostic.config(vim.deepcopy(o))
 end
-
 
 --- Inlay Hints
 local function setup_inlay_hints(o)
@@ -161,12 +162,10 @@ local function setup_inlay_hints(o)
                         vim.lsp.inlay_hint.enable(true)
                     end
                 end
-            end
-,
+            end,
         }
     )
 end
-
 
 --- Code Lens
 local function setup_codelens(_)
@@ -192,14 +191,12 @@ local function setup_codelens(_)
                                 }
                             )
                         end
-                    end
-,
+                    end,
                 },
             }
         )
     end
 end
-
 
 --- Capabilities
 local function setup_capabilities(o)
@@ -211,12 +208,10 @@ local function setup_capabilities(o)
             )
         end
 
-
     )
     capabilities = vim.tbl_deep_extend("force", capabilities, o)
     return capabilities
 end
-
 
 --- Servers
 
@@ -232,25 +227,21 @@ local function setup_server(server, server_opts, global_capabilities)
             capabilities = vim.deepcopy(global_capabilities),
         }, server_opts
     )
-    if not o.on_attach then
-        o.on_attach = function(client, bufnr)
-            OL.load(
-                "workspace-diagnostics", {}, function(wd)
-                    wd.populate_workspace_diagnostics(client, bufnr)
-                end
-
-
-            )
-        end
-
-
+    local on_attach = o.on_attach or function()
+    end
+    o.on_attach = function(client, bufnr)
+        OL.load(
+            "workspace-diagnostics", {}, function(wd)
+                wd.populate_workspace_diagnostics(client, bufnr)
+            end
+        )
+        on_attach(client, bufnr)
     end
     lsp[server].setup(o)
     if server_opts.callback then
         server_opts.callback(server_opts)
     end
 end
-
 
 local function setup_servers(servers, capabilities)
     --- get all the servers that are available through mason-lspconfig
@@ -282,13 +273,11 @@ local function setup_servers(servers, capabilities)
                 function(server)
                     local server_opts = servers[server]
                     return setup_server(server, server_opts, capabilities)
-                end
-,
+                end,
             },
         }
     )
 end
-
 
 function spec.config(_, o)
     if o.diagnostics.enabled then
@@ -303,5 +292,4 @@ function spec.config(_, o)
     local capabilities = setup_capabilities(o.capabilities)
     setup_servers(o.servers, capabilities)
 end
-
 

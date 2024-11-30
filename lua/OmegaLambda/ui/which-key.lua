@@ -3,29 +3,21 @@ local spec, opts = OL.spec:add("folke/which-key.nvim")
 spec.cond = true
 OL.callbacks.colourscheme.which_key = true
 
----@class wk.Opts
----@type false | "classic" | "modern" | "helix"
 opts.preset = "helix"
 -- Delay before showing the popup. Can be a number or a function that returns a number.
----@type number | fun(ctx: { keys: string, mode: string, plugin?: string }):number
 opts.delay = function(ctx)
     return ctx.plugin and 0 or 50
 end
----@param mapping wk.Mapping
 opts.filter = function(mapping)
-    -- example to exclude mappings without a description
-    -- return mapping.desc and mapping.desc ~= ""
-    return true
+    return mapping.desc and mapping.desc ~= ""
 end
 --- You can add any mappings here, or use `require('which-key').add()` later
----@type wk.Spec
 opts.spec = {}
 -- show a warning when issues were detected with your mappings
 opts.notify = true
 -- Which-key automatically sets up triggers for your mappings.
 -- But you can disable this and setup the triggers manually.
 -- Check the docs for more info.
----@type wk.Spec
 opts.triggers = {
     {
         "<auto>",
@@ -34,7 +26,6 @@ opts.triggers = {
 }
 -- Start hidden and wait for a key to be pressed before showing the popup
 -- Only used by enabled xo mapping modes.
----@param ctx { mode: string, operator: string }
 opts.defer = function(ctx)
     return ctx.mode == "V" or ctx.mode == "<C-V>"
 end
@@ -57,7 +48,6 @@ opts.plugins = {
         g = true, -- bindings for prefixed with g
     },
 }
----@type wk.Win.opts
 opts.win = {
     -- don't allow the popup to overlap with the cursor
     no_overlap = true,
@@ -67,7 +57,7 @@ opts.win = {
     -- row = math.huge,
     -- border = "none",
     padding = { 1,
-                2 }, -- extra window padding [top/bottom, right/left]
+    2 }, -- extra window padding [top/bottom, right/left]
     title = true,
     title_pos = "right",
     zindex = 1000,
@@ -87,7 +77,6 @@ opts.keys = {
     scroll_down = "<Down>", -- binding to scroll down inside the popup
     scroll_up = "<Up>", -- binding to scroll up inside the popup
 }
----@type (string|wk.Sorter)[]
 --- Mappings are sorted using configured sorters and natural sort of the keys
 --- Available sorters:
 --- * local: buffer-local mappings first
@@ -105,13 +94,11 @@ opts.sort = {
     -- "alphanum",
     "mod",
 }
----@type number|fun(node: wk.Node):boolean?
 opts.expand = 0 -- expand groups when <= n mappings
 -- expand = function(node)
 --   return not node.desc -- expand all nodes without a description
 -- end,
 -- Functions/Lua Patterns for formatting the labels
----@type table<string, ({[1]:string, [2]:string}|fun(str:string):string)[]>
 opts.replace = {
     key = {
         function(key)
@@ -162,7 +149,6 @@ opts.icons = {
     mappings = true,
     --- See `lua/which-key/icons.lua` for more details
     --- Set to `false` to disable keymap icons from rules
-    ---@type wk.IconRule[]|false
     rules = {
         {
             pattern = "flash",

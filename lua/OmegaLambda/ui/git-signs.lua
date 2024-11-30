@@ -2,48 +2,44 @@ local spec, opts = OL.spec:add("lewis6991/gitsigns.nvim")
 
 OL.callbacks.colourscheme.gitsigns = true
 
-spec.event = {
-    "VeryLazy",
-}
-
 opts.signs = {
     add = {
-        text = '┃',
+        text = "┃",
     },
     change = {
-        text = '┃',
+        text = "┃",
     },
     delete = {
-        text = '_',
+        text = "_",
     },
     topdelete = {
-        text = '‾',
+        text = "‾",
     },
     changedelete = {
-        text = '~',
+        text = "~",
     },
     untracked = {
-        text = '┆',
+        text = "┆",
     },
 }
 opts.signs_staged = {
     add = {
-        text = '┃',
+        text = "┃",
     },
     change = {
-        text = '┃',
+        text = "┃",
     },
     delete = {
-        text = '_',
+        text = "_",
     },
     topdelete = {
-        text = '‾',
+        text = "‾",
     },
     changedelete = {
-        text = '~',
+        text = "~",
     },
     untracked = {
-        text = '┆',
+        text = "┆",
     },
 }
 opts.signs_staged_enable = true
@@ -59,22 +55,22 @@ opts.attach_to_untracked = false
 opts.current_line_blame = true -- Toggle with `:Gitsigns toggle_current_line_blame`
 opts.current_line_blame_opts = {
     virt_text = true,
-    virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+    virt_text_pos = "right_align", -- 'eol' | 'overlay' | 'right_align'
     delay = 100,
     ignore_whitespace = false,
     virt_text_priority = 100,
     use_focus = true,
 }
-opts.current_line_blame_formatter = '<author>, <author_time:%R> - <summary>'
+opts.current_line_blame_formatter = "<author>, <author_time:%R> - <summary>"
 opts.sign_priority = 6
 opts.update_debounce = 100
 opts.status_formatter = nil -- Use default
 opts.max_file_length = 40000 -- Disable if file is longer than this (in lines)
 opts.preview_config = {
     -- Options passed to nvim_open_win
-    border = 'single',
-    style = 'minimal',
-    relative = 'cursor',
+    border = "single",
+    style = "minimal",
+    relative = "cursor",
     row = 0,
     col = 1,
 }

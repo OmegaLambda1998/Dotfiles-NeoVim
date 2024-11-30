@@ -23,6 +23,9 @@ reportUnknownLambdaType = "information"
 reportUnknownVariableType = "information"
 reportUnknownMemberType = "information"
 
+reportAny = "information"
+reportExplicitAny = "information"
+
 #
 # === CMP: Ruff ===
 #

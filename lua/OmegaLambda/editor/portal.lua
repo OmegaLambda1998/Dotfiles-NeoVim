@@ -8,7 +8,6 @@ spec.cmd = {
 opts.log_level = OL.log.levels[OL.log.level]
 
 ---The base filter applied to every search.
----@type Portal.SearchPredicate | nil
 opts.filter = nil
 
 ---The maximum number of results for any search.
@@ -44,8 +43,8 @@ opts.window_options = {
     relative = "cursor",
     width = 80,
     height = math.floor(
-      (vim.api.nvim_win_get_height(0) - (2 * opts.max_results)) /
-        opts.max_results
+        (vim.api.nvim_win_get_height(0) - (2 * opts.max_results)) /
+            opts.max_results
     ),
     col = 2,
     focusable = false,
@@ -58,9 +57,9 @@ spec.keys = {
         "<leader>pc",
         function()
             OL.load(
-              "portal.builtin", {}, function(portal)
-                  portal.changelist.tunnel()
-              end
+                "portal.builtin", {}, function(portal)
+                    portal.changelist.tunnel()
+                end
             )
         end,
         desc = "Portal Changelist",
@@ -69,9 +68,9 @@ spec.keys = {
         "<leader>ph",
         function()
             OL.load(
-              "portal.builtin", {}, function(portal)
-                  portal.harpoon.tunnel()
-              end
+                "portal.builtin", {}, function(portal)
+                    portal.harpoon.tunnel()
+                end
             )
         end,
         desc = "Portal Harpoon",
@@ -80,9 +79,9 @@ spec.keys = {
         "<leader>hp",
         function()
             OL.load(
-              "portal.builtin", {}, function(portal)
-                  portal.harpoon.tunnel()
-              end
+                "portal.builtin", {}, function(portal)
+                    portal.harpoon.tunnel()
+                end
             )
         end,
         desc = "Portal Harpoon",
@@ -91,9 +90,9 @@ spec.keys = {
         "<leader>pj",
         function()
             OL.load(
-              "portal.builtin", {}, function(portal)
-                  portal.jumplist.tunnel()
-              end
+                "portal.builtin", {}, function(portal)
+                    portal.jumplist.tunnel()
+                end
             )
         end,
         desc = "Portal Jumplist",
@@ -102,9 +101,9 @@ spec.keys = {
         "<leader>pq",
         function()
             OL.load(
-              "portal.builtin", {}, function(portal)
-                  portal.quickfix.tunnel()
-              end
+                "portal.builtin", {}, function(portal)
+                    portal.quickfix.tunnel()
+                end
             )
         end,
         desc = "Portal Quickfix",
@@ -112,11 +111,11 @@ spec.keys = {
 }
 
 OL.map(
-  {
-      "<leader>p",
-      group = "Portal",
-      desc = "Portal",
-      { spec.keys },
-  }
+    {
+        "<leader>p",
+        group = "Portal",
+        desc = "Portal",
+        { spec.keys },
+    }
 )
 

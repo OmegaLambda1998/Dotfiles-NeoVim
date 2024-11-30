@@ -10,6 +10,7 @@ return function(opts)
     ---@class OL
     OL = require("OmegaLambda.setup.configs")
     OL.verbose = opts.verbose or false
+    OL.should_profile = opts.should_profile or false
 
     --- Pager Compatability
     function OL.is_pager()
@@ -46,10 +47,10 @@ return function(opts)
     ---@class OLPath
     ---@field setup OLPath
     OL.paths = OL.OLPath.new(
-                   {
+        {
             root = "OmegaLambda",
         }
-               )
+    )
     OL.paths:append("setup")
 
     ---

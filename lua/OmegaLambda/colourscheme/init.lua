@@ -14,6 +14,7 @@ opts.background = {
 opts.transparent_background = true
 opts.default_integrations = false
 
+---@class OLColourscheme: OLConfig
 OL.callbacks.colourscheme = OL.OLConfig.new()
 opts.integrations = OL.callbacks.colourscheme
 

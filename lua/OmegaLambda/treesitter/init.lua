@@ -6,6 +6,7 @@ OL.callbacks.colourscheme.treesitter = true
 spec.main = "nvim-treesitter.configs"
 
 --- Setup callbacks
+---@class OLTreesitter: OLConfig
 OL.callbacks.treesitter = OL.OLConfig.new()
 OL.callbacks.treesitter.configs = OL.OLConfig.new()
 OL.callbacks.treesitter.dependencies = OL.OLConfig.new()
@@ -28,7 +29,6 @@ function spec.init(plugin)
     OL.load("nvim-treesitter.query_predicates")
 end
 
-
 spec.cmd = {
     "TSUpdateSync",
     "TSUpdate",
@@ -40,10 +40,9 @@ spec.cmd = {
 --- 
 
 --- Highlight
-OL.callbacks.treesitter.exclude = OL.OLConfig.new()
 opts.highlight = {
     enable = true,
-    additional_vim_regex_highlighting = OL.callbacks.treesitter.exclude,
+    additional_vim_regex_highlighting = false,
 }
 
 --- Indent
@@ -60,6 +59,25 @@ OL.callbacks.treesitter.include = OL.OLConfig.new(
 )
 opts.ensure_installed = OL.callbacks.treesitter.include
 
+OL.callbacks.treesitter.exclude = OL.OLConfig.new(
+    {
+        "fzf",
+        "conf",
+        "text",
+        "bigfile",
+        "snacks_notif",
+        "snacks_notif_history",
+        "snacks_terminal",
+        "checkhealth",
+        "lazy",
+        "oil",
+        "oil_preview",
+        "mason",
+        "qf",
+        "zip",
+    }
+)
+
 OL.callbacks.update:add(
     function()
         OL.load(
@@ -68,10 +86,8 @@ OL.callbacks.update:add(
                 ts.update()
             end
 
-
         )
     end
-
 
 )
 
@@ -84,7 +100,6 @@ function spec.config(_, o)
     )
     OL.load_setup(spec.main, {}, ts_opts)
 end
-
 
 --- Fold
 OL.opt("foldmethod", "expr")

@@ -25,7 +25,10 @@ function OL.inspect(...)
 end
 
 --- Allow overwriting of notify function
-OL.notify = vim.notify
+function OL:update_notify(fn)
+    OL.notify = fn
+end
+OL:update_notify(vim.notify)
 
 --- Log Levels
 local TRACE = vim.log.levels.TRACE
@@ -47,24 +50,22 @@ end
 ---@class OLLog: OLConfig
 ---@field level integer
 ---@field min_level integer
-local OLLog = OL.OLConfig.new(
-                  {
-        TRACE = TRACE,
-        DEBUG = DEBUG,
-        INFO = INFO,
-        WARN = WARN,
-        ERROR = ERROR,
-        OFF = OFF,
-        levels = {
-            TRACE = "trace",
-            DEBUG = "debug",
-            INFO = "info",
-            WARN = "warn",
-            ERROR = "error",
-            OFF = "off",
-        },
-    }
-              )
+local OLLog = OL.OLConfig.new({})
+
+OLLog.TRACE = TRACE
+OLLog.DEBUG = DEBUG
+OLLog.INFO = INFO
+OLLog.WARN = WARN
+OLLog.ERROR = ERROR
+OLLog.OFF = OFF
+OLLog.levels = {
+    TRACE = "trace",
+    DEBUG = "debug",
+    INFO = "info",
+    WARN = "warn",
+    ERROR = "error",
+    OFF = "off",
+}
 OL.OLLog = OLLog
 
 function OLLog.new(tbl)

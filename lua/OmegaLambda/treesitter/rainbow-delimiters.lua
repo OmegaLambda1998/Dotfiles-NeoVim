@@ -15,13 +15,13 @@ opts.strategy = {
 }
 
 opts.query = {
-    [''] = 'rainbow-delimiters',
-    latex = 'rainbow-blocks', -- rainbow-blocks
-    lua = 'rainbow-blocks', -- rainbow-blocks
+    [""] = "rainbow-delimiters",
+    latex = "rainbow-blocks", -- rainbow-blocks
+    lua = "rainbow-blocks", -- rainbow-blocks
     query = function(bufnr)
         -- Use blocks for read-only buffers like in `:InspectTree`
-        local is_nofile = vim.bo[bufnr].buftype == 'nofile'
-        return is_nofile and 'rainbow-blocks' or 'rainbow-delimiters'
+        local is_nofile = vim.bo[bufnr].buftype == "nofile"
+        return is_nofile and "rainbow-blocks" or "rainbow-delimiters"
     end,
 }
 
@@ -29,6 +29,8 @@ opts.priority = {
     [""] = 110,
     lua = 210,
 }
+
+opts.blacklist = OL.callbacks.treesitter.exclude
 
 function spec.config(_, o)
     OL.load(

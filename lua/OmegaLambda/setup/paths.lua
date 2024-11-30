@@ -7,14 +7,14 @@ local norm = vim.fs.normalize
 local glob = vim.fn.glob
 
 local config_path = joinpath(
-                        OL.unpack(
-                            OL.flatten(
-                                {
+    OL.unpack(
+        OL.flatten(
+            {
                 stdpath("config"),
             }
-                            )
-                        ), "lua"
-                    )
+        )
+    ), "lua"
+)
 
 ---@class OLPath: OLConfig
 ---@field root string
@@ -60,18 +60,18 @@ end
 function OLPath:module(...)
     local paths = OL.flatten(...)
     local modpath = joinpath(tostring(self.root), OL.unpack(paths)):gsub(
-                        "/", "."
-                    )
+        "/", "."
+    )
     return modpath
 end
 
 function OLPath:abs(...)
     local paths = OL.flatten(...)
     local abspath = norm(
-                        joinpath(
-                            config_path, tostring(self.root), OL.unpack(paths)
-                        )
-                    )
+        joinpath(
+            config_path, tostring(self.root), OL.unpack(paths)
+        )
+    )
     return abspath
 end
 
@@ -83,15 +83,17 @@ function OLPath:glob(pattern, greedy)
     local abs_pattern = self:abs(pattern)
     local matches = glob(abs_pattern)
     return split(
-               matches, "\n", {
+        matches, "\n", {
             trimempty = true,
             plain = true,
         }
-           )
+    )
 end
 
 function OL.get_roots()
-    local roots = {lsp = vim.lsp.buf.list_workspace_folders()}
+    local roots = {
+        lsp = vim.lsp.buf.list_workspace_folders(),
+    }
     local cwd = vim.fs.normalize(vim.fn.getcwd())
     roots.cwd = cwd
     local root

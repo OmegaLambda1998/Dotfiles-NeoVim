@@ -1,21 +1,21 @@
 ---
 --- === Omega Lambda ===
 ---
-local argv = vim.v.argv
-local verbose = vim.tbl_contains(argv, "+verbose")
+local verbose = os.getenv("NVIM_VERBOSE")
+local should_profile = os.getenv("NVIM_PROFILE")
 
 ---
 --- === Compatability & Deprecations ===
 ---
---- uv ---
+
+--- loop => uv ---
 vim.uv = vim.uv or vim.loop
 vim.loop = vim.uv
 
---- table ---
+--- table.pack & table.unpack ---
 table.pack = table.pack or function(...)
     return { ... }
 end
-
 
 table.unpack = table.unpack or unpack
 
@@ -27,6 +27,7 @@ table.unpack = table.unpack or unpack
 OL = require("OmegaLambda.setup")(
     {
         verbose = verbose,
+        should_profile = should_profile,
     }
 )
 OL.log:debug("Verbose: %s", OL.verbose)
@@ -41,6 +42,14 @@ OL.load(
 
 --- Bootstrap Lazy
 OL.lazy.bootstrap()
+
+--- Setup Profiling
+OL.load(
+    "profile", {
+        from = OL.paths.lazy,
+        strict = OL.should_profile,
+    }
+)
 
 --- Setup Colourscheme
 OL.load(

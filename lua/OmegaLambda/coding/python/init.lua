@@ -15,10 +15,10 @@ OL.callbacks.lsp.ft:add(ext)
 OL.callbacks.lsp:add(
     lsp, {
         cmd = {
-            'basedpyright-langserver',
+            "basedpyright-langserver",
             "--verbose",
-            '--threads 16',
-            '--stdio',
+            "--threads 16",
+            "--stdio",
         },
         settings = {
             basedpyright = {
