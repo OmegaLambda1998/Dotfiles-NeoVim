@@ -5,10 +5,18 @@ local spec, opts = OL.spec:add("folke/snacks.nvim")
 spec.priority = 1000
 spec.cond = true
 spec.lazy = false
-
+local enabled = not OL.is_pager()
 OL.callbacks.colourscheme.snacks = true
 
 local config = {}
+
+---
+--- --- Animate ---
+---
+
+opts.animate = {
+    enabled = enabled,
+}
 
 ---
 --- --- Big Files ---
@@ -27,7 +35,7 @@ OL.callbacks.bigfile = OL.OLCall.new(
 
 opts.bigfile = OL.OLConfig.new(
     {
-        enabled = not OL.is_pager(),
+        enabled = enabled,
         notify = true, --- Show notification when bigfile detected
         size = 1.5 * 1024 * 1024, --- 1.5MB
         setup = OL.callbacks.bigfile,
@@ -38,7 +46,7 @@ opts.bigfile = OL.OLConfig.new(
 --- --- Dashboard ---
 ---
 opts.dashboard = {
-    enabled = not OL.is_pager(),
+    enabled = enabled,
     width = math.floor(2 * vim.api.nvim_win_get_width(0) / 3),
 }
 
@@ -209,6 +217,32 @@ table.insert(
 ---
 
 ---
+--- --- Dim ---
+---
+
+opts.dim = {
+    enabled = enabled,
+    scope = {
+        min_size = 1,
+        max_size = 20,
+        siblings = true,
+    },
+    animate = {
+        enabled = opts.animate.enabled,
+        easing = "outQuad",
+        duration = {
+            step = 5, -- ms per step
+            total = 100, -- maximum duration
+        },
+    },
+    -- what buffers to dim
+    filter = function(buf)
+        return vim.g.snacks_dim ~= false and vim.b[buf].snacks_dim ~= false and
+                   vim.bo[buf].buftype == ""
+    end,
+}
+
+---
 --- --- Git ---
 ---
 
@@ -217,60 +251,97 @@ table.insert(
 ---
 
 ---
---- --- Lazy Git ---
+--- --- Indent
 ---
+opts.indent = {
+    enabled = enabled,
+}
+opts.indent.indent = {
+    enabled = opts.indent.enabled,
+    priority = 200,
+    char = ".",
+    blank = nil,
+    only_scope = false, -- only show indent guides of the scope
+    only_current = false, -- only show indent guides in the current window
+    hl = {
+        "SnacksIndent1",
+        "SnacksIndent2",
+        "SnacksIndent3",
+        "SnacksIndent4",
+        "SnacksIndent5",
+        "SnacksIndent6",
+        "SnacksIndent7",
+        "SnacksIndent8",
+    },
+}
+opts.indent.animate = {
+    enabled = opts.animate.enabled and opts.indent.enabled,
+    style = "out",
+    easing = "linear",
+    duration = {
+        step = 10, -- ms per step
+        total = 500, -- maximum duration
+    },
+}
+opts.indent.scope = {
+    enabled = opts.indent.enabled,
+    priority = opts.indent.indent.priority,
+    char = "",
+    underline = true, -- underline the start of the scope
+    only_scope = opts.indent.indent.only_scope,
+    only_current = opts.indent.indent.only_current,
+    hl = opts.indent.indent.hl,
+}
+opts.indent.chunk = {
+    -- when enabled, scopes will be rendered as chunks, except for the
+    -- top-level scope which will be rendered as a scope.
+    enabled = opts.indent.enabled,
+    -- only show chunk scopes in the current window
+    only_scope = opts.indent.indent.only_scope,
+    only_current = opts.indent.indent.only_current,
+    priority = opts.indent.indent.priority,
+    hl = opts.indent.indent.hl,
+
+    char = {
+        --- corner_top = "┌",
+        --- corner_bottom = "└",
+        corner_top = "╭",
+        corner_bottom = "╰",
+        horizontal = "─",
+        vertical = "│",
+        arrow = "─",
+    },
+}
+opts.indent.blank = {
+    char = " ",
+    hl = "SnacksIndentBlank",
+}
+opts.indent.filter = function(buf)
+    return
+        vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and
+            vim.bo[buf].buftype == ""
+end
 
 ---
---- --- Notify ---
+--- --- Input ---
 ---
 
-OL.callbacks.colourscheme.notify = true
-
+opts.input = {
+    enabled = true,
+}
 table.insert(
     config, function(o)
         OL.load(
             "snacks", {}, function(snacks)
-                snacks.setup(o)
-
-                OL.notify = function(msg, msg_opts)
-                    if msg_opts == nil then
-                        msg_opts = {}
-                    end
-                    if msg_opts.title == nil then
-                        msg_opts.title = "OmegaLambda"
-                    end
-                    if msg_opts.level == nil then
-                        msg_opts.level = OL.log.INFO
-                    end
-                    snacks.notify(msg, o)
-                end
-
-                --- Overwrite commands
-                vim.print = function(...)
-                    snacks.debug.inspect(...)
-                end
-                print = function(...)
-                    OL.notify(
-                        ..., {
-                            level = OL.log.DEBUG,
-                        }
-                    )
-                end
-                local original_error = error
-                error = function(...)
-                    if ... ~= "Entry 0 missing parent url" then
-                        pcall(snacks.notify.error(...))
-                        if OL.verbose then
-                            snacks.debug.backtrace()
-                        end
-                    else
-                        original_error(...)
-                    end
-                end
+                vim.ui.input = snacks.input
             end
         )
     end
 )
+
+---
+--- --- Lazy Git ---
+---
 
 ---
 --- --- Notifier ---
@@ -279,7 +350,7 @@ table.insert(
 OL.callbacks.colourscheme.notifier = true
 
 opts.notifier = {
-    style = "compact",
+    style = "fancy",
 }
 
 table.insert(
@@ -363,16 +434,252 @@ table.insert(
 )
 
 ---
+--- --- Notify ---
+---
+
+OL.callbacks.colourscheme.notify = true
+
+table.insert(
+    config, function(o)
+        OL.load(
+            "snacks", {}, function(snacks)
+                OL.notify = function(msg, msg_opts)
+                    if msg_opts == nil then
+                        msg_opts = {}
+                    end
+                    if msg_opts.title == nil then
+                        msg_opts.title = "OmegaLambda"
+                    end
+                    if msg_opts.level == nil then
+                        msg_opts.level = OL.log.INFO
+                    end
+                    snacks.notify(msg, o)
+                end
+
+                --- Overwrite commands
+                vim.print = function(...)
+                    snacks.debug.inspect(...)
+                end
+                print = function(...)
+                    vim.print(...)
+                end
+
+                local original_error = error
+                error = function(...)
+                    if ... ~= "Entry 0 missing parent url" then
+                        pcall(snacks.notify.error(...))
+                        if OL.verbose then
+                            snacks.debug.backtrace()
+                        end
+                    else
+                        original_error(...)
+                    end
+                end
+
+                warn = snacks.notify.warn
+            end
+        )
+    end
+)
+
+---
+--- --- Profiler ---
+---
+
+function OL.toggle_profile()
+    OL.load(
+        "snacks.profiler", {}, function(prof)
+            if prof.running() then
+                prof.stop()
+            else
+                prof.start()
+            end
+        end
+    )
+end
+
+opts.profiler = {
+    enabled = enabled,
+}
+
+spec.keys = {
+    {
+        "<leader>po",
+        function()
+            OL.load(
+                "snacks.profiler", {}, function(prof)
+                    prof.scratch()
+                end
+            )
+        end,
+        desc = "Profiler Scratch Buffer",
+    },
+}
+
+OL.map(
+    {
+        "<leader>p",
+        group = "Profiler",
+        desc = "Profiler",
+        spec.keys,
+    }
+)
+
+table.insert(
+    config, function(o)
+        if OL.should_profile then
+            OL.load(
+                "snacks.profiler", {}, function(profile)
+                    if OL.should_profile:lower():match("^start") then
+                        profile.startup()
+                    else
+                        profile.start()
+                    end
+                end
+            )
+        end
+
+    end
+)
+
+---
 --- --- Quick File ---
 ---
 
 opts.quickfile = {
-    exclude = OL.callbacks.treesitter.exclude,
+    enabled = true,
 }
 
 ---
 --- --- Rename ---
 ---
+
+opts.rename = {
+    enabled = false,
+}
+
+---
+--- --- Scope ---
+---
+
+opts.scope = {
+    enabled = enabled,
+    -- absolute minimum size of the scope.
+    -- can be less if the scope is a top-level single line scope
+    min_size = 2,
+    -- try to expand the scope to this size
+    max_size = nil,
+    cursor = true, -- when true, the column of the cursor is used to determine the scope
+    edge = true, -- include the edge of the scope (typically the line above and below with smaller indent)
+    siblings = false, -- expand single line scopes with single line siblings
+    -- what buffers to attach to
+    filter = function(buf)
+        return vim.bo[buf].buftype == ""
+    end,
+    -- debounce scope detection in ms
+    debounce = 30,
+    treesitter = {
+        -- detect scope based on treesitter.
+        -- falls back to indent based detection if not available
+        enabled = true,
+        ---@type string[]|{enabled?:boolean}
+        blocks = {
+            enabled = true, -- enable to use the following blocks
+            "function_declaration",
+            "function_definition",
+            "method_declaration",
+            "method_definition",
+            "class_declaration",
+            "class_definition",
+            "do_statement",
+            "while_statement",
+            "repeat_statement",
+            "if_statement",
+            "for_statement",
+        },
+        -- these treesitter fields will be considered as blocks
+        field_blocks = {
+            "local_declaration",
+        },
+    },
+    -- These keymaps will only be set if the `scope` plugin is enabled.
+    -- Alternatively, you can set them manually in your config,
+    -- using the `Snacks.scope.textobject` and `Snacks.scope.jump` functions.
+    keys = {
+        ---@type table<string, snacks.scope.TextObject|{desc?:string}>
+        textobject = {
+            ii = {
+                min_size = 2, -- minimum size of the scope
+                edge = false, -- inner scope
+                cursor = false,
+                treesitter = {
+                    blocks = {
+                        enabled = false,
+                    },
+                },
+                desc = "inner scope",
+            },
+            ai = {
+                cursor = false,
+                min_size = 2, -- minimum size of the scope
+                treesitter = {
+                    blocks = {
+                        enabled = false,
+                    },
+                },
+                desc = "full scope",
+            },
+        },
+        ---@type table<string, snacks.scope.Jump|{desc?:string}>
+        jump = {
+            ["[["] = {
+                min_size = 1, -- allow single line scopes
+                bottom = false,
+                cursor = false,
+                edge = true,
+                treesitter = {
+                    blocks = {
+                        enabled = true,
+                    },
+                },
+                desc = "jump to top edge of scope",
+            },
+            ["]]"] = {
+                min_size = 1, -- allow single line scopes
+                bottom = true,
+                cursor = false,
+                edge = true,
+                treesitter = {
+                    blocks = {
+                        enabled = true,
+                    },
+                },
+                desc = "jump to bottom edge of scope",
+            },
+        },
+    },
+}
+
+---
+--- --- Scroll ---
+---
+
+opts.scroll = {
+    enabled = true,
+    animate = {
+        duration = {
+            step = 15,
+            total = 250,
+        },
+        easing = "linear",
+    },
+    spamming = 10, -- threshold for spamming detection
+    -- what buffers to animate
+    filter = function(buf)
+        return vim.g.snacks_scroll ~= false and vim.b[buf].snacks_scroll ~=
+                   false and vim.bo[buf].buftype ~= "terminal"
+    end,
+}
 
 ---
 --- --- Status Column ---
@@ -400,13 +707,6 @@ opts.statuscolumn = {
     },
     refresh = 50,
 }
-table.insert(
-    config, function(o)
-        if o.statuscolumn.enabled then
-            OL.load("gitsigns")
-        end
-    end
-)
 
 ---
 --- --- Terminal ---
@@ -414,8 +714,8 @@ table.insert(
 OL.map(
     {
         "<leader>t",
-        group = "Terminal",
-        desc = "Terminal",
+        group = "Toggle",
+        desc = "Toggle",
         mode = { "n" },
         {
             {
@@ -437,9 +737,17 @@ OL.map(
 ---
 --- --- Toggle ---
 ---
-
 opts.toggle = {
-    map = vim.keymap.set,
+    map = function(mode, lhs, rhs, opts)
+        OL.map(
+            {
+                lhs,
+                rhs,
+                mode = mode,
+                OL.unpack(opts),
+            }
+        )
+    end,
     which_key = true,
     notify = true,
     --- icons for enabled/disabled states
@@ -453,34 +761,45 @@ opts.toggle = {
         disabled = "yellow",
     },
 }
-
----
---- --- Windows ---
----
+table.insert(
+    config, function(_)
+        local toggles = {
+            animate = "<leader>ta",
+            dim = "<leader>td",
+            indent = "<leader>ti",
+            profiler = "<leader>pp",
+            profiler_highlights = "<leader>ph",
+            scroll = "<leader>ts",
+            words = "<leader>tw",
+        }
+        OL.load(
+            "snacks.toggle", {}, function(toggle)
+                for cmd, map in pairs(toggles) do
+                    toggle[cmd]():map(map)
+                end
+            end
+        )
+    end
+)
 
 ---
 --- --- Words ---
 ---
 
 opts.words = {
-    enabled = false, -- enable/disable the plugin
-    debounce = 200, -- time in ms to wait before updating
-    notify_jump = true, -- show a notification when jumping
-    notify_end = true, -- show a notification when reaching the end
-    foldopen = true, -- open folds after jumping
-    jumplist = true, -- set jump point before jumping
-    modes = {
-        "n",
-        "i",
-        "c",
-    }, -- modes to show references
+    enabled = false,
 }
 
 ---
---- --- Styles ---
+--- --- Zen ---
 ---
 
+opts.zen = {
+    enabled = false,
+}
+
 function spec.config(_, o)
+    OL.load_setup("snacks", {}, o)
     for _, fn in ipairs(config) do
         fn(o)
     end

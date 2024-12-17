@@ -8,38 +8,50 @@ local function enabled()
 end
 
 --- LSP
-local lsp = "basedpyright"
-OL.callbacks.pyinstall = OL.OLConfig.new()
-
 OL.callbacks.lsp.ft:add(ext)
-OL.callbacks.lsp:add(
-    lsp, {
-        cmd = {
-            "basedpyright-langserver",
-            "--verbose",
-            "--threads 16",
-            "--stdio",
-        },
+
+local servers = {}
+servers.ruff = {
+    init_options = {
         settings = {
-            basedpyright = {
-                disableLanguageServices = false,
-                disableOrganizeImports = true, --- Using Ruff
-                disableTaggedHints = false,
-                analysis = {
-                    autoImportCompletions = true,
-                    autoSearchPaths = true,
-                    diagnosticMode = "workspace",
-                    inlayHints = {
-                        variableTypes = true,
-                        callArgumentNames = true,
-                        functionReturnTypes = true,
-                        genericTypes = true,
-                    },
+            configuration = pyproject,
+            showSyntaxErrors = false,
+            lint = {
+                enable = false,
+            },
+            format = {
+                preview = false,
+            },
+        },
+    },
+}
+servers.basedpyright = {
+    settings = {
+        basedbypright = {
+            disableOrganizeImports = true, --- Using Ruff for this
+            analysis = {
+                autoImportCompletions = false, --- Slows down completion a lot
+                autoSearchPaths = true, --- Search common paths like src/
+                diagnosticMode = "openFilesOnly", --- Don't search everything everywhere. It will be slow
+                useLibraryCodeForTypes = true, --- Analyse library code for type information if type stubs are missing
+                typeCheckingMode = "recommended",
+                inlayHints = {
+                    variableTypes = true,
+                    callArgumentMames = true,
+                    functionReturnTypes = true,
+                    genericTypes = true,
                 },
             },
         },
-    }
-)
+        python = {
+            pythonPath = ".venv/bin/python",
+        },
+    },
+}
+
+for lsp, opts in pairs(servers) do
+    OL.callbacks.lsp:add(lsp, opts)
+end
 
 --- CMP
 OL.callbacks.cmp.ft:add(ext)
@@ -53,8 +65,8 @@ local formatters = {
             "check",
             "--fix",
             "--unsafe-fixes",
-            "--config",
-            pyproject,
+            --- "--config",
+            --- pyproject,
             "--exit-zero",
             "--force-exclude",
             "--stdin-filename",
@@ -67,8 +79,8 @@ local formatters = {
         mason = false,
         args = {
             "format",
-            "--config",
-            pyproject,
+            --- "--config",
+            --- pyproject,
             "--force-exclude",
             "--stdin-filename",
             "$FILENAME",
@@ -87,8 +99,8 @@ end
 local linters = {
     ruff = {
         prepend_args = {
-            "--config",
-            pyproject,
+            --- "--config",
+            --- pyproject,
         },
     },
 }

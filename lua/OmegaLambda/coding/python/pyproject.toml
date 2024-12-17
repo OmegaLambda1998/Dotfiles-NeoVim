@@ -1,30 +1,31 @@
 #
-# === LSP: Based Pyright ===
+# === LSP: BasedPyright
 #
 
 [tool.basedpyright]
-useLibraryCodeForTypes = true
 
-# --- Diagnostics ---
-reportMissingTypeStubs = false
-
-# --- Type Evaluation Settings ---
+# --- Type Evaluation Settings 
 strictListInference = false
 strictDictionaryInference = false
 strictSetInference = false
+analyzeUnannotatedFunctions = true
+strictParameterNoneValue = true
+deprecateTypingAliases = true
+enableExperimentalFeatures = true
+disableBytesTypePromotions = true
+strictGenericNarrowing = true
 
-# --- Type Checking Settings ---
-typeCheckingMode = "recommended"
+# --- Type Check Overrides
+reportMissingTypeStubs = false
 
-# --- Type Checking Rule Overrides ---
-reportUnknownParameterType = "information"
-reportUnknownArgumentType = "information"
-reportUnknownLambdaType = "information"
-reportUnknownVariableType = "information"
-reportUnknownMemberType = "information"
+reportAny = false
+reportExplicitAny = false
 
-reportAny = "information"
-reportExplicitAny = "information"
+reportUnknownParameterType = false
+reportUnknownArgumentType = false
+reportUnknownLambdaType = false
+reportUnknownVariableType = false
+reportUnknownMemberType = false
 
 #
 # === CMP: Ruff ===
@@ -39,6 +40,7 @@ indent-width = 4
 # 
 
 [tool.ruff.lint]
+preview = true
 select = [
     "F", # Pyflakes
     "E", # pycodestyle errors
@@ -141,6 +143,7 @@ convention = "google"
 # === Formatter: Lint ===
 # 
 [tool.ruff.format]
+preview = true
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false

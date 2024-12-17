@@ -1,5 +1,9 @@
 local spec, opts = OL.spec:add("mfussenegger/nvim-lint")
 
+spec.dependencies = {
+    "williamboman/mason.nvim",
+}
+
 ---@class OLLint: OLConfig
 OL.callbacks.lint = OL.OLConfig.new()
 OL.callbacks.lint.ft = OL.OLConfig.new(
@@ -11,7 +15,9 @@ OL.callbacks.lint.ft = OL.OLConfig.new(
 )
 spec.event = OL.callbacks.lint.ft
 
-OL.callbacks.lint.linters_by_ft = OL.OLConfig.new()
+OL.callbacks.lint.linters_by_ft = OL.OLConfig.new(
+    { ["*"] = {} }
+)
 opts.linters_by_ft = OL.callbacks.lint.linters_by_ft
 
 OL.callbacks.lint.linters = OL.OLConfig.new()
@@ -49,45 +55,53 @@ local function debounce(ms, fn)
 
 end
 
-local function run()
-    local lint = OL.load("lint")
-    if lint then
-        -- Use nvim-lint's logic first:
-        -- * checks if linters exist for the full filetype first
-        -- * otherwise will split filetype by "." and add all those linters
-        -- * this differs from conform.nvim which only uses the first filetype that has a formatter
-        local names = lint._resolve_linter_by_ft(vim.bo.filetype)
+local function run(dry_run)
+    return OL.load(
+        "lint", {}, function(lint)
+            -- Use nvim-lint's logic first:
+            -- * checks if linters exist for the full filetype first
+            -- * otherwise will split filetype by "." and add all those linters
+            -- * this differs from conform.nvim which only uses the first filetype that has a formatter
+            local names = lint._resolve_linter_by_ft(vim.bo.filetype)
 
-        -- Create a copy of the names table to avoid modifying the original.
-        names = vim.list_extend({}, names)
+            -- Create a copy of the names table to avoid modifying the original.
+            names = vim.list_extend({}, names)
+            names = vim.list_extend(names, OL.callbacks.lint.linters_by_ft["*"])
 
-        -- Filter out linters that don't exist or don't match the condition.
-        local ctx = {
-            filename = vim.api.nvim_buf_get_name(0),
-        }
-        ctx.dirname = vim.fn.fnamemodify(ctx.filename, ":h")
+            -- Filter out linters that don't exist or don't match the condition.
+            local ctx = {
+                filename = vim.api.nvim_buf_get_name(0),
+            }
+            ctx.dirname = vim.fn.fnamemodify(ctx.filename, ":h")
 
-        names = vim.tbl_filter(
-            function(name)
-                local linter = lint.linters[name]
-                if not linter then
-                    OL.log:warn(
-                        "Linter not found: " .. name, {
-                            title = "nvim-lint",
-                        }
-                    )
+            names = vim.tbl_filter(
+                function(name)
+                    local linter = lint.linters[name]
+                    if not linter then
+                        OL.log:warn(
+                            "Linter not found: " .. name, {
+                                title = "nvim-lint",
+                            }
+                        )
+                    end
+                    return linter and
+                               not (type(linter) == "table" and linter.condition and
+                                   not linter.condition(ctx))
+                end, names
+            )
+
+            if dry_run ~= true then
+                -- Run linters.
+                if #names > 0 then
+                    for _, name in ipairs(names) do
+                        lint.try_lint(name)
+                    end
                 end
-                return linter and
-                           not (type(linter) == "table" and linter.condition and
-                               not linter.condition(ctx))
-            end, names
-        )
-
-        -- Run linters.
-        if #names > 0 then
-            lint.try_lint(names)
+            else
+                return names
+            end
         end
-    end
+    )
 end
 
 OL.aucmd("lint", opts.events, debounce(100, run))
@@ -96,12 +110,7 @@ OL.aucmd("lint", opts.events, debounce(100, run))
 OL.usrcmd(
     "LintInfo", function()
         local filetype = vim.bo.filetype
-        local linters = OL.load(
-            "lint", {}, function(lint)
-                return lint.linters_by_ft[filetype]
-            end
-
-        )
+        local linters = run(true)
         if linters then
             OL.log:log(
                 OL.log.level, OL.fstring(
@@ -140,4 +149,3 @@ function spec.config(_, o)
         lint.linters_by_ft = o.linters_by_ft
     end
 end
-

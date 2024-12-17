@@ -4,7 +4,6 @@ local function enabled()
     return vim.bo.filetype == filetype
 end
 
-
 vim.filetype.add(
     {
         extension = {
@@ -19,8 +18,44 @@ vim.filetype.add(
 local spec, opts = OL.spec:add("mathjiajia/latex.nvim")
 spec.event = {
     "BufReadPost *." .. filetype,
+
 }
-spec.init = function()
+
+opts.conceals = {
+    enabled = {
+        "amssymb",
+        "core",
+        "delim",
+        "font",
+        "greek",
+        "math",
+        "mleftright",
+        "script",
+    },
+    add = {},
+}
+opts.imaps = {
+    enabled = false,
+    add = {},
+    default_leader = ";",
+}
+opts.surrounds = {
+    enabled = false,
+    command = "c",
+    math = "$",
+    quotation = "\"",
+}
+opts.texlab = {
+    enabled = true,
+    build = "<localleader>ll",
+    forward = "<localleader>gl",
+    cancel_build = "<localleader>lx",
+    close_env = "<localleader>le",
+    change_env = "<localleader>lc",
+    toggle_star = "<localleader>ls",
+}
+
+spec.config = function(_, o)
     OL.map(
         {
             "<localleader>l",
@@ -28,40 +63,8 @@ spec.init = function()
             desc = "Latex",
         }
     )
-    vim.g.latex_conf = {
-        conceals = {
-            enabled = {
-                "amssymb",
-                "core",
-                "delim",
-                "font",
-                "greek",
-                "math",
-                "mleftright",
-                "script",
-            },
-            add = {},
-        },
-        imaps = {
-            enabled = false,
-            add = {},
-            default_leader = ";",
-        },
-        surrounds = {
-            enabled = false,
-            command = "c",
-            math = "$",
-            quotation = "\"",
-        },
-        texlab = {
-            enabled = true,
-            build = "<localleader>ll",
-            forward = "<localleader>gf",
-            cancel_build = "<localleader>lc",
-        },
-    }
+    vim.g.latex_conf = o
 end
-
 
 ---
 --- --- LSP ---
@@ -95,9 +98,14 @@ settings.build = {
         "%f",
     },
     forwardSearchAfter = false,
-    onSave = true,
+    onSave = false,
     useFileList = false,
 }
+
+local inverse_search = OL.fstring(
+    "\"nvim --headless --server %s --remote \"%s\" && nvim --headless --server %s --remote-send \"gg%sjk0%slh\"\"",
+        vim.v.servername, "%%1", vim.v.servername, "%%2", "%%3"
+)
 
 --- Forward Search
 settings.forwardSearch = {
@@ -107,15 +115,11 @@ settings.forwardSearch = {
         "--execute-command",
         "turn_on_synctex",
         "--inverse-search",
-        OL.fstring(
-            "\"nvim --headless --server %s --remote-send %s\"",
-                vim.v.servername, "\"<C-\\><C-N>:e %1<CR><C-\\><C-N>:%2<CR>\""
-        ),
+        OL.fstring("bash -c %s", inverse_search),
         "--forward-search-file",
         "%f",
         "--forward-search-line",
         "%l",
-        "--forward-search-column",
         "%p",
     },
 }
@@ -123,16 +127,16 @@ settings.forwardSearch = {
 --- Diagnostics
 settings.diagnostics = {
     ignoredPatterns = {
-        "Unused",
-        "Underfull",
-        "Overfull",
+        "Unused entry", --- Ignore unused bibtex entries
+        "Underfull", --- Ignore underfull hbox
+        --- "Overfull",
     },
 }
 
 --- TOC / Document Symbols
-settings.symbols = {
-    ignoredPatterns = {},
-}
+--- settings.symbols = {
+---     ignoredPatterns = {},
+--- }
 
 --- Completion
 settings.completion = {

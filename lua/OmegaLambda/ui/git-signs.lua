@@ -1,4 +1,7 @@
 local spec, opts = OL.spec:add("lewis6991/gitsigns.nvim")
+spec.event = {
+    "VeryLazy",
+}
 
 OL.callbacks.colourscheme.gitsigns = true
 

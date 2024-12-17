@@ -5,7 +5,7 @@ local verbose = os.getenv("NVIM_VERBOSE")
 local should_profile = os.getenv("NVIM_PROFILE")
 
 ---
---- === Compatability & Deprecations ===
+--- === Compatibility & Deprecations ===
 ---
 
 --- loop => uv ---
@@ -42,14 +42,6 @@ OL.load(
 
 --- Bootstrap Lazy
 OL.lazy.bootstrap()
-
---- Setup Profiling
-OL.load(
-    "profile", {
-        from = OL.paths.lazy,
-        strict = OL.should_profile,
-    }
-)
 
 --- Setup Colourscheme
 OL.load(

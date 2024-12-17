@@ -12,6 +12,9 @@ OL.callbacks.mason_lsp.install = OL.OLConfig.new()
 ---
 
 local spec, opts = OL.spec:add("neovim/nvim-lspconfig")
+spec.dependencies = {
+    "williamboman/mason.nvim",
+}
 
 vim.lsp.set_log_level(OL.log.level)
 OL.load(
@@ -217,6 +220,20 @@ end
 
 OL.spec:add("artemave/workspace-diagnostics.nvim")
 
+OL.map(
+    {
+        "<leader>dD",
+        function()
+            for _, client in ipairs(vim.lsp.get_clients()) do
+                require("workspace-diagnostics").populate_workspace_diagnostics(
+                    client, 0
+                )
+            end
+        end,
+        desc = "Populate Workspace Diagnostics",
+    }
+)
+
 local function setup_server(server, server_opts, global_capabilities)
     if server_opts == nil or server_opts.enabled == false then
         return
@@ -227,16 +244,6 @@ local function setup_server(server, server_opts, global_capabilities)
             capabilities = vim.deepcopy(global_capabilities),
         }, server_opts
     )
-    local on_attach = o.on_attach or function()
-    end
-    o.on_attach = function(client, bufnr)
-        OL.load(
-            "workspace-diagnostics", {}, function(wd)
-                wd.populate_workspace_diagnostics(client, bufnr)
-            end
-        )
-        on_attach(client, bufnr)
-    end
     lsp[server].setup(o)
     if server_opts.callback then
         server_opts.callback(server_opts)

@@ -15,6 +15,9 @@ OL.callbacks.format.ft = OL.OLConfig.new(
 )
 
 spec.event = OL.callbacks.format.ft
+spec.dependencies = {
+    "williamboman/mason.nvim",
+}
 
 OL.callbacks.format.formatters_by_ft = OL.OLConfig.new()
 opts.formatters_by_ft = OL.callbacks.format.formatters_by_ft

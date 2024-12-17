@@ -33,7 +33,9 @@ OL.callbacks.cmp:add(
     cmp, {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
-        fallback = "lsp",
+        fallbacks = {
+            "lsp",
+        },
         enabled = function(ctx)
             return (ctx == nil) or enabled()
         end,
@@ -61,7 +63,7 @@ local linter_config = "selene.toml"
 OL.callbacks.lint.ft:add(filetype)
 OL.callbacks.lint:add(
     filetype, linter, {
-        mason = "OL-selene",
+        mason = "selene",
         prepend_args = {
             "--config",
             OL.paths.coding:abs(_ft, linter_config),

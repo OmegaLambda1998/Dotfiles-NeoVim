@@ -16,7 +16,7 @@ opts.strategy = {
 
 opts.query = {
     [""] = "rainbow-delimiters",
-    latex = "rainbow-blocks", -- rainbow-blocks
+    latex = "rainbow-delimiters", -- rainbow-blocks
     lua = "rainbow-blocks", -- rainbow-blocks
     query = function(bufnr)
         -- Use blocks for read-only buffers like in `:InspectTree`

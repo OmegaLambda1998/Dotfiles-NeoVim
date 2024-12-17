@@ -53,10 +53,6 @@ opts.sections = {
             "fancy_diagnostics",
         },
         {
-            OL.load("lazy.status").updates,
-            cond = OL.load("lazy.status").has_updates,
-        },
-        {
             "fancy_diff",
             source = function()
                 local gitsigns = vim.b.gitsigns_status_dict
@@ -124,9 +120,10 @@ spec.init = function()
 end
 
 function spec.config(_, o)
+    table.insert(o.sections.lualine_x, OL.load("snacks.profiler").status())
     OL.load(
         "lualine_require", {}, function(lr)
-            lr.require = require
+            lr.require = OL.load
         end
     )
     vim.o.laststatus = vim.g.lualine_laststatus
@@ -154,13 +151,13 @@ function spec.config(_, o)
     } do
         vim.keymap.set(
             "", char, function()
+                vim.fn.feedkeys(char, "n") -- 'n': do not remap keys, any other option locks up Vim
                 vim.api.nvim_exec_autocmds(
                     "User", {
                         pattern = "CmdlineEnterPre",
                         group = "CmdlineStatus",
                     }
                 )
-                vim.fn.feedkeys(char, "n") -- 'n': do not remap keys, any other option locks up Vim
             end
         )
     end
