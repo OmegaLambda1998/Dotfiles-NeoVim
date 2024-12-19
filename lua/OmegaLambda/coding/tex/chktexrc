@@ -23,7 +23,7 @@
 # There are two types of variables, those that take single items and
 # those that take lists.
 #
-# In turn, there are two types of lists, case-sensitive and case-insentive.
+# In turn, there are two types of lists, case-sensitive and case-insensitive.
 # Case-sensitive lists are delimited by `{' and `}'
 # while case-insensitive are delimited by `[' and `]'.
 # Only some variables support case insensitive lists, since in many
@@ -33,7 +33,7 @@
 #
 # Variables can be set with or without an equals sign.  If included, the
 # `=' causes the variable to be overwritten.  This is the only thing
-# that makes sense for varibles taking a single item and so we always
+# that makes sense for variables taking a single item and so we always
 # include it in that case.  For list variables, omitting the equals
 # sign will cause the items in the list to be appended instead of
 # overwriting the entire list.
@@ -62,7 +62,7 @@
 # You can use double quotes `"' to surround an item with spaces, or you can
 # escape spaces as described later.
 #
-# Detection of tokens like `}' are somewhat context sensitve---they
+# Detection of tokens like `}' are somewhat context sensitive---they
 # have to be preceded by a space (or newline).  This allows them to be
 # part of an item without escaping.  Since some variables require such
 # characters, this generally makes life easier.
@@ -98,7 +98,7 @@
 
 ## Available Settings
 #
-# All avaiable settings follow.
+# All available settings follow.
 #
 
 ## QuoteStyle
@@ -229,9 +229,9 @@ UserWarnRegex
 {
     (?!#Always! use! \nmid)\\not! *(\||\\mid)
 
-    # Capitalize section when saying Section 6.
-    (?!#-1:Capitalize! before! references)PCRE:\b(chapter|(sub)?section|theorem|lemma|proposition|corollary|appendix)~\\ref
-    (?!#1:Capitalize! before! references)POSIX:([^[:alnum:]]|^)(chapter|(sub)?section|theorem|lemma|proposition|corollary|appendix)~\\ref
+    # Capitalise section when saying Section 6.
+    (?!#-1:Capitalise! before! references)PCRE:\b(chapter|(sub)?section|theorem|lemma|proposition|corollary|appendix)~\\ref
+    (?!#1:Capitalise! before! references)POSIX:([^[:alnum:]]|^)(chapter|(sub)?section|theorem|lemma|proposition|corollary|appendix)~\\ref
 
     # Spell it introduction
     # PCRE:(?i)\bintro\b(?!#Spell! it! out.! This! comment! is! not! used.)
@@ -239,6 +239,9 @@ UserWarnRegex
 
     # Use cleveref
     (?!#-2:Use! \cref)\\ref\{
+
+    # Use citep or citet
+    (?!#-2:Use! \citep! or! \citet)\\cite[\{|\[]
 
     # Use texttilde
     (?!#-2:Use! \texttidle)\$\\sim\$
@@ -508,7 +511,7 @@ WipeArg
 MathEnvir
 {
     displaymath math eqnarray array equation
-    align alignat gather flalign multline
+    align alignat gather flalign multline # spellchecker:disable-line
     dmath dgroup darray
 }
 
@@ -704,16 +707,16 @@ NotPreSpaced
 #
 Linker
 {
-    \ref \vref \pageref \eqref \cite \cref
+    \ref \vref \pageref \eqref \cite \citet \citep \cref
 }
 
 
-## CenterDots
+## CenterDots # spellchecker:disable-line
 #
 # Commands or characters which should have `\cdots' in between.
 # For example, $1+2+3+\cdots+n$.
 #
-CenterDots
+CenterDots # spellchecker:disable-line
 {
     = + - \cdot \div & \times \geq \leq < >
 }
@@ -742,7 +745,7 @@ LowDots
 MathRoman
 {
     log lg ln lim limsup liminf sin arcsin sinh cos arccos cosh tan
-    arctan tanh cot coth sec csc max min sup inf arg ker dim hom det
+    arctan tanh cot coth sec csc max min sup inf arg ker dim hom det # spellchecker:disable-line
     exp Pr gcd deg bmod pmod mod
 }
 
@@ -782,7 +785,7 @@ NoCharNext
 #
 # The arguments of commands listed in WipeArg, as well as
 # `\verb+...+' commands, are replaced with an innocuous character
-# to prevent that data from inadvertantly producing a warning.
+# to prevent that data from inadvertently producing a warning.
 #
 # This should not contain an alphabetic character (in case the user
 # writes (`\foo\verb+bar+'), neither should it contain be one of

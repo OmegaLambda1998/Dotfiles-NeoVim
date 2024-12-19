@@ -668,8 +668,8 @@ opts.scroll = {
     enabled = true,
     animate = {
         duration = {
-            step = 15,
-            total = 250,
+            step = 5,
+            total = 100,
         },
         easing = "linear",
     },
