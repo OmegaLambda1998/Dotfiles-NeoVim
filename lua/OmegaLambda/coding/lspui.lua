@@ -120,13 +120,15 @@ local function inlay_hints()
                 "CursorMovedI",
             },
             function(_)
-                OL.load(
-                    "inlay-hint", {}, function(hint)
-                        if hint.is_enabled() then
-                            hint.enable()
+                if not OL.is_pager() then
+                    OL.load(
+                        "inlay-hint", {}, function(hint)
+                            if hint and hint.is_enabled and hint.is_enabled() then
+                                hint.enable()
+                            end
                         end
-                    end
-                )
+                    )
+                end
             end,
         }
     )

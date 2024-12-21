@@ -8,6 +8,18 @@ opts.need = math.huge
 
 OL.opt("sessionoptions", "buffers,curdir,folds,help,skiprtp,tabpages")
 
+local function delete_session()
+    OL.load(
+        "persistence", {}, function(session)
+            local sfile = session.current()
+            if sfile and vim.uv.fs_stat(sfile) ~= 0 then
+                session.stop()
+                vim.fn.system("rm " .. vim.fn.fnameescape(sfile))
+            end
+        end
+    )
+end
+
 spec.keys = {
     {
         "<leader>sw",
@@ -32,6 +44,13 @@ spec.keys = {
             )
         end,
         desc = "Session Load",
+    },
+    {
+        "<leader>sd",
+        function()
+            delete_session()
+        end,
+        desc = "Delete Session",
     },
     {
         "<leader>sS",
