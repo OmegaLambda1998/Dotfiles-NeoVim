@@ -1,27 +1,26 @@
 ---
 --- === Load Plugins ===
 ---
-OL.spec:add(
-    "rafamadriz/friendly-snippets", {
-        config = function()
-        end,
-    }
-)
-
-local compat, _ = OL.spec:add(
-    "Saghen/blink.compat", {
-        opts = {
-            impersonate_nvim_cmp = true,
-        },
-    }
-)
+local compat, _ = OL.spec:add("Saghen/blink.compat")
 compat.dependencies = {}
 
 local spec, opts = OL.spec:add("Saghen/blink.cmp")
 
 spec.dependencies = {
     "williamboman/mason.nvim",
-    "rafamadriz/friendly-snippets",
+    {
+        "rafamadriz/friendly-snippets",
+        config = function()
+        end,
+    },
+    {
+        "xzbdmw/colorful-menu.nvim",
+        opts = {
+            ls = {
+                fallback = true,
+            },
+        },
+    },
 }
 
 OL.paths.coding:append("snippets")
@@ -35,6 +34,7 @@ spec.build = "cargo build --release"
 OL.callbacks.cmp = OL.OLConfig.new()
 OL.callbacks.cmp.ft = OL.OLConfig.new(
     {
+        "CmdlineEnter",
         add = function(self, ft)
             table.insert(self, "InsertEnter *." .. ft)
         end,
@@ -81,7 +81,7 @@ opts.sources = {
     end,
 }
 
-function OL.callbacks.cmp:add(provider, provider_opts)
+function OL.callbacks.cmp:add(provider, provider_opts, ft)
     local default_opts = {
         name = provider,
         module = nil,
@@ -205,31 +205,9 @@ opts.keymap = {
     },
 }
 
-opts.snippets = {
-    --- Function to use when expanding LSP provided snippets
-    expand = function(snippet)
-        vim.snippet.expand(snippet)
-    end,
-    --- Function to use when checking if a snippet is active
-    active = function(filter)
-        vim.snippet.active(filter)
-    end,
-    --- Function to use when jumping between tab stops in a snippet, where direction can be negative or positive
-    jump = function(direction)
-        vim.snippet.jump(direction)
-    end,
-}
-
 opts.completion = {}
 opts.completion.keyword = {
-    --- 'prefix' will fuzzy match on the text before the cursor
-    --- 'full' will fuzzy match on the text before *and* after the cursor
-    --- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
     range = "full",
-    --- Regex used to get the text when fuzzy matching
-    regex = "[-_]\\|\\k",
-    --- After matching with regex, any characters matching this regex at the prefix will be excluded
-    exclude_from_prefix_regex = "[\\-]",
 }
 
 opts.completion.trigger = {
@@ -264,7 +242,10 @@ opts.completion.list = {
     max_items = 200,
     --- Controls if completion items will be selected automatically,
     --- and whether selection automatically inserts
-    selection = "manual",
+    selection = {
+        preselect = false,
+        auto_insert = true,
+    },
     --- Controls how the completion items are selected
     --- 'preselect' will automatically select the first item in the completion list
     --- 'manual' will not select any item by default
@@ -335,7 +316,7 @@ opts.completion.menu = {
     --- Controls how the completion items are rendered on the popup window
     draw = {
         --- Aligns the keyword you've typed to a component in the menu
-        align_to_component = "source", --- or 'none' to disable
+        align_to = "none", --- or 'none' to disable
         --- Left and right padding, optionally { left, right } for different padding on each side
         padding = 1,
         --- Gap between columns
@@ -346,14 +327,10 @@ opts.completion.menu = {
         --- Components to render, grouped by column
         columns = {
             {
-                "source",
-                "kind",
                 "kind_icon",
-                gap = 1,
             },
             {
                 "label",
-                "label_description",
                 gap = 1,
             },
         },
@@ -366,77 +343,32 @@ opts.completion.menu = {
         ---   text function: will be called for each item
         ---   highlight function: will be called only when the line appears on screen
         components = {
-
-            source = {
-                ellipsis = false,
-                text = function(ctx)
-                    return ctx.item and ctx.item.source_name or "Unknown"
-                end,
-                highlight = function(ctx)
-                    return (require(
-                               "blink.cmp.completion.windows.render.tailwind"
-                           ).get_hl(ctx)) or ("BlinkCmpKind" .. ctx.kind)
-                end,
-            },
-
-            kind_icon = {
-                ellipsis = false,
-                text = function(ctx)
-                    return ctx.kind_icon .. ctx.icon_gap
-                end,
-                highlight = function(ctx)
-                    return (require(
-                               "blink.cmp.completion.windows.render.tailwind"
-                           ).get_hl(ctx)) or ("BlinkCmpKind" .. ctx.kind)
-                end,
-            },
-
-            kind = {
-                ellipsis = false,
-                width = {
-                    fill = true,
-                },
-                text = function(ctx)
-                    return OL.fstring(
-                        "[%s]", ctx.kind ~= "Unknown" and ctx.kind or "Text"
-                    )
-                end,
-                highlight = function(ctx)
-                    return (require(
-                               "blink.cmp.completion.windows.render.tailwind"
-                           ).get_hl(ctx)) or ("BlinkCmpKind" .. ctx.kind)
-                end,
-            },
-
             label = {
                 width = {
                     fill = true,
                     max = 60,
                 },
                 text = function(ctx)
-                    return ctx.label .. ctx.label_detail
+                    local highlights_info =
+                        require("colorful-menu").blink_highlights(
+                            ctx
+                        )
+                    if highlights_info ~= nil then
+                        -- Or you want to add more item to label
+                        return highlights_info.label
+                    else
+                        return ctx.label
+                    end
                 end,
                 highlight = function(ctx)
-                    --- label and label details
-                    local highlights = {
-                        {
-                            0,
-                            #ctx.label,
-                            group = ctx.deprecated and "BlinkCmpLabelDeprecated" or
-                                "BlinkCmpLabel",
-                        },
-                    }
-                    if ctx.label_detail then
-                        table.insert(
-                            highlights, {
-                                #ctx.label,
-                                #ctx.label + #ctx.label_detail,
-                                group = "BlinkCmpLabelDetail",
-                            }
+                    local highlights = {}
+                    local highlights_info =
+                        require("colorful-menu").blink_highlights(
+                            ctx
                         )
+                    if highlights_info ~= nil then
+                        highlights = highlights_info.highlights
                     end
-
-                    --- characters matched on the label by the fuzzy matcher
                     for _, idx in ipairs(ctx.label_matched_indices) do
                         table.insert(
                             highlights, {
@@ -446,19 +378,9 @@ opts.completion.menu = {
                             }
                         )
                     end
-
+                    -- Do something else
                     return highlights
                 end,
-            },
-
-            label_description = {
-                width = {
-                    max = 30,
-                },
-                text = function(ctx)
-                    return ctx.label_description
-                end,
-                highlight = "BlinkCmpLabelDescription",
             },
         },
     },

@@ -329,15 +329,15 @@ end
 opts.input = {
     enabled = true,
 }
-table.insert(
-    config, function(o)
-        OL.load(
-            "snacks", {}, function(snacks)
-                vim.ui.input = snacks.input
-            end
-        )
-    end
-)
+--- table.insert(
+---     config, function(o)
+---         OL.load(
+---             "snacks", {}, function(snacks)
+---                 vim.ui.input = snacks.input
+---             end
+---         )
+---     end
+--- )
 
 ---
 --- --- Lazy Git ---
@@ -463,20 +463,6 @@ table.insert(
                 print = function(...)
                     vim.print(...)
                 end
-
-                local original_error = error
-                error = function(...)
-                    if ... ~= "Entry 0 missing parent url" then
-                        pcall(snacks.notify.error(...))
-                        if OL.verbose then
-                            snacks.debug.backtrace()
-                        end
-                    else
-                        original_error(...)
-                    end
-                end
-
-                warn = snacks.notify.warn
             end
         )
     end

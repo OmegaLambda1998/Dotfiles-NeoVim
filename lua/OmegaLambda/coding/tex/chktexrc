@@ -227,6 +227,49 @@ UserWarn
 #
 UserWarnRegex
 {
+    # Grammar
+    (?!#Grammar! thus! far)thusfar
+
+    # Acronyms
+    # (?!#Acronym! des)DES
+    # (?!#Acronym! des)! des! !
+    # (?!#Acronym! dessn)DES-SN
+    # (?!#Acronym! dessn)! dessn! !
+    # (?!#Acronym! dessniii)DES-SN3YR
+    # (?!#Acronym! dessniii)! dessn3yr! !
+    # (?!#Acronym! dessnv)DES-SN5YR
+    # (?!#Acronym! dessnv)! dessn5yr! !
+    #
+    # (?!#Acronym! lsst)LSST
+    # (?!#Acronym! lsst)! lsst! !
+    #
+    # (?!#Acronym! gr)GR
+    #
+    # (?!#Acronym! bao)BAO
+    #
+    # (?!#Acronym! cmb)CMB
+    #
+    # (?!#Acronym! pippin)Pippin
+    #
+    # (?!#Acronym! sn)! SN! !
+    # (?!#Acronym! sn)supernova
+    # (?!#Acronym! sne)! SNe! !
+    # (?!#Acronym! sne)supernovae
+    # (?!#Acronym! sncc)core! collapse
+    # (?!#Acronym! sncc)core-collapse
+    #
+    # # Aliases
+    # (?!#Alias! lcdm))CDM
+    #
+    # (?!#Acronym! oo)Omega_\{0\}
+    # (?!#Acronym! om)Omega_\{M\}
+    # (?!#Acronym! omo)Omega_\{M,0\}
+    # (?!#Acronym! or)Omega_\{R\}
+    # (?!#Acronym! oro)Omega_\{R,0\}
+    # (?!#Acronym! ol)Omega_\{\\Lambda\}
+    # (?!#Acronym! olo)Omega_\{\\Lambda,0\}
+    # (?!#Acronym! Ho)H_\{0\}
+
     (?!#Always! use! \nmid)\\not! *(\||\\mid)
 
     # Capitalise section when saying Section 6.
@@ -780,7 +823,7 @@ NoCharNext
 
 
 ## VerbClear
-#
+#% TODO: SALT2 -> SALT3
 # The character to replace verbatim text with.
 #
 # The arguments of commands listed in WipeArg, as well as

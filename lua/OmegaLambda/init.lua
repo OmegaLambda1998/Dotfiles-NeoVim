@@ -74,6 +74,7 @@ OL.load(
 OL.loadall(
     "*", {
         exclude = {
+            "colourscheme",
             "init",
             "setup",
             "lazy",

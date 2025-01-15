@@ -10,16 +10,19 @@ OL.load(
         from = OL.paths.coding,
     }
 )
+
 OL.load(
     "cmp", {
         from = OL.paths.coding,
     }
 )
+
 OL.load(
     "format", {
         from = OL.paths.coding,
     }
 )
+
 OL.load(
     "lint", {
         from = OL.paths.coding,

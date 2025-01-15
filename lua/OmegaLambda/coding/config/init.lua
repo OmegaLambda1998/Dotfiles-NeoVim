@@ -8,6 +8,20 @@ local filetypes = {
 
 --- LSP
 local servers = {
+    toml = {
+        name = "taplo",
+        opts = {
+            capabilities = {
+                textDocument = {
+                    completion = {
+                        completionItem = {
+                            snippetSupport = true,
+                        },
+                    },
+                },
+            },
+        },
+    },
     json = {
         name = "jsonls",
         opts = {
@@ -34,6 +48,12 @@ for ft, server in pairs(servers) do
 end
 
 --- Format
+local formatters = {
+    toml = {
+        name = "taplo",
+        opts = {},
+    },
+}
 local formatter = "yq"
 local yq_opts = "(.. |= (\
     with(select(kind == \"map\"); . style=\"\") |\
@@ -46,33 +66,12 @@ local yq_opts = "(.. |= (\
 for ft, alias in pairs(filetypes) do
     OL.callbacks.format.ft:add(ft)
 
-    local ft_formatter = OL.fstring("%s_%s", ft, formatter)
-    OL.callbacks.format:add(
-        ft, ft_formatter, {
-            function()
-                local ft_formatter_opts = OL.load(
-                    "conform.formatters." .. formatter, {}, function(fmt)
-                        return vim.deepcopy(fmt)
-                    end
-                )
-                ft_formatter_opts.args = {
-                    "-p",
-                    ft,
-                    "-o",
-                    ft,
-                    "-I2",
-                    yq_opts,
-                    "-",
-                }
-                return ft_formatter_opts
-            end,
-            mason = false,
-        }
-    )
-    if alias ~= ft then
-        OL.callbacks.format.ft:add(alias)
+    if formatters[ft] then
+        OL.callbacks.format:add(ft, formatters[ft].name, formatters[ft].opts)
+    else
+        local ft_formatter = OL.fstring("%s_%s", ft, formatter)
         OL.callbacks.format:add(
-            alias, ft_formatter, {
+            ft, ft_formatter, {
                 function()
                     local ft_formatter_opts = OL.load(
                         "conform.formatters." .. formatter, {}, function(fmt)
@@ -93,6 +92,32 @@ for ft, alias in pairs(filetypes) do
                 mason = false,
             }
         )
+        if alias ~= ft then
+            OL.callbacks.format.ft:add(alias)
+            OL.callbacks.format:add(
+                alias, ft_formatter, {
+                    function()
+                        local ft_formatter_opts = OL.load(
+                            "conform.formatters." .. formatter, {},
+                                function(fmt)
+                                    return vim.deepcopy(fmt)
+                                end
+                        )
+                        ft_formatter_opts.args = {
+                            "-p",
+                            ft,
+                            "-o",
+                            ft,
+                            "-I2",
+                            yq_opts,
+                            "-",
+                        }
+                        return ft_formatter_opts
+                    end,
+                    mason = false,
+                }
+            )
+        end
     end
 end
 

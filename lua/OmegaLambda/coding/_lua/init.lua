@@ -39,6 +39,7 @@ OL.callbacks.cmp:add(
         enabled = function(ctx)
             return (ctx == nil) or enabled()
         end,
+        score_offset = 100,
     }
 )
 

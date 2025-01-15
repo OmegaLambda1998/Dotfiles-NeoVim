@@ -138,42 +138,50 @@ inlay_hints()
 ---
 --- === Winbar Context ===
 ---
-local function barbecue()
-    OL.callbacks.colourscheme.barbecue = {
-        dim_dirname = true,
-        bold_basename = true,
-        dim_context = false,
-        alt_background = false,
-    }
+--- local function barbecue()
+---     OL.callbacks.colourscheme.barbecue = {
+---         dim_dirname = true,
+---         bold_basename = true,
+---         dim_context = false,
+---         alt_background = false,
+---     }
+---
+---     OL.spec:add("SmiteshP/nvim-navic")
+---     local spec, opts = OL.spec:add("utilyre/barbecue.nvim")
+---     opts.create_autocmd = false
+---     spec.event = {
+---         "LspAttach",
+---     }
+---
+---     function spec.config(_, o)
+---         OL.load_setup("barbecue", {}, o)
+---         vim.api.nvim_create_autocmd(
+---             {
+---                 "WinResized", -- or WinResized on NVIM-v0.9 and higher
+---                 "BufWinEnter",
+---                 "CursorHold",
+---                 "InsertLeave",
+---             }, {
+---                 group = vim.api.nvim_create_augroup("barbecue.updater", {}),
+---                 callback = function()
+---                     require("barbecue.ui").update()
+---                 end,
+---             }
+---         )
+---     end
+---
+---     opts.theme = "catppuccin"
+--- end
 
-    OL.spec:add("SmiteshP/nvim-navic")
-    local spec, opts = OL.spec:add("utilyre/barbecue.nvim")
-    opts.create_autocmd = false
+--- barbecue()
+
+local function dropbar()
+    local spec, opts = OL.spec:add("Bekaboo/dropbar.nvim")
     spec.event = {
         "LspAttach",
     }
-
-    function spec.config(_, o)
-        OL.load_setup("barbecue", {}, o)
-        vim.api.nvim_create_autocmd(
-            {
-                "WinResized", -- or WinResized on NVIM-v0.9 and higher
-                "BufWinEnter",
-                "CursorHold",
-                "InsertLeave",
-            }, {
-                group = vim.api.nvim_create_augroup("barbecue.updater", {}),
-                callback = function()
-                    require("barbecue.ui").update()
-                end,
-            }
-        )
-    end
-
-    opts.theme = "catppuccin"
 end
-
-barbecue()
+dropbar()
 
 ---
 --- === Code Actions ===

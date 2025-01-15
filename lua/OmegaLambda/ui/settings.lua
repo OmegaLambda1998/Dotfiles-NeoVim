@@ -3,7 +3,7 @@ OL.opt("conceallevel", 2)
 OL.opt("inccommand", "nosplit") -- preview incremental substitute
 OL.opt("jumpoptions", "view")
 
-OL.opt("textwidth", 80)
+--- OL.opt("textwidth", 80)
 OL.opt("linebreak")
 OL.opt("breakindent")
 OL.opt("list")

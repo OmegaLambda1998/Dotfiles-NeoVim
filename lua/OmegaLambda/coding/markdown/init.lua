@@ -30,6 +30,9 @@ local lsp = "marksman"
 OL.callbacks.lsp.ft:add(ext)
 OL.callbacks.lsp:add(lsp, {})
 
+--- CMP
+OL.callbacks.cmp.ft:add(ext)
+
 --- Format
 local formatter = "mdformat"
 OL.callbacks.format.ft:add(ext)
