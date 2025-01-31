@@ -234,11 +234,39 @@ vim.list_extend(
 )
 
 --- Markdown Export
-opts.load["core.export.markdown"] = {
+opts.load["core.export"] = {
     config = {
-        extensions = "all",
+        export_dir = vim.fn.expand(
+            opts.load["core.dirman"].config.workspaces.core .. "/export"
+        ),
     },
 }
+opts.load["core.export.markdown"] = {
+    config = {
+        extensions = {
+            "todo-items-basic",
+            "todo-items-pending",
+            "todo-items-extended",
+            "definition-lists",
+            "mathematics",
+            --- "metadata",
+            "latex",
+        },
+    },
+}
+vim.list_extend(
+    keys, {
+        {
+            "<localleader>e",
+            desc = "export",
+        },
+        {
+            "<localleader>er",
+            ":Neorg export to-file README.md<CR>",
+            desc = "export to readme",
+        },
+    }
+)
 
 --- Keybind
 opts.load["core.keybinds"] = {
@@ -390,6 +418,11 @@ vim.list_extend(
             "<localleader>tu",
             "<Plug>(neorg.qol.todo-items.todo.task-undone)",
             desc = "task is undone",
+        },
+        {
+            "<C-Space>",
+            "<Plug>(neorg.qol.todo-items.todo.task-cycle)",
+            desc = "cycle task",
         },
     }
 )

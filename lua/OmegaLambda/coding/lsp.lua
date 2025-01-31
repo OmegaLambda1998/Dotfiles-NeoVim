@@ -21,7 +21,6 @@ OL.load(
     "vim.lsp.log", {}, function(lsp_log)
         lsp_log.set_format_func(vim.inspect)
     end
-
 )
 
 ---@class OLLSP: OLConfig

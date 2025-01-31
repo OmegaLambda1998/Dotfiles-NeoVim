@@ -1,0 +1,4 @@
+---
+--- === Lua ===
+---
+require("FileTypes.lua")

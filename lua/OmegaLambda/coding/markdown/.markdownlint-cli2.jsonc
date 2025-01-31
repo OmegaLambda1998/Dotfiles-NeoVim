@@ -1,6 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.15.0/schema/markdownlint-cli2-config-schema.json",
+  "frontMatter": "(^---\\s*$[^]*?^---\\s*$)(\\r\\n|\\r|\\n|$)",
   "config": {
+    "MD003": {
+      "style": "atx"
+    },
     "MD013": false,
     "MD024": false
   }

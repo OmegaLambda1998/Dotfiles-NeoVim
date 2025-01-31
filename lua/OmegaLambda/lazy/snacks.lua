@@ -618,7 +618,7 @@ opts.scope = {
         },
         ---@type table<string, snacks.scope.Jump|{desc?:string}>
         jump = {
-            ["[["] = {
+            ["[i"] = {
                 min_size = 1, -- allow single line scopes
                 bottom = false,
                 cursor = false,
@@ -630,7 +630,7 @@ opts.scope = {
                 },
                 desc = "jump to top edge of scope",
             },
-            ["]]"] = {
+            ["]i"] = {
                 min_size = 1, -- allow single line scopes
                 bottom = true,
                 cursor = false,

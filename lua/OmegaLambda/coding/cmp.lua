@@ -5,7 +5,7 @@ local compat, _ = OL.spec:add("Saghen/blink.compat")
 compat.dependencies = {}
 
 local spec, opts = OL.spec:add("Saghen/blink.cmp")
-
+spec.cond = false
 spec.dependencies = {
     "williamboman/mason.nvim",
     {
@@ -461,7 +461,9 @@ opts.signature = {
 opts.fuzzy = {
     --- when enabled, allows for a number of typos relative to the length of the query
     --- disabling this matches the behavior of fzf
-    use_typo_resistance = true,
+    max_typos = function(keyword)
+        return math.floor(#keyword / 4)
+    end,
     --- frencency tracks the most recently/frequently used items and boosts the score of the item
     use_frecency = true,
     --- proximity bonus boosts the score of items matching nearby words

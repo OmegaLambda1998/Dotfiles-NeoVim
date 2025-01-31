@@ -26,7 +26,7 @@ local function enabled()
 end
 
 --- LSP
-local lsp = "marksman"
+local lsp = "prosemd_lsp"
 OL.callbacks.lsp.ft:add(ext)
 OL.callbacks.lsp:add(lsp, {})
 
@@ -34,10 +34,18 @@ OL.callbacks.lsp:add(lsp, {})
 OL.callbacks.cmp.ft:add(ext)
 
 --- Format
-local formatter = "mdformat"
+local formatter = "markdownlint-cli2"
+local formatter_config = ".markdownlint-cli2.jsonc"
 OL.callbacks.format.ft:add(ext)
 
-OL.callbacks.format:add(filetype, formatter, {})
+OL.callbacks.format:add(
+    filetype, formatter, {
+        prepend_args = {
+            "--config",
+            OL.paths.coding:abs(filetype, formatter_config),
+        },
+    }
+)
 
 --- Lint
 local linter = "markdownlint-cli2"

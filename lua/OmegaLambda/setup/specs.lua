@@ -22,10 +22,8 @@ end
 function OLSpec:add(url, opts)
     ---@class OLPlugin: OLConfig
     local spec = OL.OLConfig.new(
-                     {
-            url,
-        }
-                 )
+        { url }
+    )
     if opts then
         for k, v in pairs(opts) do
             spec[k] = v
