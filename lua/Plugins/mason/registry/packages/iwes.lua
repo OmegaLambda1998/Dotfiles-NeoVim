@@ -14,7 +14,18 @@ return Pkg.new(
             Pkg.Cat.LSP,
         },
         install = function(ctx)
-            cargo.install("iwes")
+            cargo.install(
+                "iwes", {
+                    bin = {
+                        "iwes",
+                    },
+                }
+            )
+            ctx.receipt:with_primary_source(
+                {
+                    type = "cargo",
+                }
+            )
         end,
     }
 )
