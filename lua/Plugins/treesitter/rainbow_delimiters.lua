@@ -34,12 +34,16 @@ CFG.rainbow_delimiter.priority = {
 }
 rd.opts.priority = CFG.rainbow_delimiter.priority
 
+--- Highlight ---
+rd.opts.highlight = CFG.spec:get("snacks").opts.indent.indent.hl
+
 function M.setup(treesitter)
     table.insert(
         treesitter.dependencies, {
             url,
         }
     )
+    return treesitter
 end
 
 return M

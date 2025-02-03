@@ -2,7 +2,7 @@
 base: "lua51"
 lua_versions: ["luajit"]
 globals:
-  OL:
+  CFG:
     any: true
   vim:
     any: true

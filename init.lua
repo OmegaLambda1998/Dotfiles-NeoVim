@@ -1,6 +1,6 @@
 local draft = os.getenv("NVIM_DRAFT")
 
-if draft then
+if draft == nil then
     --- Environment Variables ---
     local verbose = os.getenv("NVIM_VERBOSE") and true or false
     local profile = os.getenv("NVIM_PROFILE") and true or false
@@ -9,6 +9,7 @@ if draft then
     require("ConfigHelper")
     CFG.verbose = verbose
     CFG.profile = profile
+    CFG.disable = {}
 
     --- Lazy Bootstrap ---
     local lazy = require("Plugins.lazy")
@@ -46,6 +47,9 @@ if draft then
 
     --- Setup usercommands ---
     CFG.usrcmd:setup()
+
+    --- Setup highlights ---
+    CFG.hl:setup()
 
     CFG.is_setup = true
 else

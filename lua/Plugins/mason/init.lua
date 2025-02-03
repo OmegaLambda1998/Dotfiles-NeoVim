@@ -61,3 +61,5 @@ mason.post:insert(
         )
     end
 )
+
+CFG.colourscheme:set("mason")

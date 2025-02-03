@@ -2,10 +2,6 @@ local M = {
     mappings = {},
 }
 
-function M:map(map)
-    table.insert(self.mappings, map)
-end
-
 function M:create(map)
     local lhs = map.lhs or map[1]
     local rhs = map.rhs or map[2]
@@ -33,6 +29,13 @@ function M:create(map)
     end
     if type(rhs) == "function" then
         vim.keymap.set(mode, lhs, rhs, opts)
+    end
+end
+
+function M:map(map)
+    table.insert(self.mappings, map)
+    if CFG.is_setup then
+        self:create(map)
     end
 end
 

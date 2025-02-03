@@ -119,7 +119,6 @@ function M.setup(snacks)
                         end,
                         desc = "Recent Files",
                     },
-
                     {
                         "<leader>ps",
                         function()
@@ -127,7 +126,13 @@ function M.setup(snacks)
                         end,
                         desc = "Smart",
                     },
-
+                    {
+                        "<leader>pv",
+                        function()
+                            Snacks.picker.resume()
+                        end,
+                        desc = "Previous",
+                    },
                     {
                         "<leader>pz",
                         function()

@@ -1,7 +1,7 @@
 ---
 --- === Mason LSPConfig ===
 ---
-local lspmason = CFG.spec:add("williamboman/mason-lspconfig.nvim")
+CFG.spec:add("williamboman/mason-lspconfig.nvim")
 CFG.mason_lsp = {}
 
 ---
@@ -9,9 +9,19 @@ CFG.mason_lsp = {}
 ---
 
 local lsp = CFG.spec:add("neovim/nvim-lspconfig")
-local path = CFG.paths.join({"Plugins", "lsp"})
+local path = CFG.paths.join(
+    {
+        "Plugins",
+        "lsp",
+    }
+)
 require("vim.lsp.log").set_format_func(vim.inspect)
 
+lsp.dependencies = {
+    {
+        "saghen/blink.cmp",
+    }, --- Load first to get capabilities
+}
 lsp.cmd = {
     "LspInfo",
     "LspStart",
@@ -35,6 +45,51 @@ local icons = {
     [severity.HINT] = " ",
     [severity.INFO] = " ",
 }
+
+CFG.colourscheme:set("semantic_tokens")
+
+CFG.colourscheme:set(
+    "native_lsp", {
+        enabled = true,
+        virtual_text = {
+            errors = {
+                "italic",
+            },
+            hints = {
+                "italic",
+            },
+            warnings = {
+                "italic",
+            },
+            information = {
+                "italic",
+            },
+            ok = {
+                "italic",
+            },
+        },
+        underlines = {
+            errors = {
+                "underdouble",
+            },
+            warnings = {
+                "undercurl",
+            },
+            information = {
+                "underdashed",
+            },
+            hints = {
+                "underdotted",
+            },
+            ok = {
+                "underline",
+            },
+        },
+        inlay_hints = {
+            background = true,
+        },
+    }
+)
 
 --- Diagnostics ---
 
@@ -86,7 +141,6 @@ function lsp.opts.inlay_hint.setup(opts)
     )
     return opts
 end
-lsp = require(path.join({"inlay_hint"}).mod).setup(lsp)
 
 --- Capabilities ---
 
@@ -178,3 +232,24 @@ lsp.pre:insert(
         return opts
     end
 )
+
+---
+--- === Plugins ===
+---
+
+local plugins = {
+    "inlay_hint",
+    "hover",
+}
+
+for _, file in ipairs(plugins) do
+    local plugin = require(
+        path.join(
+            { file }
+        ).mod
+    )
+    if plugin.setup then
+        lsp = plugin.setup(lsp)
+    end
+end
+

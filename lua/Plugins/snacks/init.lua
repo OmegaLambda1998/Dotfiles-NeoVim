@@ -3,19 +3,10 @@ local snacks = CFG.spec:add("folke/snacks.nvim")
 snacks.priority = 1000
 snacks.cond = true
 snacks.lazy = false
-snacks.dependencies = {
-    {
-        "nvim-tree/nvim-web-devicons",
-    },
-    {
-        "echasnovski/mini.icons",
-    },
-}
-
 local modules = {
     "animate",
     "bigfile",
-    "bufdelete",
+    --- "bufdelete",
     --- "dashboard",
     "debug",
     --- "dim",
@@ -35,7 +26,7 @@ local modules = {
     "scroll",
     "statuscolumn",
     "terminal",
-    "toggle", --- TODO: Fucking Broken
+    "toggle",
     --- "util",
     --- "win",
     "words",
@@ -49,3 +40,5 @@ end
 for _, module in ipairs(modules) do
     snacks = require("Plugins.snacks." .. module).setup(snacks)
 end
+
+CFG.colourscheme:set("snacks")

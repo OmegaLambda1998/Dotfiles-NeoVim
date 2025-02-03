@@ -10,12 +10,11 @@ function CFG.is_pager()
 end
 
 CFG.spec = require("ConfigHelper.spec")
-
 CFG.paths = require("ConfigHelper.paths")
-
 CFG.key = require("ConfigHelper.keymaps")
 CFG.set = require("ConfigHelper.settings")
 CFG.aucmd = require("ConfigHelper.autocommands")
 CFG.usrcmd = require("ConfigHelper.usercommands")
+CFG.hl = require("ConfigHelper.highlights")
 
 return CFG

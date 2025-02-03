@@ -22,3 +22,5 @@ wk.post:insert(
         CFG.key:setup()
     end
 )
+
+CFG.colourscheme:set("which_key")

@@ -7,7 +7,7 @@ opts.indent = {
     enabled = true,
     priority = 200,
     only_scope = false,
-    only_current = false,
+    only_current = true,
     hl = {
         "SnacksIndent1",
         "SnacksIndent2",
@@ -35,7 +35,7 @@ opts.scope = {
     underline = true,
     only_current = opts.indent.only_current,
     hl = opts.indent.hl,
-    char = "",
+    char = ".",
 }
 
 opts.chunk = {
