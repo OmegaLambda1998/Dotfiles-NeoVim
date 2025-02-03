@@ -29,6 +29,7 @@ mason.opts.ui = {
 
 mason.opts.registries = {
     "github:mason-org/mason-registry",
+    "lua:Plugins.mason.registry",
 }
 
 mason.post:insert(
