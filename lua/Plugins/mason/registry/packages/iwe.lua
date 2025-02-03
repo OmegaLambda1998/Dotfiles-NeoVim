@@ -4,8 +4,8 @@ local cargo = require("mason-core.managers.cargo")
 
 return Pkg.new(
     {
-        name = "iwes",
-        desc = "Language Server for IWE: A lightning-fast, Neovim extension to supercharge your notes.",
+        name = "iwe",
+        desc = "A lightning-fast, Neovim extension to supercharge your notes.",
         homepage = "iwe.md",
         languages = {
             Pkg.Lang.Markdown,
@@ -15,9 +15,9 @@ return Pkg.new(
         },
         install = function(ctx)
             cargo.install(
-                "iwes", {
+                "iwe", {
                     bin = {
-                        "iwes",
+                        "iwe",
                     },
                 }
             )
