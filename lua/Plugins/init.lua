@@ -36,6 +36,3 @@ require("Plugins.editor")
 
 --- UI ---
 require("Plugins.ui")
-
---- IWE ---
-require("Plugins.IWE")
