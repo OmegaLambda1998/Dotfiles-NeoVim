@@ -101,21 +101,21 @@ blink.opts.sources = {
         "snippets",
         "buffer",
     },
-    per_filetype = CFG.cmp.sources,
+    per_filetype = {},
 }
-blink.opts.sources.providers = {
-    lsp = {
-        async = true,
-    },
-    snippets = {
-        opts = {
-            search_paths = {
-                path.join(
-                    {
-                        "snippets",
-                    }
-                ).path,
-            },
+
+blink.opts.sources.providers = {}
+blink.opts.sources.providers.lsp = {
+    async = true,
+}
+blink.opts.sources.providers.snippets = {
+    opts = {
+        search_paths = {
+            path.join(
+                {
+                    "snippets",
+                }
+            ).path,
         },
     },
 }
@@ -123,10 +123,14 @@ blink.opts.sources.providers = {
 blink.pre:insert(
     function(opts)
         local providers = opts.sources.default
-        for ft, ft_providers in pairs(opts.sources.per_filetype) do
-            opts.sources.per_filetype[ft] = vim.tbl_deep_extend(
-                "force", opts.sources.default, ft_providers
-            )
+        for ft, ft_providers in pairs(CFG.cmp.sources) do
+            for _, provider in ipairs(opts.sources.default) do
+                if not vim.tbl_contains(ft_providers) then
+                    table.insert(ft_providers, provider)
+                end
+            end
+            opts.sources.per_filetype[ft] = ft_providers
+
             for _, provider in ipairs(ft_providers) do
                 if not vim.tbl_contains(providers, provider) then
                     table.insert(providers, provider)

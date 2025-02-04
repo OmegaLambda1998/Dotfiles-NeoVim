@@ -111,37 +111,6 @@ CFG.aucmd:on(
     }
 )
 
---- Wrap and check for spell in text filetypes
-CFG.aucmd:on(
-    "FileType", function()
-        vim.opt_local.wrap = true
-        vim.opt_local.spell = true
-    end, {
-        group = "wrap_spell",
-        pattern = {
-            "text",
-            "plaintex",
-            "typst",
-            "gitcommit",
-            "markdown",
-        },
-    }
-)
-
---- Fix conceallevel for json files
-CFG.aucmd:on(
-    { "FileType" }, function()
-        vim.opt_local.conceallevel = 0
-    end, {
-        group = "json_conceal",
-        pattern = {
-            "json",
-            "jsonc",
-            "json5",
-        },
-    }
-)
-
 --- Auto create dir when saving a file, in case some intermediate directory does not exist
 CFG.aucmd:on(
     { "BufWritePre" }, function(event)

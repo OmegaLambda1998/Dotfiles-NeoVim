@@ -15,13 +15,14 @@
   "mason-lspconfig.nvim": { "branch": "main", "commit": "f75e877f5266e87523eb5a18fcde2081820d087b" },
   "mason.nvim": { "branch": "main", "commit": "e2f7f9044ec30067bc11800a9e266664b88cda22" },
   "nvim-lint": { "branch": "master", "commit": "789b7ada1b4f00e08d026dffde410dcfa6a0ba87" },
-  "nvim-lspconfig": { "branch": "master", "commit": "00b236b795acfb79339bd6771488c155073a2889" },
+  "nvim-lspconfig": { "branch": "master", "commit": "66bc018936c6ff76beb75f89d986af6442db4001" },
   "nvim-treesitter": { "branch": "master", "commit": "4e701776f8824fc188a6254f57d080971ce28c92" },
   "nvim-treesitter-context": { "branch": "master", "commit": "9a49f43a2ec9bf77aecfb0fcbc43af43338375c0" },
   "nvim-web-devicons": { "branch": "master", "commit": "402377242b04be3f4f0f3720bd952df86e946c30" },
   "oil.nvim": { "branch": "master", "commit": "add50252b5e9147c0a09d36480d418c7e2737472" },
   "overseer.nvim": { "branch": "master", "commit": "390332d4687e3d07495a545ba11e62fcf30339f1" },
   "rainbow-delimiters.nvim": { "branch": "master", "commit": "cf0da2516b0684596b09c51dbc93c609cdc2f455" },
+  "render-markdown.nvim": { "branch": "main", "commit": "2a9e0ab6043bfb4996ce6a6a35594ab357e5d299" },
   "snacks.nvim": { "branch": "main", "commit": "b773368f8aa6e84a68e979f0e335d23de71f405a" },
   "which-key.nvim": { "branch": "main", "commit": "0e76a87ac51772569aec678dc74baa8e2a86100c" }
 }

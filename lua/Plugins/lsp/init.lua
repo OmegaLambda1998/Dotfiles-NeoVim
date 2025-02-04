@@ -233,6 +233,16 @@ lsp.pre:insert(
     end
 )
 
+--- Clear LSP Log
+lsp.post:insert(
+    function()
+        local log = vim.fs.joinpath(vim.fn.stdpath("state"), "lsp.log")
+        if vim.uv.fs_stat(log) then
+            vim.fs.rm(log)
+        end
+    end
+)
+
 ---
 --- === Plugins ===
 ---
