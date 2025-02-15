@@ -16,6 +16,10 @@ function M.setup(snacks)
                         Snacks.terminal()
                     end,
                     desc = "Toggle Terminal",
+                    mode = {
+                        "n",
+                        "t",
+                    },
                 }
             )
         end

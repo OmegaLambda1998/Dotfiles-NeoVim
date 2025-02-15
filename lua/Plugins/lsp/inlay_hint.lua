@@ -5,15 +5,20 @@ inlay_hint.branch = "nightly"
 inlay_hint.event = {
     "LspAttach",
 }
+inlay_hint.cond = CFG.spec:get("nvim-lspconfig").opts.inlay_hint.enabled
 
 inlay_hint.opts.virt_text_pos = "inline"
 function inlay_hint.opts.display_callback(line_hints, options, bufnr)
     local lhint = {}
-    local line = vim.api.nvim_win_get_cursor(0)[1] - 1  -- Fetch cursor position once
+    local line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- Fetch cursor position once
 
     for _, hint in pairs(line_hints) do
         if hint.position.line ~= line then
-            local label_parts = type(hint.label) == "table" and hint.label or { { value = hint.label } }
+            local label_parts = type(hint.label) == "table" and hint.label or {
+                {
+                    value = hint.label,
+                },
+            }
             local text_parts = {}
 
             if hint.paddingLeft then
@@ -38,15 +43,28 @@ function inlay_hint.opts.display_callback(line_hints, options, bufnr)
     return lhint
 end
 
-inlay_hint.post:insert(function()
-    CFG.aucmd:on({"CursorMoved", "CursorMovedI"}, function()
-        if not CFG.is_pager() then
-            local hint = require("inlay-hint")
-            if hint.is_enabled and hint.is_enabled() then
-                hint.enable()
+inlay_hint.post:insert(
+    function()
+        CFG.aucmd:on(
+            {
+                "InsertEnter",
+            }, function()
+                local hint = require("inlay-hint")
+                hint.enable(false)
             end
-        end
-    end)
-end)
+        )
+        CFG.aucmd:on(
+            {
+                "CursorMoved",
+                "InsertLeave",
+            }, function()
+                if not CFG.is_pager() then
+                    local hint = require("inlay-hint")
+                    hint.enable(true) --- Refresh inlay hints
+                end
+            end
+        )
+    end
+)
 
 return M

@@ -1,7 +1,10 @@
 local oil = CFG.spec:add("stevearc/oil.nvim")
 oil.lazy = false
 
+oil.opts.default_file_explorer = true
+
 oil.opts.skip_confirm_for_simple_edits = true
+
 oil.opts.lsp_file_methods = {
     autosave_changes = "unmodified",
 }

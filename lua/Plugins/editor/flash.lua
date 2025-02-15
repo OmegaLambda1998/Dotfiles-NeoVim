@@ -12,12 +12,10 @@ flash.keys = {
     {
         "t",
         desc = "Flash Jump Forward",
-        mode = { "n" },
     },
     {
         "T",
         desc = "Flash Jump Backward",
-        mode = { "n" },
     },
     {
         "f",
@@ -96,14 +94,42 @@ flash.opts.label = {
     },
 }
 
-flash.opts.mode = {}
-flash.opts.mode.char = {
+flash.opts.modes = {}
+flash.opts.modes.char = {
+    enabled = true,
+    config = function(opts)
+        --- Autohide flash when in operator-pending mode
+        opts.autohide = opts.autohide or
+                            (vim.fn.mode(true):find("no") and vim.v.operator ==
+                                "y")
+        opts.highlight.backdrop = vim.fn.mode(true):find("o")
+        --- Disable jump labels when using a count, or when recoding / executing registers
+        opts.jump_labels = opts.jump_labels and vim.v.count == 0 and
+                               vim.fn.reg_executing() == "" and
+                               vim.fn.reg_recording() == ""
+    end,
     autohide = false,
     jump_labels = true,
     label = {
         exclude = "hjkliardcx",
     },
+    char_actions = function(motion)
+        return {
+            [";"] = "next",
+            [","] = "prev",
+            [motion:lower()] = "next",
+            [motion:upper()] = "prev",
+        }
+    end,
+    search = {
+        wrap = false,
+        incremental = false,
+    },
+    highlight = {
+        backdrop = true,
+    },
     jump = {
+        register = false,
         autojump = true,
     },
 }
@@ -117,3 +143,5 @@ CFG.key:map(
 
 CFG.colourscheme:set("flash")
 
+CFG.set:opt("ignorecase")
+CFG.set:opt("smartcase")

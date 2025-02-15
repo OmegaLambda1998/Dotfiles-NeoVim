@@ -18,11 +18,10 @@ CFG.format.formatters_by_ft = {
 
 function CFG.format:add(ft, formatter, opts)
     opts = opts or {}
-    self.formatters_by_ft[ft] = vim.tbl_deep_extend(
-        "force", self.formatters_by_ft[ft] or {}, {
-            formatter,
-        }
-    )
+    if self.formatters_by_ft[ft] == nil then
+        self.formatters_by_ft[ft] = {}
+    end
+    table.insert(self.formatters_by_ft[ft], formatter)
     self.formatters[formatter] = vim.tbl_deep_extend(
         "force", self.formatters[formatter] or {}, opts
     )

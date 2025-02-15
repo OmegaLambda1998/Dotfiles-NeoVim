@@ -27,7 +27,7 @@ function M.setup(snacks)
                     {
                         "<leader>pf",
                         function()
-                            Snacks.picker.files()
+                            Snacks.picker.smart()
                         end,
                         desc = "Files",
                     },
@@ -118,13 +118,6 @@ function M.setup(snacks)
                             Snacks.picker.recent()
                         end,
                         desc = "Recent Files",
-                    },
-                    {
-                        "<leader>ps",
-                        function()
-                            Snacks.picker.smart()
-                        end,
-                        desc = "Smart",
                     },
                     {
                         "<leader>pv",

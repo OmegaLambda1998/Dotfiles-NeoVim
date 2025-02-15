@@ -37,6 +37,7 @@ M.add = function(self, url, opts, spec)
         for _, fn in ipairs(p.pre) do
             o = fn(o)
         end
+        plugin.opts = o
         if p.setup ~= false then
             if not p.main then
                 p.main = p.name:gsub(".nvim", "")

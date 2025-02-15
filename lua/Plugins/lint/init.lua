@@ -23,13 +23,16 @@ lint.opts.linters_by_ft = CFG.lint.linters_by_ft
 
 function CFG.lint:add(ft, linter, opts)
     opts = opts or {}
-    self.linters_by_ft[ft] = vim.tbl_deep_extend(
-        "force", self.linters_by_ft[ft] or {}, {
+    self.linters_by_ft[ft] = vim.list_extend(
+        self.linters_by_ft[ft] or {}, {
             linter,
         }
     )
     self.linters[linter] = vim.tbl_deep_extend(
-        "force", self.linters[linter] or {}, opts
+        "force", self.linters[linter] or {
+            ignore_errors = not CFG.verbose,
+            ignore_exitcode = not CFG.verbose,
+        }, opts
     )
     if opts.mason ~= false then
         if opts.mason then
@@ -67,6 +70,9 @@ local function run(dry_run)
 
     -- Create a copy of the names table to avoid modifying the original.
     names = vim.list_extend({}, names)
+    if #names == 0 then
+        names = vim.list_extend(names, CFG.lint.linters_by_ft["_"])
+    end
     names = vim.list_extend(names, CFG.lint.linters_by_ft["*"])
 
     -- Filter out linters that don't exist or don't match the condition.
@@ -81,19 +87,25 @@ local function run(dry_run)
             if not linter then
                 vim.print("Linter not found: " .. name)
             end
-            return linter ~= nil
+            return linter and
+                       not (type("linter") == "table" and linter.cond and
+                           not linter.cond(ctx))
         end, names
     )
 
     if dry_run ~= true then
         -- Run linters.
         if #names > 0 then
-            for _, name in ipairs(names) do
-                Lint.try_lint(name)
-            end
+            Lint.try_lint(names)
+            -- for _, name in ipairs(names) do
+            -- end
         end
     else
-        return names
+        rtn = {}
+        for _, name in ipairs(names) do
+            rtn[name] = Lint.linters[name]
+        end
+        return rtn
     end
 end
 
@@ -102,11 +114,7 @@ CFG.usrcmd:fn(
         local filetype = vim.bo.filetype
         local linters = run(true)
         if linters then
-            vim.print(
-                string.format(
-                    "Linters for %s: %s", filetype, table.concat(linters, ", ")
-                )
-            )
+            vim.print(string.format("Linters for %s:", filetype), linters)
         else
             vim.print(
                 string.format("No linters configured for filetype: ", filetype)
@@ -136,6 +144,7 @@ lint.pre:insert(
             end
         end
         Lint.linters_by_ft = opts.linters_by_ft
+        return opts
     end
 )
 

@@ -81,6 +81,9 @@ local opts = {
         loader = CFG.verbose,
         require = CFG.verbose,
     },
+    dev = {
+        path = "~/PARA/Projects/",
+    },
 }
 
 function M.setup()

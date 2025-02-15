@@ -7,32 +7,35 @@ local path = CFG.paths.join(
 )
 
 CFG.cmp = {
+    dependencies = {},
     brackets = {},
     sources = {},
     providers = {},
-}
-
-blink.build = "cargo build --release"
-blink.event = {
-    "CmdlineEnter",
-}
-blink.dependencies = {
-    {
-        "xzbdmw/colorful-menu.nvim",
+    fallback_for = {},
+    event = {
+        "CmdlineEnter",
     },
 }
+function CFG.cmp:ft(ft)
+    table.insert(self.event, "InsertEnter *." .. ft)
+end
+
+blink.build = "cargo build --release"
+blink.event = CFG.cmp.event
+blink.dependencies = CFG.cmp.dependencies
+table.insert(
+    blink.dependencies, {
+        "xzbdmw/colorful-menu.nvim",
+    }
+)
 
 --- Snippets ---
-require(
-    path.join(
-        { "snippets" }
-    ).mod
-)
+local enable_snippets = true
 
 --- Completion ---
 blink.opts.completion = {}
 blink.opts.completion.keyword = {
-    range = "full",
+    range = "prefix",
 }
 blink.opts.completion.list = {
     selection = {
@@ -50,6 +53,7 @@ blink.opts.completion.accept = {
         override_brackets_for_filetypes = CFG.cmp.brackets,
     },
 }
+
 blink.opts.completion.menu = {
     border = "single",
     draw = {
@@ -82,6 +86,10 @@ blink.opts.completion.documentation = {
     },
 }
 
+blink.opts.completion.trigger = {
+    prefetch_on_insert = true,
+}
+
 --- Signature ---
 blink.opts.signature = {
     enabled = true,
@@ -95,20 +103,18 @@ blink.opts.signature.window = {
 
 --- Sources ---
 blink.opts.sources = {
+    per_filetype = {},
+    providers = {},
     default = {
         "lsp",
         "path",
-        "snippets",
         "buffer",
     },
-    per_filetype = {},
 }
 
-blink.opts.sources.providers = {}
-blink.opts.sources.providers.lsp = {
-    async = true,
-}
+--- Providers ---
 blink.opts.sources.providers.snippets = {
+    enabled = enable_snippets,
     opts = {
         search_paths = {
             path.join(
@@ -119,18 +125,56 @@ blink.opts.sources.providers.snippets = {
         },
     },
 }
+if blink.opts.sources.providers.snippets.enabled then
+    table.insert(blink.opts.sources.default, "snippets")
+    require(
+        path.join(
+            {
+                "snippets",
+            }
+        ).mod
+    ).setup(blink)
+end
+local snippet_capabilities = {
+    textDocument = {
+        completion = {
+            completionItem = {
+                snippetSupport = blink.opts.sources.providers.snippets.enabled,
+            },
+        },
+    },
+}
 
 blink.pre:insert(
     function(opts)
-        local providers = opts.sources.default
+        --- First get default providers
+        local providers = vim.deepcopy(opts.sources.default)
+
+        --- Then, process each per_filetype provider
         for ft, ft_providers in pairs(CFG.cmp.sources) do
+            --- If provider doesn't already have an enable function
+            --- Enable on filetype
+            for _, provider in ipairs(ft_providers) do
+                CFG.cmp.providers[provider] = vim.tbl_deep_extend(
+                    "force", {
+                        enabled = function()
+                            return vim.bo.filetype == ft
+                        end,
+                    }, CFG.cmp.providers[provider] or {}
+                )
+            end
+
+            --- Ensure each filetype still has all the normal default providers
             for _, provider in ipairs(opts.sources.default) do
                 if not vim.tbl_contains(ft_providers) then
                     table.insert(ft_providers, provider)
                 end
             end
+
+            --- Add per_filetype providers
             opts.sources.per_filetype[ft] = ft_providers
 
+            --- Add per_filetype provider configs
             for _, provider in ipairs(ft_providers) do
                 if not vim.tbl_contains(providers, provider) then
                     table.insert(providers, provider)
@@ -138,12 +182,15 @@ blink.pre:insert(
             end
         end
 
+        --- Make sure each provider has the following default config
+        --- Overwriting where applicable
         for _, provider in ipairs(providers) do
             opts.sources.providers[provider] = vim.tbl_deep_extend(
                 "force", opts.sources.providers[provider] or {},
                     CFG.cmp.providers[provider] or {}
             )
         end
+
         return opts
     end
 )
@@ -186,6 +233,12 @@ blink.opts.keymap = {
 CFG.colourscheme:set("blink_cmp")
 blink.post:insert(
     function()
-        CFG.lsp.capabilities = require("blink.cmp").get_lsp_capabilities()
+        CFG.lsp.capabilities = vim.tbl_deep_extend(
+            "force", CFG.lsp.capabilities, {
+                capabilities = require("blink.cmp").get_lsp_capabilities(),
+            }, {
+                capabilities = snippet_capabilities,
+            }
+        )
     end
 )

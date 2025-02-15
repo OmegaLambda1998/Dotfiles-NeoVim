@@ -16,6 +16,7 @@ mason.dependencies = {
 }
 
 CFG.mason = {}
+CFG.mason.bin = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "bin")
 CFG.mason.ensure_installed = {}
 mason.opts.ensure_installed = CFG.mason.ensure_installed
 

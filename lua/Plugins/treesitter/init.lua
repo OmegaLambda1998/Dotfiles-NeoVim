@@ -1,4 +1,6 @@
-CFG.treesitter = {}
+CFG.treesitter = {
+    ensure_installed = {},
+}
 local path = CFG.paths.join(
     {
         "Plugins",
@@ -7,6 +9,8 @@ local path = CFG.paths.join(
 )
 
 local treesitter = CFG.spec:add("nvim-treesitter/nvim-treesitter")
+
+treesitter.main = "nvim-treesitter.configs"
 
 treesitter.dependencies = {}
 
@@ -31,6 +35,8 @@ end
 ---
 --- Opts ---
 ---
+
+treesitter.opts.ensure_installed = CFG.treesitter.ensure_installed
 
 treesitter.opts.auto_install = true
 treesitter.opts.sync_install = false
@@ -59,6 +65,15 @@ treesitter.post:insert(
         vim.wo.foldmethod = "expr"
         vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
         vim.wo.foldlevel = 99
+        CFG.key:map(
+            {
+                "<CR>",
+                "za",
+                mode = {
+                    "n",
+                },
+            }
+        )
     end
 )
 

@@ -3,10 +3,12 @@ local colourscheme = CFG.spec:add("catppuccin/nvim")
 colourscheme.name = "catppuccin"
 colourscheme.main = "catppuccin"
 colourscheme.lazy = false
+colourscheme.cond = true
 colourscheme.priority = 1001
 colourscheme.dependencies = {
     {
         "nvim-tree/nvim-web-devicons",
+        cond = true,
     },
 }
 

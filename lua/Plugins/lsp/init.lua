@@ -16,6 +16,7 @@ local path = CFG.paths.join(
     }
 )
 require("vim.lsp.log").set_format_func(vim.inspect)
+vim.lsp.set_log_level(CFG.verbose and "debug" or "info")
 
 lsp.dependencies = {
     {
@@ -94,6 +95,7 @@ CFG.colourscheme:set(
 --- Diagnostics ---
 
 local diagnostic_opts = {
+    update_in_insert = false,
     severity_sort = true,
     source = true,
 }
@@ -107,7 +109,6 @@ lsp.opts.diagnostics = vim.tbl_deep_extend(
             text = icons,
         },
         float = diagnostic_opts,
-        update_in_insert = true,
         jump = {
             float = diagnostic_opts,
         },
@@ -129,7 +130,7 @@ function lsp.opts.inlay_hint.setup(opts)
     CFG.aucmd:on(
         "LspAttach", function(ctx)
             local client = vim.lsp.get_client_by_id(ctx.data.client_id)
-            if client and client:supports_method("textDocument/inlayhint") then
+            if client and client:supports_method("textDocument/inlayHint") then
                 local buf = ctx.buf
                 if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" then
                     vim.lsp.inlay_hint.enable(true)
@@ -147,9 +148,85 @@ end
 CFG.lsp.capabilities = {}
 lsp.opts.capabilities = CFG.lsp.capabilities
 
+--- dynamicRegistration capabilities
+local dynamicRegistration = {
+    textDocument = {
+        callHierarchy = {
+            dynamicRegistration = true,
+        },
+        codeAction = {
+            dynamicRegistration = true,
+        },
+        codeLens = {
+            dynamicRegistration = true,
+        },
+        completion = {
+            dynamicRegistration = true,
+            completionList = {
+                dynamicRegistration = true,
+            },
+        },
+        definition = {
+            dynamicRegistration = true,
+        },
+        diagnostic = {
+            dynamicRegistration = true,
+        },
+        documentHighlight = {
+            dynamicRegistration = true,
+        },
+        documentSymbol = {
+            dynamicRegistration = true,
+        },
+        foldingRange = {
+            dynamicRegistration = true,
+        },
+        formatting = {
+            dynamicRegistration = true,
+        },
+        hover = {
+            dynamicRegistration = true,
+        },
+        inlayHint = {
+            dynamicRegistration = true,
+        },
+        rangeFormatting = {
+            dynamicRegistration = true,
+        },
+        references = {
+            dynamicRegistration = true,
+        },
+        rename = {
+            dynamicRegistration = true,
+        },
+        semanticTokens = {
+            dynamicRegistration = true,
+        },
+        signatureHelp = {
+            dynamicRegistration = true,
+        },
+        synchronization = {
+            dynamicRegistration = true,
+        },
+    },
+    workspace = {
+        didChangeConfiguration = {
+            dynamicRegistration = true,
+        },
+        didChangeWatchedFiles = {
+            dynamicRegistration = true,
+        },
+        symbol = {
+            dynamicRegistration = true,
+        },
+    },
+}
+
 function lsp.opts.capabilities.setup(opts)
     opts.capabilities = vim.tbl_deep_extend(
-        "force", vim.lsp.protocol.make_client_capabilities(), opts.capabilities
+        "force", vim.lsp.protocol.make_client_capabilities(),
+            opts.capabilities or {}, CFG.lsp.capabilities.capabilities or {},
+            dynamicRegistration or {}
     )
     return opts
 end
@@ -167,6 +244,9 @@ local function setup_server(name, opts, capabilities)
     local config = vim.tbl_deep_extend(
         "force", {
             capabilities = vim.deepcopy(capabilities),
+            flags = {
+                allow_incremental_sync = true,
+            },
         }, opts
     )
     lspconfig[name].setup(config)
@@ -220,6 +300,19 @@ end
 lsp.setup = false
 lsp.pre:insert(
     function(opts)
+        local ok, wf = pcall(require, "vim.lsp._watchfiles")
+        if ok then
+            -- disable lsp watcher. Too slow on linux
+            wf._watchfunc = function()
+                return function()
+                end
+            end
+        end
+        return opts
+    end
+)
+lsp.pre:insert(
+    function(opts)
         local modes = {
             "diagnostics",
             "inlay_hint",
@@ -227,7 +320,9 @@ lsp.pre:insert(
             "servers",
         }
         for _, mode in ipairs(modes) do
-            opts = opts[mode].setup(opts)
+            if mode.enabled ~= false then
+                opts = opts[mode].setup(opts)
+            end
         end
         return opts
     end

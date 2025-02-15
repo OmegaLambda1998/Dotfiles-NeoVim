@@ -3,7 +3,7 @@ local M = {}
 local opts = {
     enabled = true,
     notify_jump = true,
-    debounce = 50,
+    debounce = 100,
 }
 
 function M.setup(snacks)
@@ -17,7 +17,7 @@ function M.setup(snacks)
                         "n",
                     },
                     {
-                        "[[",
+                        "[<space>",
                         function()
                             if Snacks.words.is_enabled() then
                                 Snacks.words.jump(-1, true)
@@ -25,7 +25,7 @@ function M.setup(snacks)
                         end,
                     },
                     {
-                        "]]",
+                        "]<space>",
                         function()
                             if Snacks.words.is_enabled() then
                                 Snacks.words.jump(1, true)
