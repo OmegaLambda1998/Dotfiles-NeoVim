@@ -16,11 +16,11 @@ local path = CFG.paths.join(
     }
 )
 require("vim.lsp.log").set_format_func(vim.inspect)
-vim.lsp.set_log_level(CFG.verbose and "debug" or "info")
+vim.lsp.set_log_level(CFG.verbose and "debug" or "warn")
 
 lsp.dependencies = {
     {
-        "saghen/blink.cmp",
+        -- "saghen/blink.cmp",
     }, --- Load first to get capabilities
 }
 lsp.cmd = {
@@ -148,7 +148,7 @@ end
 CFG.lsp.capabilities = {}
 lsp.opts.capabilities = CFG.lsp.capabilities
 
---- dynamicRegistration capabilities
+--- Dynamic registration capabilities
 local dynamicRegistration = {
     textDocument = {
         callHierarchy = {
@@ -225,8 +225,7 @@ local dynamicRegistration = {
 function lsp.opts.capabilities.setup(opts)
     opts.capabilities = vim.tbl_deep_extend(
         "force", vim.lsp.protocol.make_client_capabilities(),
-            opts.capabilities or {}, CFG.lsp.capabilities.capabilities or {},
-            dynamicRegistration or {}
+            opts.capabilities or {}, CFG.lsp.capabilities.capabilities or {}
     )
     return opts
 end
@@ -345,6 +344,7 @@ lsp.post:insert(
 local plugins = {
     "inlay_hint",
     "hover",
+    "workspace-diagnostics",
 }
 
 for _, file in ipairs(plugins) do

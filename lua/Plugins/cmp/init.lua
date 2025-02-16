@@ -11,7 +11,12 @@ CFG.cmp = {
     brackets = {},
     sources = {},
     providers = {},
-    fallback_for = {},
+    fallback_for = {
+        buffer = {
+            "lsp",
+            "path",
+        },
+    },
     event = {
         "CmdlineEnter",
     },
@@ -62,9 +67,13 @@ blink.opts.completion.menu = {
                 "kind_icon",
             },
             {
+                "provider",
+            },
+            {
                 "label",
                 gap = 1,
             },
+            { "lsp" },
         },
         components = {
             label = {
@@ -77,10 +86,37 @@ blink.opts.completion.menu = {
                     )
                 end,
             },
+            provider = {
+                text = function(ctx)
+                    return "[" .. ctx.item.source_name:sub(1, 3) .. "]"
+                end,
+                highlight = function(ctx)
+                    return require(
+                               "blink.cmp.completion.windows.render.tailwind"
+                           ).get_hl(ctx) or ("BlinkCmpKind" .. ctx.kind)
+                end,
+            },
+            lsp = {
+                text = function(ctx)
+                    local client = vim.lsp.get_client_by_id(ctx.item.client_id)
+                    if not (client and not client:is_stopped()) then
+                        return
+                    end
+                    local source = client.name
+                    if #source > 9 then
+                        source = source:sub(1, 3) .. "..." ..
+                                     source:sub(#source - 3, #source)
+                    end
+                    return "<" .. source .. ">"
+                end,
+                highlight = "BlinkCmpLabelDetail",
+            },
         },
     },
 }
 blink.opts.completion.documentation = {
+    auto_show = true,
+    auto_show_delay_ms = 250,
     window = {
         border = "single",
     },
@@ -113,6 +149,12 @@ blink.opts.sources = {
 }
 
 --- Providers ---
+local provider_config = {
+    enabled = true,
+    async = true,
+    fallbacks = {},
+}
+
 blink.opts.sources.providers.snippets = {
     enabled = enable_snippets,
     opts = {
@@ -185,10 +227,24 @@ blink.pre:insert(
         --- Make sure each provider has the following default config
         --- Overwriting where applicable
         for _, provider in ipairs(providers) do
+            local config = vim.deepcopy(provider_config)
             opts.sources.providers[provider] = vim.tbl_deep_extend(
-                "force", opts.sources.providers[provider] or {},
+                "force", config, opts.sources.providers[provider] or {},
                     CFG.cmp.providers[provider] or {}
             )
+        end
+
+        --- Add per_filtype providers as fallbacks
+        for fallback, targets in pairs(CFG.cmp.fallback_for) do
+            for _, target in ipairs(targets) do
+                if not vim.tbl_contains(
+                    opts.sources.providers[target].fallbacks, fallback
+                ) then
+                    table.insert(
+                        opts.sources.providers[target].fallbacks, fallback
+                    )
+                end
+            end
         end
 
         return opts

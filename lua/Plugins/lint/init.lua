@@ -101,7 +101,7 @@ local function run(dry_run)
             -- end
         end
     else
-        rtn = {}
+        local rtn = {}
         for _, name in ipairs(names) do
             rtn[name] = Lint.linters[name]
         end

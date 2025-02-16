@@ -181,14 +181,26 @@ CFG.key:map(
 
 --- Diagnostics
 local diagnostic_goto = function(next, severity)
-    local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-    severity = severity and vim.diagnostic.severity[severity] or nil
-    return function()
-        go(
+    local go = next and function(s)
+        vim.diagnostic.jump(
             {
-                severity = severity,
+                count = 1,
+                float = true,
+                severity = s,
             }
         )
+    end or function(s)
+        vim.diagnostics.jump(
+            {
+                count = -1,
+                float = true,
+                severity = s,
+            }
+        )
+    end
+    severity = severity and vim.diagnostic.severity[severity] or nil
+    return function()
+        go(severity)
     end
 end
 local diagnostics = {

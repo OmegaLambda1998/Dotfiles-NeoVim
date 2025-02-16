@@ -1,0 +1,508 @@
+
+
+Debug Started for v3.16.0
+{
+  commit = "5bf7a73fe851896d5ac26d313db849bf00f45b78"
+}
+new Mode(n:1)
+Trigger(add) Mode(n:1) " ` ' z= g` g' ] <C-W> , z g [
+BufNew(2)
+on_key: ,
+State(start): Mode(n:0) Node(,) { keys = "," }
+  update Mode(n:1)
+  continue: , Mode(n:1)
+  getchar
+  on_key: <Esc>
+  got: <Esc>
+on_key: ,
+State(start): Mode(n:0) Node(,) { keys = "," }
+  update Mode(n:1)
+  continue: , Mode(n:1)
+  getchar
+  on_key: l
+  got: l
+  continue: ,l Mode(n:1)
+  getchar
+  on_key: l
+  got: l
+  suspend: Mode(n:1)
+  Trigger(del) Mode(n:1) ' z= g` g' ] <C-W> , z " [ ` g
+  feedkeys: Mode(n:1) ,ll
+on_key: ,ll
+ModeChanged(n:c)
+  new Mode(c:1)
+  Unsafe(pending "L")
+  suspend: Mode(c:1)
+ModeChanged(c:n)
+  cooldown
+BufNew(7)
+BufEnter(7)
+  new Mode(n:7)
+Trigger(add) Mode(c:1) <C-R>
+Trigger(add) Mode(n:1) " ` ' z= g` g' ] <C-W> , z g [
+Trigger(add) Mode(n:7) " ` ' z= g` g' ] <C-W> , z g [
+on_key: U
+on_key: q
+BufEnter(1)
+on_key: :
+ModeChanged(n:c)
+  Safe(true)
+on_key: q
+BufNew(8)
+on_key: <CR>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:1)
+  Trigger(del) Mode(n:1) ' z= g` g' ] <C-W> , z g [ " `
+Trigger(add) Mode(n:1) " ` ' z= g` g' ] <C-W> , z g [
+
+
+Debug Started for v3.16.0
+{
+  commit = "5bf7a73fe851896d5ac26d313db849bf00f45b78"
+}
+new Mode(n:1)
+Trigger(add) Mode(n:1) ` " ' z= g` g' z ] <C-W> , g [
+Trigger(del) Mode(n:1) g` g' z ] <C-W> , ` [ " ' z= g
+new Mode(n:1)
+Trigger(add) Mode(n:1) ` " ' z= g` g' z ] <C-W> , g [
+on_key: ,
+State(start): Mode(n:0) Node(,) { keys = "," }
+  update Mode(n:1)
+  continue: , Mode(n:1)
+  getchar
+  on_key: p
+  got: p
+  continue: ,p Mode(n:1)
+  getchar
+  on_key: f
+  got: f
+  suspend: Mode(n:1)
+  Trigger(del) Mode(n:1) g` g' z ] <C-W> , ` [ " ' z= g
+  feedkeys: Mode(n:1) ,pf
+on_key: ,pf
+Trigger(add) Mode(n:1) ` " ' z= g` g' z ] <C-W> , g [
+BufNew(4)
+BufNew(5)
+BufNew(6)
+BufNew(7)
+BufNew(8)
+BufEnter(6)
+  new Mode(n:6)
+Trigger(add) Mode(n:6) ' " ` g` g' z= , g ] [ z <C-W>
+ModeChanged(n:i)
+  new Mode(i:6)
+  Safe(true)
+Trigger(add) Mode(i:6) <C-R>
+on_key: <CR>
+ModeChanged(i:n)
+  Safe(true)
+BufEnter(1)
+BufNew(9)
+BufReadPost(9)
+BufEnter(9)
+  new Mode(n:9)
+Trigger(add) Mode(n:9) ` " ' z= g` g' z ] <C-W> , g [
+Trigger(del) Mode(n:9) ` " ' z= g` g' z ] <C-W> , g [
+LspAttach(9)
+new Mode(n:9)
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+BufNew(10)
+BufNew(11)
+BufNew(12)
+BufNew(13)
+BufNew(14)
+BufNew(15)
+BufNew(16)
+BufNew(17)
+BufNew(18)
+BufNew(19)
+BufNew(20)
+BufNew(21)
+BufNew(22)
+BufNew(23)
+BufNew(24)
+BufNew(25)
+BufNew(26)
+BufNew(27)
+BufNew(28)
+BufNew(29)
+BufNew(30)
+BufNew(31)
+BufNew(32)
+BufNew(33)
+BufNew(34)
+BufNew(35)
+BufNew(36)
+BufNew(37)
+BufNew(38)
+BufNew(39)
+BufNew(40)
+BufNew(41)
+BufNew(42)
+BufNew(43)
+BufNew(44)
+BufNew(45)
+BufNew(46)
+BufNew(47)
+BufNew(48)
+BufNew(49)
+BufNew(50)
+on_key: <LeftRelease>
+on_key: :
+ModeChanged(n:c)
+  new Mode(c:9)
+  Safe(true)
+Trigger(add) Mode(c:9) <C-R>
+on_key: l
+BufNew(51)
+BufNew(52)
+on_key: u
+on_key: a
+on_key: <Space>
+on_key: v
+on_key: i
+on_key: m
+on_key: .
+on_key: l
+on_key: s
+on_key: p
+on_key: .
+on_key: b
+on_key: u
+on_key: f
+on_key: _
+on_key: c
+on_key: <BS>
+on_key: <BS>
+on_key: .
+on_key: c
+on_key: o
+on_key: m
+on_key: p
+on_key: <Tab>(
+on_key: )
+on_key: <CR>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ` " ' z= g` g' z ] <C-W> , g [
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+BufNew(53)
+on_key: ,
+State(start): Mode(n:0) Node(,) { keys = "," }
+  update Mode(n:9)
+  continue: , Mode(n:9)
+  getchar
+  on_key: n
+  got: n
+  continue: ,n Mode(n:9)
+  getchar
+  on_key: n
+  got: n
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ` " ' z= g` g' z ] <C-W> , g [
+  feedkeys: Mode(n:9) ,nn
+on_key: ,nn
+BufNew(56)
+BufEnter(56)
+  new Mode(n:56)
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(add) Mode(n:56) ' " ` g` g' z= g ] [ z <C-W> ,
+on_key: q
+BufEnter(9)
+on_key: :
+ModeChanged(n:c)
+  Safe(true)
+on_key: <Up>
+on_key: <Esc>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+on_key: :
+ModeChanged(n:c)
+  Safe(true)
+on_key: v
+on_key: i
+on_key: m
+on_key: .
+on_key: l
+on_key: s
+on_key: p
+on_key: .
+on_key: c
+on_key: o
+on_key: m
+on_key: p
+on_key: l
+on_key: e
+on_key: t
+on_key: i
+on_key: o
+on_key: n
+on_key: <Esc>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+on_key: :
+ModeChanged(n:c)
+  Safe(true)
+on_key: l
+on_key: u
+on_key: a
+on_key: =
+on_key: <Space>
+on_key: v
+on_key: i
+on_key: m
+on_key: .
+on_key: l
+on_key: s
+on_key: p
+on_key: .
+on_key: c
+on_key: o
+on_key: m
+on_key: p
+on_key: l
+on_key: e
+on_key: t
+on_key: i
+on_key: o
+on_key: n
+on_key: .
+on_key: t
+on_key: r
+on_key: i
+on_key: g
+on_key: g
+on_key: e
+on_key: r
+on_key: (
+on_key: )
+on_key: <CR>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+BufNew(57)
+on_key: <LeftRelease>
+on_key: :
+ModeChanged(n:c)
+  Safe(true)
+on_key: 1
+on_key: 2
+on_key: 7
+on_key: <CR>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+on_key: <LeftRelease>
+on_key: ,
+State(start): Mode(n:0) Node(,) { keys = "," }
+  update Mode(n:9)
+  continue: , Mode(n:9)
+  getchar
+  on_key: p
+  got: p
+  continue: ,p Mode(n:9)
+  getchar
+  on_key: d
+  got: d
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+  feedkeys: Mode(n:9) ,pd
+on_key: ,pd
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+BufNew(60)
+BufNew(61)
+BufNew(62)
+BufNew(63)
+BufNew(64)
+BufEnter(62)
+  new Mode(n:62)
+Trigger(add) Mode(n:62) ' " ` g` g' z= , g ] [ z <C-W>
+ModeChanged(n:i)
+  new Mode(i:62)
+  Safe(true)
+Trigger(add) Mode(i:62) <C-R>
+on_key: <Down>
+ModeChanged(i:n)
+  new Mode(n:64)
+  Unsafe(pending "z")
+  suspend: Mode(n:64)
+Trigger(add) Mode(n:64) ' " ` g` g' z= g ] [ z , <C-W>
+on_key: <Down>
+ModeChanged(n:i)
+  new Mode(i:64)
+  Unsafe(pending "z")
+  suspend: Mode(i:64)
+ModeChanged(i:n)
+  cooldown
+Trigger(add) Mode(i:64) <C-R>
+on_key: <Down>
+ModeChanged(n:i)
+  Unsafe(pending "z")
+  suspend: Mode(i:64)
+  Trigger(del) Mode(i:64) <C-R>
+ModeChanged(i:n)
+  cooldown
+Trigger(add) Mode(i:64) <C-R>
+on_key: <Down>
+ModeChanged(n:i)
+  Unsafe(pending "z")
+  suspend: Mode(i:64)
+  Trigger(del) Mode(i:64) <C-R>
+ModeChanged(i:n)
+  cooldown
+Trigger(add) Mode(i:64) <C-R>
+on_key: <CR>
+BufEnter(9)
+LspAttach(29)
+BufReadPost(29)
+BufEnter(29)
+  new Mode(n:29)
+Trigger(add) Mode(n:29) ' " ` g` g' z= g ] [ z <C-W> ,
+BufNew(65)
+BufNew(66)
+BufNew(67)
+on_key: i
+ModeChanged(n:i)
+  new Mode(i:29)
+  Safe(true)
+Trigger(add) Mode(i:29) <C-R>
+on_key: l
+on_key: o
+on_key: w
+on_key: e
+on_key: r
+on_key: <Space>
+on_key: =
+on_key: <Space>
+on_key: <Esc>
+ModeChanged(i:n)
+  Safe(true)
+BufNew(68)
+BufNew(69)
+on_key: b
+on_key: b
+on_key: d
+ModeChanged(n:no)
+  new Mode(o:29)
+  Safe(true)
+  State(start): Mode(o:0) Node() { defer = false }
+    update Mode(o:29)
+    continue:  Mode(o:29)
+    getchar
+    Trigger(add) Mode(o:29) ] g [
+    on_key: w
+    got: w
+    suspend: Mode(o:29)
+    Trigger(del) Mode(o:29) ] g [
+    feedkeys: Mode(o:29) w
+on_key: w
+ModeChanged(no:n)
+  Safe(true)
+Trigger(add) Mode(o:29) ] g [
+on_key: x
+ModeChanged(n:no)
+  Unsafe(pending "l")
+  suspend: Mode(o:29)
+  Trigger(del) Mode(o:29) ] g [
+ModeChanged(no:n)
+  cooldown
+Trigger(add) Mode(o:29) ] g [
+on_key: x
+ModeChanged(n:no)
+  Unsafe(pending "l")
+  suspend: Mode(o:29)
+  Trigger(del) Mode(o:29) ] g [
+ModeChanged(no:n)
+  cooldown
+Trigger(add) Mode(o:29) ] g [
+on_key: i
+ModeChanged(n:i)
+  Safe(true)
+on_key: l
+on_key: o
+on_key: c
+on_key: a
+on_key: l
+on_key: <Space>
+on_key: <Esc>
+ModeChanged(i:n)
+  Safe(true)
+on_key: :
+ModeChanged(n:c)
+  new Mode(c:29)
+  Safe(true)
+Trigger(add) Mode(c:29) <C-R>
+on_key: w
+on_key: <CR>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:29)
+  Trigger(del) Mode(n:29) ' ` ] [ z <C-W> , g z= g' g` "
+Trigger(add) Mode(n:29) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(del) Mode(c:29) <C-R>
+Trigger(del) Mode(n:29) ' ` ] [ z <C-W> , g z= g' g` "
+Trigger(del) Mode(o:29) ] g [
+Trigger(del) Mode(i:29) <C-R>
+Trigger(del) Mode(c:9) <C-R>
+Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+new Mode(n:29)
+Trigger(add) Mode(n:29) ' " ` g` g' z= g ] [ z <C-W> ,
+on_key: <C-D>
+ModeChanged(n:c)
+  new Mode(c:29)
+  Unsafe(pending "B")
+  suspend: Mode(c:29)
+ModeChanged(c:n)
+  cooldown
+BufEnter(9)
+  new Mode(n:9)
+LspDetach(29)
+  Trigger(del) Mode(n:29) ' ` ] [ z <C-W> , g z= g' g` "
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+on_key: ,
+State(start): Mode(n:0) Node(,) { keys = "," }
+  update Mode(n:9)
+  continue: , Mode(n:9)
+  getchar
+  on_key: p
+  got: p
+  continue: ,p Mode(n:9)
+  getchar
+  on_key: d
+  got: d
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+  feedkeys: Mode(n:9) ,pd
+on_key: ,pd
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+BufNew(74)
+BufNew(75)
+BufNew(76)
+BufNew(77)
+BufNew(78)
+BufNew(79)
+BufNew(80)
+on_key: :
+ModeChanged(n:c)
+  new Mode(c:9)
+  Safe(true)
+Trigger(add) Mode(c:9) <C-R>
+on_key: q
+on_key: <CR>
+ModeChanged(c:n)
+  Unsafe(command-mode)
+  suspend: Mode(n:9)
+  Trigger(del) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,
+Trigger(add) Mode(n:9) ' " ` g` g' z= g ] [ z <C-W> ,

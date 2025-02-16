@@ -34,6 +34,7 @@ CFG.cmp.providers[filetype] = {
     name = "RenderMarkdown",
     module = "render-markdown.integ.blink",
 }
+CFG.cmp:ft(ft)
 
 ---
 --- === Overseer ===

@@ -8,8 +8,8 @@ function join(base, paths)
     return {
         path = path,
         mod = mod,
-        join = function(paths)
-            return join(path, paths)
+        join = function(p)
+            return join(path, p)
         end,
     }
 end

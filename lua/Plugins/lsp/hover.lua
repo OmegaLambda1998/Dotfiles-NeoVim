@@ -1,7 +1,9 @@
 local M = {}
 local hover = CFG.spec:add("lewis6991/hover.nvim")
 
-hover.event = {"LspAttach"}
+hover.event = {
+    "LspAttach",
+}
 
 hover.opts.title = true
 hover.opts.preview_window = false
@@ -17,12 +19,11 @@ hover.opts.init = function()
     end
 end
 
-
 hover.post:insert(
     function()
         --- Remove pre-existing <S-k> bindings
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            pcall(vim.api.nvim_buf_del_keymap, buf, 'n', '<S-k>')
+            pcall(vim.api.nvim_buf_del_keymap, buf, "n", "<S-k>")
         end
         CFG.key:map(
             {

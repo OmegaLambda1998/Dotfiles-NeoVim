@@ -1,6 +1,8 @@
 local ft = "py"
 local filetype = "python"
 
+CFG.cmp:ft(ft)
+
 ---
 --- === LSP ===
 ---
