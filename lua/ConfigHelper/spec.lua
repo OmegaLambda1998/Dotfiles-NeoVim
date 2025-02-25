@@ -40,7 +40,7 @@ M.add = function(self, url, opts, spec)
         plugin.opts = o
         if p.setup ~= false then
             if not p.main then
-                p.main = p.name:gsub(".nvim", "")
+                p.main = p.name:gsub("%.nvim", "")
             end
             require(p.main).setup(o)
         end

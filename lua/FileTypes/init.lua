@@ -6,3 +6,14 @@ require("FileTypes.python")
 
 --- Markdown ---
 require("FileTypes.markdown")
+
+--- Rust ---
+require("FileTypes.rust")
+
+--- Julia ---
+require("FileTypes.julia")
+
+--- Config Files ---
+require("FileTypes.json")
+require("FileTypes.yaml")
+require("FileTypes.toml")

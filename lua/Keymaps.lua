@@ -190,7 +190,7 @@ local diagnostic_goto = function(next, severity)
             }
         )
     end or function(s)
-        vim.diagnostics.jump(
+        vim.diagnostic.jump(
             {
                 count = -1,
                 float = true,

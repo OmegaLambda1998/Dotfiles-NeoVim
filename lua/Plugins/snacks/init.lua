@@ -7,7 +7,7 @@ local modules = {
     "animate",
     "bigfile",
     --- "bufdelete",
-    --- "dashboard",
+    "dashboard",
     "debug",
     --- "dim",
     --- "git",
@@ -22,7 +22,7 @@ local modules = {
     "quickfile",
     --- "rename",
     "scope",
-    --- "scratch", --- TODO: Neorg
+    --- "scratch", --- TODO: KMdS
     "scroll",
     "statuscolumn",
     "terminal",

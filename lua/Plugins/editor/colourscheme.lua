@@ -15,8 +15,10 @@ colourscheme.dependencies = {
 CFG.colourscheme = {
     integrations = {},
     highlights = {},
+    opts = {},
     name = colourscheme.name,
 }
+
 function CFG.colourscheme:set(name, opts)
     if opts == nil then
         opts = true
@@ -26,6 +28,9 @@ end
 function CFG.colourscheme:hl(name, opts)
     CFG.colourscheme.highlights[name] = opts
 end
+
+colourscheme.opts = CFG.colourscheme.opts
+
 colourscheme.opts.integrations = CFG.colourscheme.integrations
 colourscheme.opts.highlight_overrides = {
     all = CFG.colourscheme.highlights,

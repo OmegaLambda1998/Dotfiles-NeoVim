@@ -12,7 +12,6 @@ end
 wk.opts.win = {
     title_pos = "right",
 }
-wk.opts.debug = CFG.verbose
 
 wk.post:insert(
     function()

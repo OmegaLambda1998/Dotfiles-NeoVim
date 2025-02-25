@@ -50,59 +50,6 @@ CFG.aucmd:on(
 )
 
 --- BasedPyRight ---
-local lazy_path = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
-local stub_path = vim.fs.joinpath(vim.fn.stdpath("data"), "stubs")
-vim.fn.mkdir(stub_path, "p")
-local stubs = {
-    {
-        stub = CFG.spec:add("microsoft/python-type-stubs"),
-        src = "python-type-stubs/stubs",
-        group = true,
-    },
-    {
-        stub = CFG.spec:add("pandas-dev/pandas-stubs"),
-        src = "pandas-stubs/pandas-stubs",
-        dst = "pandas",
-    },
-    {
-        stub = CFG.spec:add("python/typeshed"),
-        src = "typeshed/stubs",
-        group = true,
-    },
-}
-for _, opts in ipairs(stubs) do
-    opts.stub.ft = {
-        filetype,
-    }
-    opts.stub.setup = false
-    opts.stub.post:insert(
-        function()
-            if opts.group then
-                local parent = vim.fs.joinpath(lazy_path, opts.src)
-                for name, type in vim.fs.dir(parent) do
-                    local src = vim.fs.joinpath(parent, name)
-                    local dst = vim.fs.joinpath(stub_path, name):gsub(
-                        "-stubs", ""
-                    )
-                    vim.uv.fs_symlink(
-                        src, dst, {
-                            dir = true,
-                        }
-                    )
-                end
-            else
-                local src = vim.fs.joinpath(lazy_path, opts.src)
-                local dst = vim.fs.joinpath(stub_path, opts.dst)
-                vim.uv.fs_symlink(
-                    src, dst, {
-                        dir = true,
-                    }
-                )
-            end
-        end
-    )
-end
-
 local inlay_hint = CFG.spec:get("nvim-lspconfig").opts.inlay_hint.enabled
 
 servers.basedpyright = {
@@ -121,33 +68,11 @@ servers.basedpyright = {
                     genericTypes = inlay_hint,
                 },
                 logLevel = CFG.verbose and "Trace" or "Information",
-                stubPath = stub_path,
                 useLibraryCodeForTypes = true,
             },
         },
         python = {
             pythonPath = ".venv/bin/python",
-        },
-    },
-}
-
---- PyLyzer ---
-servers.pylyzer = {
-    enabled = false,
-    cmd = {
-        "pylyzer",
-        "--server",
-        "--hurry",
-        "--do-not-show-ext-errors",
-        "--verbose",
-        "2",
-    },
-    settings = {
-        python = {
-            diagnostics = false,
-            inlayHints = false,
-            smartCompletion = false,
-            checkOnType = false,
         },
     },
 }

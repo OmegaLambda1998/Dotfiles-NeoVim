@@ -47,16 +47,8 @@ inlay_hint.post:insert(
     function()
         CFG.aucmd:on(
             {
-                "InsertEnter",
-            }, function()
-                local hint = require("inlay-hint")
-                hint.enable(false)
-            end
-        )
-        CFG.aucmd:on(
-            {
                 "CursorMoved",
-                "InsertLeave",
+                "CursorMovedI",
             }, function()
                 if not CFG.is_pager() then
                     local hint = require("inlay-hint")

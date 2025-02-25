@@ -124,7 +124,9 @@ for _, status in ipairs(statuses) do
     end
 end
 for _, hl in ipairs(hl_groups) do
-    CFG.colourscheme.highlights[hl] = {
-        bg = "none",
-    }
+    CFG.colourscheme:hl(
+        hl, {
+            bg = "none",
+        }
+    )
 end
