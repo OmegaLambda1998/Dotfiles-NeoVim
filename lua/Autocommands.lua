@@ -124,3 +124,26 @@ CFG.aucmd:on(
     }
 )
 
+--- Enable relativenumber in visual / operator-pending mode
+CFG.aucmd:on(
+    { "ModeChanged" }, function()
+        CFG.set:opt("relativenumber")
+    end, {
+        group = "enable_relative_number",
+        pattern = {
+            "*:v",
+            "*:o",
+        },
+    }
+)
+CFG.aucmd:on(
+    { "ModeChanged" }, function()
+        CFG.set:opt("relativenumber", false)
+    end, {
+        group = "disable_relative_number",
+        pattern = {
+            "v:*",
+            "o:*",
+        },
+    }
+)

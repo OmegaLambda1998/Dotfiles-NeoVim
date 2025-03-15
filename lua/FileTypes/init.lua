@@ -1,3 +1,6 @@
+--- All ---
+require("FileTypes.all")
+
 --- Lua ---
 require("FileTypes.lua")
 
@@ -17,3 +20,6 @@ require("FileTypes.julia")
 require("FileTypes.json")
 require("FileTypes.yaml")
 require("FileTypes.toml")
+
+--- Latex Files ---
+require("FileTypes.latex")

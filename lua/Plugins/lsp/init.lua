@@ -31,7 +31,11 @@ lsp.cmd = {
 CFG.lsp = {}
 CFG.lsp.ft = {
     add = function(self, ft)
-        table.insert(self, "BufReadPost *." .. ft)
+        if ft ~= "*" then
+            table.insert(self, "BufReadPost *." .. ft)
+        else
+            table.insert(self, "BufReadPost *")
+        end
     end,
 }
 

@@ -2,6 +2,10 @@ local M = {
     settings = {},
 }
 
+function M.create(mode, key, val)
+    mode[key] = val
+end
+
 function M:set(mode, key, val)
     if val == nil then
         val = true
@@ -13,6 +17,9 @@ function M:set(mode, key, val)
             val,
         }
     )
+    if CFG.is_setup then
+        M.create(mode, key, val)
+    end
 end
 
 function M:opt(key, val)
@@ -51,13 +58,9 @@ function M:b(key, val)
     M:set(vim.b, key, val)
 end
 
-function M:create(mode, key, val)
-    mode[key] = val
-end
-
 function M:setup()
     for _, setting in ipairs(self.settings) do
-        self:create(unpack(setting))
+        M.create(unpack(setting))
     end
 end
 

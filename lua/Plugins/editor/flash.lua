@@ -142,6 +142,3 @@ CFG.key:map(
 )
 
 CFG.colourscheme:set("flash")
-
-CFG.set:opt("ignorecase")
-CFG.set:opt("smartcase")

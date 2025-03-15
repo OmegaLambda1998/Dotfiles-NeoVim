@@ -23,11 +23,9 @@ heirline.pre:insert(
             ),
 
             lib.component.fill(),
-            lib.component.cmd_info(),
-            lib.component.fill(),
-
-            lib.component.treesitter(),
             lib.component.lsp(),
+
+            lib.component.cmd_info(),
             lib.component.nav(),
         }
 

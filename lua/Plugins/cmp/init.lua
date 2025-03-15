@@ -7,8 +7,16 @@ local path = CFG.paths.join(
 )
 
 CFG.cmp = {
-    dependencies = {},
+    dependencies = {
+        {
+            "xzbdmw/colorful-menu.nvim",
+        },
+        {
+            "Saghen/blink.compat",
+        },
+    },
     brackets = {},
+    default_sources = {},
     sources = {},
     providers = {},
     fallback_for = {
@@ -19,6 +27,7 @@ CFG.cmp = {
     },
     event = {
         "CmdlineEnter",
+        "InsertEnter",
     },
 }
 function CFG.cmp:ft(ft)
@@ -26,22 +35,8 @@ function CFG.cmp:ft(ft)
 end
 
 blink.build = "cargo build --release"
-blink.keys = {
-    {
-        "<C-k>",
-        mode = {
-            "n",
-            "i",
-        },
-    },
-}
 blink.event = CFG.cmp.event
 blink.dependencies = CFG.cmp.dependencies
-table.insert(
-    blink.dependencies, {
-        "xzbdmw/colorful-menu.nvim",
-    }
-)
 
 --- Snippets ---
 local enable_snippets = true
@@ -90,9 +85,11 @@ blink.opts.completion.menu = {
                     return require("colorful-menu").blink_components_text(ctx)
                 end,
                 highlight = function(ctx)
-                    return require("colorful-menu").blink_components_highlight(
-                        ctx
-                    )
+                    local hl =
+                        require("colorful-menu").blink_components_highlight(
+                            ctx
+                        )
+                    return hl
                 end,
             },
             provider = {
@@ -100,9 +97,7 @@ blink.opts.completion.menu = {
                     return "[" .. ctx.item.source_name:sub(1, 3) .. "]"
                 end,
                 highlight = function(ctx)
-                    return require(
-                               "blink.cmp.completion.windows.render.tailwind"
-                           ).get_hl(ctx) or ("BlinkCmpKind" .. ctx.kind)
+                    return ctx.kind_hl or ("BlinkCmpKind" .. ctx.kind)
                 end,
             },
             lsp = {
@@ -144,6 +139,14 @@ blink.opts.signature.trigger = {
 }
 blink.opts.signature.window = {
     border = "single",
+}
+
+--- Fuzzy ---
+blink.opts.fuzzy = {
+    sorts = {
+        "score",
+        "sort_text",
+    },
 }
 
 --- Sources ---
@@ -196,8 +199,22 @@ local snippet_capabilities = {
     },
 }
 
+--- Compat Sources ---
+
+table.insert(blink.dependencies, "kdheepak/cmp-latex-symbols")
+table.insert(blink.opts.sources.default, "latex_symbols")
+blink.opts.sources.providers.latex_symbols = {
+    enabled = true,
+    name = "latex_symbols",
+    module = "blink.compat.source",
+}
+
 blink.pre:insert(
     function(opts)
+        opts.sources.default = vim.list_extend(
+            opts.sources.default, CFG.cmp.default_sources
+        )
+
         --- First get default providers
         local providers = vim.deepcopy(opts.sources.default)
 

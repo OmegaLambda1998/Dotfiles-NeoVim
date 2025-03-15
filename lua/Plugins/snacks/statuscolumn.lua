@@ -12,8 +12,6 @@ local opts = {
 
 function M.setup(snacks)
     snacks.opts.statuscolumn = opts
-    CFG.set:opt("number")
-    CFG.set:opt("relativenumber")
     return snacks
 end
 

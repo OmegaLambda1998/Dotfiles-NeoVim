@@ -57,13 +57,6 @@ opts.chunk = {
 
 function M.setup(snacks)
     snacks.opts.indent = opts
-    snacks.post:insert(
-        function()
-            CFG.set:opt("expandtab")
-            CFG.set:opt("shiftround")
-            CFG.set:opt("shiftwidth", 4)
-        end
-    )
     return snacks
 end
 

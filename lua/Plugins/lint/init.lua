@@ -96,9 +96,9 @@ local function run(dry_run)
     if dry_run ~= true then
         -- Run linters.
         if #names > 0 then
-            Lint.try_lint(names)
-            -- for _, name in ipairs(names) do
-            -- end
+            for _, name in ipairs(names) do
+                Lint.try_lint(name)
+            end
         end
     else
         local rtn = {}

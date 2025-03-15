@@ -1,11 +1,5 @@
 local ft = "jl"
 local filetype = "julia"
-local path = CFG.paths.join(
-    {
-        "FileTypes",
-        "julia",
-    }
-)
 
 ---
 --- === CMP ===

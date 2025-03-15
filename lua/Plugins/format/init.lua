@@ -36,32 +36,57 @@ end
 conform.opts.formatters = CFG.format.formatters
 conform.opts.formatters_by_ft = CFG.format.formatters_by_ft
 
-conform.opts.default_format_opts = {
-    lsp_format = "fallback",
-}
+local function format_cb(err, did_edit)
+    if err then
+        vim.notify(err, vim.log.levels.WARN)
+    elseif did_edit then
+        vim.notify("Finished Formatting", vim.log.levels.INFO)
+    else
+        vim.notify("Finished Formatting, no changes", vim.log.levels.INFO)
+    end
+    --- Save without formatting
+    CFG.disable.format = true
+    vim.cmd(":w")
+    CFG.disable.format = false
+end
 
-conform.post:insert(
-    function()
-        --- Since we just saved to load conform, run the formatter straight away
+local function format(ctx)
+    ctx = ctx or {}
+    if not CFG.disable.format then
+        vim.notify("Formatting", vim.log.levels.INFO)
+        --- Format
         require("conform").format(
             {
-                bufnr = 0,
-            }
+                bufnr = ctx.bufnr or 0,
+                async = true,
+                quiet = true,
+                lsp_format = "fallback",
+            }, format_cb
         )
+    end
+end
+
+--- Format on save
+conform.post:insert(
+    function()
         CFG.aucmd:on(
-            "BufWritePre", function(ctx)
-                if not CFG.disable.format then
-                    require("conform").format(
-                        {
-                            bufnr = ctx.buf,
-                        }
-                    )
-                end
-            end, {
+            "BufWritePost", format, {
                 pattern = "*",
             }
         )
+    end
+)
+
+--- Formatexpr
+conform.post:insert(
+    function()
         CFG.set:opt("formatexpr", "v:lua.require'conform'.formatexpr()")
+    end
+)
+
+--- Save without format
+conform.post:insert(
+    function()
         CFG.key:map(
             {
                 "<leader>w",

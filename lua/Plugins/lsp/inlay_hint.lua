@@ -47,8 +47,7 @@ inlay_hint.post:insert(
     function()
         CFG.aucmd:on(
             {
-                "CursorMoved",
-                "CursorMovedI",
+                "CursorHold",
             }, function()
                 if not CFG.is_pager() then
                     local hint = require("inlay-hint")

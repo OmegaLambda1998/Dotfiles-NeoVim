@@ -81,6 +81,7 @@ treesitter.post:insert(
 local plugins = {
     "rainbow_delimiters",
     "context",
+    "codedocs"
 }
 for _, file in ipairs(plugins) do
     local plugin = require(

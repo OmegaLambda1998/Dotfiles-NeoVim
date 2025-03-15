@@ -31,6 +31,7 @@ mason.opts.ui = {
 mason.opts.registries = {
     "github:mason-org/mason-registry",
     "lua:Plugins.mason.registry",
+    "github:visimp/mason-registry", --- TODO: Replace once ltex_plus merged to main registry
 }
 
 mason.post:insert(

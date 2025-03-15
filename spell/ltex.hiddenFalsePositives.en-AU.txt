@@ -1,0 +1,7 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qaux/packages/ aux/user/ aux/local/anuthesis/ aux/local/jabbrv/\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_AU","sentence":"^\\Qaux/packages/ aux/user/ aux/local/anuthesis/ aux/local/jabbrv/\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_AU","sentence":"^\\Qsections/0_preamble/0_0_titlepage, sections/0_preamble/0_1_frontmatter, sections/0_preamble/0_2_dedication, sections/0_preamble/0_3_ack, sections/0_preamble/0_4_abstract, sections/0_preamble/0_5_toc, sections/1_intro/1_intro, sections/2_pippin/2_pippin, sections/3_neyman/3_neyman, sections/4_future/4_future,\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_AU","sentence":"^\\Qsections/3_neyman/3_neyman\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QL.CDM Cosmology.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_AU","sentence":"^\\QThe metric used in modern cosmology is the Friedmann-Lemaı̂tre-Robertson-Walker (FLRW) metric \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QOr.: Radiation.\\E$"}
