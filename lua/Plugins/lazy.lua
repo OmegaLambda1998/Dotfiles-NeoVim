@@ -82,7 +82,7 @@ local opts = {
         require = CFG.verbose,
     },
     dev = {
-        path = "~/PARA/Projects/Configurations/nvim/plugins",
+        path = vim.fn.stdpath("config") .. "/plugins",
     },
 }
 
