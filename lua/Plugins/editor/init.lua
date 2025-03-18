@@ -6,3 +6,6 @@ require("Plugins.editor.flash")
 
 --- Persisted ---
 require("Plugins.editor.persisted")
+
+--- Remote ---
+require("Plugins.editor.remote")

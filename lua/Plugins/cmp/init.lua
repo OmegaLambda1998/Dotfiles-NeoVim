@@ -147,6 +147,7 @@ blink.opts.fuzzy = {
         "score",
         "sort_text",
     },
+    implementation = "prefer_rust",
 }
 
 --- Sources ---

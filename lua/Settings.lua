@@ -58,3 +58,6 @@ CFG.set:opt("smoothscroll")
 --- Show
 CFG.set:opt("showmode")
 CFG.set:opt("showcmd")
+
+--- Treat _ as a word break
+CFG.set:opt("iskeyword", "_", "remove")

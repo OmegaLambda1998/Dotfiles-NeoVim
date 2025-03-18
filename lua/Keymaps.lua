@@ -1,3 +1,20 @@
+--- Yank to and Paste from system clipboard
+CFG.key:map({
+    mode = {"n", "v"},
+    noremap = true,
+    silent = true,
+    {
+        "Y",
+        '"+y',
+        desc = "Yank to system clipboard"
+    },
+    {
+        "P",
+        '"+p',
+        desc = "Paste from system clipboard"
+    }
+})
+
 --- Better up / down
 CFG.key:map(
     {
