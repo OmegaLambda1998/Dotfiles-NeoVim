@@ -56,7 +56,7 @@ local opts = {
             enabled = function()
                 return require("snacks").git.get_root() == nil
             end,
-            cmd = "gh status",
+            cmd = "(type gh &> /dev/null) && gh status",
             height = 5,
             padding = 1,
             ttl = 5 * 60,
