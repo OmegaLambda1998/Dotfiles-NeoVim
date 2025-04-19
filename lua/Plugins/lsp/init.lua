@@ -249,7 +249,7 @@ lsp.pre:insert(
             "servers",
         }
         for _, mode in ipairs(modes) do
-            if mode.enabled ~= false then
+            if opts[mode].enabled ~= false then
                 opts = opts[mode].setup(opts)
             end
         end

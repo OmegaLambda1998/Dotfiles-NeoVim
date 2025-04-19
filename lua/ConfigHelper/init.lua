@@ -5,10 +5,15 @@ local Config = require("ConfigHelper.config")
 ---@field verbose boolean Increase logging verbosity
 ---@field profile boolean Enable profiling
 ---@field disable table<string, boolean> Globally flags to track whether a given object is currently disabled
+---@field is_setup boolean Has the setup been run?
+---
 ---@field spec Specifications Specifications for all plugins
 ---@field paths Paths Paths relative to the base neovim config directory
 ---@field key Keymaps Keymap utilities
 ---@field set Settings Settings utilities
+---@field aucmd AutoCommands Autocommand utilities
+---@field usrcmd UserCommands Usercommand utilities
+---@field hl Highlights Highlighting utilities
 ---
 ---@field is_pager fun():boolean Check whether neovim is being used as a pager
 local OLConfig = {}
@@ -27,14 +32,15 @@ function OLConfig.prototype(self, verbose, profile)
     self.verbose = verbose
     self.profile = profile
     self.disable = {}
+    self.is_setup = false
 
     self.spec = require("ConfigHelper.spec").new()
     self.paths = require("ConfigHelper.paths").new()
     self.key = require("ConfigHelper.keymaps").new()
     self.set = require("ConfigHelper.settings").new()
-    self.aucmd = require("ConfigHelper.autocommands")
-    self.usrcmd = require("ConfigHelper.usercommands")
-    self.hl = require("ConfigHelper.highlights")
+    self.aucmd = require("ConfigHelper.autocommands").new()
+    self.usrcmd = require("ConfigHelper.usercommands").new()
+    self.hl = require("ConfigHelper.highlights").new()
 
     return self
 end

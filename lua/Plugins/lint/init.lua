@@ -43,7 +43,7 @@ function CFG.lint:add(ft, linter, opts)
 end
 
 local function debounce(ms, fn)
-    local timer = vim.uv.new_timer()
+    local timer = vim.uv.new_timer() --[[@as uv.uv_timer_t]]
     return function(...)
         local argv = {
             ...,
@@ -87,9 +87,7 @@ local function run(dry_run)
             if not linter then
                 vim.print("Linter not found: " .. name)
             end
-            return linter and
-                       not (type("linter") == "table" and linter.cond and
-                           not linter.cond(ctx))
+            return linter ~= nil
         end, names
     )
 
@@ -127,9 +125,13 @@ lint.pre:insert(
     function(opts)
         local Lint = require("lint")
         for name, linter in pairs(opts.linters) do
-            if type(linter) == "table" and type(Lint.linters[name]) == "table" then
+            local linter_opts = Lint.linters[name] or nil
+            if type(linter_opts) == "function" then
+                linter_opts = linter_opts()
+            end
+            if linter_opts and type(linter) == "table" then
                 Lint.linters[name] = vim.tbl_deep_extend(
-                    "force", Lint.linters[name], {
+                    "force", linter_opts, {
                         ignore_exitcode = not CFG.verbose,
                         ignore_errors = not CFG.verbose,
                     }, linter

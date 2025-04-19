@@ -3,10 +3,17 @@ local Config = require("ConfigHelper.config")
 
 --- === Specification ===
 
+---@class SpecCallback: table
+---@field insert function
+
 ---Plugin Specification
 ---@class Specification: Config, LazyPluginSpec
----@field pre (fun(PluginOpts): PluginOpts)[]
----@field post(fun())[]
+---@field opts table
+---@field dependencies string | LazyPluginSpec | (string | LazyPluginSpec)[]
+---@field keys LazyKeysBase
+---@field event string | string[]
+---@field pre SpecCallback
+---@field post SpecCallback
 ---@field setup boolean | nil
 local Specification = {}
 Specification.interface = {}
@@ -18,7 +25,7 @@ Specification.metatable = {
 ---Specification Constructor
 ---@param self Specification
 ---@param url string
----@param opts PluginOpts
+---@param opts table
 ---@param spec LazyPluginSpec
 ---@return Specification
 function Specification.prototype(self, url, opts, spec)
@@ -44,7 +51,7 @@ function Specification.prototype(self, url, opts, spec)
     }
 
     ---@param p Specification
-    ---@param o PluginOpts
+    ---@param o table
     self.config = function(p, o)
         for _, fn in ipairs(p.pre) do
             o = fn(o)
@@ -65,7 +72,7 @@ end
 
 ---Create a new Specification instance
 ---@param url string
----@param opts PluginOpts
+---@param opts table
 ---@param spec LazyPluginSpec
 ---@return Specification
 function Specification.interface.new(url, opts, spec)
@@ -83,7 +90,7 @@ end
 ---@field specifications Specification[]
 ---
 ---@field get fun(self: Specifications, name: string): Specification | nil 
----@field add fun(self: Specifications, url: string, opts: PluginOpts, spec: LazyPluginSpec): Specification | nil
+---@field add fun(self: Specifications, url: string, opts: PluginOpts?, spec: LazyPluginSpec?): Specification
 local Specifications = {}
 Specifications.interface = {}
 Specifications.schema = {}
@@ -126,7 +133,7 @@ end
 ---Add a new specification
 ---@param self Specifications
 ---@param url string
----@param opts PluginOpts
+---@param opts table
 ---@param spec LazyPluginSpec
 ---@return Specification
 function Specifications.schema.add(self, url, opts, spec)
