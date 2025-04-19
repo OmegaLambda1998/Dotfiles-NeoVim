@@ -87,7 +87,7 @@ local opts = {
 }
 
 function M.setup()
-    opts.spec = CFG.spec.spec
+    opts.spec = CFG.spec.specifications
     local lazy = require("lazy")
     lazy.setup(opts)
 

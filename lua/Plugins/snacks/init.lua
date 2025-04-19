@@ -7,7 +7,7 @@ local modules = {
     "animate",
     "bigfile",
     --- "bufdelete",
-    "dashboard",
+    --- "dashboard",
     "debug",
     --- "dim",
     --- "git",

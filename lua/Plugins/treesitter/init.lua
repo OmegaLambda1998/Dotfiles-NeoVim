@@ -1,7 +1,7 @@
 CFG.treesitter = {
     ensure_installed = {},
 }
-local path = CFG.paths.join(
+local path = CFG.paths:join(
     {
         "Plugins",
         "treesitter",
@@ -81,11 +81,11 @@ treesitter.post:insert(
 local plugins = {
     "rainbow_delimiters",
     "context",
-    "codedocs"
+    "codedocs",
 }
 for _, file in ipairs(plugins) do
     local plugin = require(
-        path.join(
+        path:join(
             { file }
         ).mod
     )

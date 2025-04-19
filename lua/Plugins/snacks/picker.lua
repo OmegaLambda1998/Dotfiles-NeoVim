@@ -53,52 +53,52 @@ function M.setup(snacks)
                         desc = "Jumps",
                     },
                     {
-                        "<leader>pl",
+                        "<leader>pr",
                         desc = "LSP",
                         {
-                            "<leader>plc",
+                            "<leader>prc",
                             function()
                                 Snacks.picker.lsp_declarations()
                             end,
                             desc = "Declarations",
                         },
                         {
-                            "<leader>pld",
+                            "<leader>prd",
                             function()
                                 Snacks.picker.lsp_definitions()
                             end,
                             desc = "Definitions",
                         },
                         {
-                            "<leader>pli",
+                            "<leader>pri",
                             function()
                                 Snacks.picker.lsp_implementations()
                             end,
                             desc = "Implementations",
                         },
                         {
-                            "<leader>plr",
+                            "<leader>prr",
                             function()
                                 Snacks.picker.lsp_references()
                             end,
                             desc = "References",
                         },
                         {
-                            "<leader>pls",
+                            "<leader>prs",
                             function()
                                 Snacks.picker.lsp_symbols()
                             end,
                             desc = "Symbols",
                         },
                         {
-                            "<leader>plt",
+                            "<leader>prt",
                             function()
                                 Snacks.picker.lsp_type_definitions()
                             end,
                             desc = "Type Definitions",
                         },
                         {
-                            "<leader>plw",
+                            "<leader>prw",
                             function()
                                 Snacks.picker.lsp_workspace_symbols()
                             end,
@@ -111,13 +111,6 @@ function M.setup(snacks)
                             Snacks.picker.pickers()
                         end,
                         desc = "Pickers",
-                    },
-                    {
-                        "<leader>pr",
-                        function()
-                            Snacks.picker.recent()
-                        end,
-                        desc = "Recent Files",
                     },
                     {
                         "<leader>pv",

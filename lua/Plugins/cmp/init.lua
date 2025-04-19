@@ -1,5 +1,5 @@
 local blink = CFG.spec:add("saghen/blink.cmp")
-local path = CFG.paths.join(
+local path = CFG.paths:join(
     {
         "Plugins",
         "cmp",
@@ -172,7 +172,7 @@ blink.opts.sources.providers.snippets = {
     enabled = enable_snippets,
     opts = {
         search_paths = {
-            path.join(
+            path:join(
                 {
                     "snippets",
                 }
@@ -183,7 +183,7 @@ blink.opts.sources.providers.snippets = {
 if blink.opts.sources.providers.snippets.enabled then
     table.insert(blink.opts.sources.default, "snippets")
     require(
-        path.join(
+        path:join(
             {
                 "snippets",
             }

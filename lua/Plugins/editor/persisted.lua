@@ -3,7 +3,6 @@ persisted.lazy = false
 
 --- Filetypes that should not be saved or loaded in sessions
 local ignored_ft = {
-    "snacks_dashboard",
     "oil",
 }
 
@@ -14,7 +13,6 @@ persisted.opts.ignored_dirs = {
         exact = true,
     },
     vim.fn.stdpath("config"),
-    "~/PARA/Projects/Configurations/nvim",
 }
 
 --- Inlcude git branch in session name
@@ -29,7 +27,7 @@ end
 --- Loading Options
 persisted.opts.autoload = true
 persisted.opts.on_autoload_no_session = function()
-    require("snacks").dashboard()
+    vim.cmd(":Oil")
 end
 
 CFG.set:o(

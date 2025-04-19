@@ -9,7 +9,7 @@ CFG.mason_lsp = {}
 ---
 
 local lsp = CFG.spec:add("neovim/nvim-lspconfig")
-local path = CFG.paths.join(
+local path = CFG.paths:join(
     {
         "Plugins",
         "lsp",
@@ -152,80 +152,6 @@ end
 CFG.lsp.capabilities = {}
 lsp.opts.capabilities = CFG.lsp.capabilities
 
---- Dynamic registration capabilities
-local dynamicRegistration = {
-    textDocument = {
-        callHierarchy = {
-            dynamicRegistration = true,
-        },
-        codeAction = {
-            dynamicRegistration = true,
-        },
-        codeLens = {
-            dynamicRegistration = true,
-        },
-        completion = {
-            dynamicRegistration = true,
-            completionList = {
-                dynamicRegistration = true,
-            },
-        },
-        definition = {
-            dynamicRegistration = true,
-        },
-        diagnostic = {
-            dynamicRegistration = true,
-        },
-        documentHighlight = {
-            dynamicRegistration = true,
-        },
-        documentSymbol = {
-            dynamicRegistration = true,
-        },
-        foldingRange = {
-            dynamicRegistration = true,
-        },
-        formatting = {
-            dynamicRegistration = true,
-        },
-        hover = {
-            dynamicRegistration = true,
-        },
-        inlayHint = {
-            dynamicRegistration = true,
-        },
-        rangeFormatting = {
-            dynamicRegistration = true,
-        },
-        references = {
-            dynamicRegistration = true,
-        },
-        rename = {
-            dynamicRegistration = true,
-        },
-        semanticTokens = {
-            dynamicRegistration = true,
-        },
-        signatureHelp = {
-            dynamicRegistration = true,
-        },
-        synchronization = {
-            dynamicRegistration = true,
-        },
-    },
-    workspace = {
-        didChangeConfiguration = {
-            dynamicRegistration = true,
-        },
-        didChangeWatchedFiles = {
-            dynamicRegistration = true,
-        },
-        symbol = {
-            dynamicRegistration = true,
-        },
-    },
-}
-
 function lsp.opts.capabilities.setup(opts)
     opts.capabilities = vim.tbl_deep_extend(
         "force", vim.lsp.protocol.make_client_capabilities(),
@@ -353,7 +279,7 @@ local plugins = {
 
 for _, file in ipairs(plugins) do
     local plugin = require(
-        path.join(
+        path:join(
             { file }
         ).mod
     )

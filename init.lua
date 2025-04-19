@@ -2,11 +2,7 @@
 local verbose = os.getenv("NVIM_VERBOSE") and true or false
 local profile = os.getenv("NVIM_PROFILE") and true or false
 
---- Config Helper ---
-require("ConfigHelper")
-CFG.verbose = verbose
-CFG.profile = profile
-CFG.disable = {}
+CFG = require("ConfigHelper").new(verbose, profile)
 
 --- Lazy Bootstrap ---
 local lazy = require("Plugins.lazy")

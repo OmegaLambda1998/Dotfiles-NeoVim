@@ -1,43 +1,55 @@
-local M = {}
+local Config = require("ConfigHelper.config")
+---@module "lazy"
 
-M.spec = {}
+--- === Specification ===
 
-M.get = function(self, name)
-    for _, spec in ipairs(self.spec) do
-        local url = spec[1] --[[@as string]]
-        if url:find(name, 0, true) then
-            return spec
-        end
+---Plugin Specification
+---@class Specification: Config, LazyPluginSpec
+---@field pre (fun(PluginOpts): PluginOpts)[]
+---@field post(fun())[]
+---@field setup boolean | nil
+local Specification = {}
+Specification.interface = {}
+Specification.schema = {}
+Specification.metatable = {
+    __index = Specification.schema,
+}
+
+---Specification Constructor
+---@param self Specification
+---@param url string
+---@param opts PluginOpts
+---@param spec LazyPluginSpec
+---@return Specification
+function Specification.prototype(self, url, opts, spec)
+    self[1] = url
+    self.opts = opts or {}
+    self.cond = function()
+        return not CFG.is_pager()
     end
-    return nil
-end
 
-M.add = function(self, url, opts, spec)
-    local plugin = {
-        url,
-        opts = opts or {},
-        cond = function()
-            return not CFG.is_pager()
-        end,
-    }
     for k, v in pairs(spec or {}) do
-        plugin[k] = v
+        self[k] = v
     end
-    plugin.pre = {
+
+    self.pre = {
         insert = function(s, fn)
             table.insert(s, fn)
         end,
     }
-    plugin.post = {
+    self.post = {
         insert = function(s, fn)
             table.insert(s, fn)
         end,
     }
-    plugin.config = function(p, o)
+
+    ---@param p Specification
+    ---@param o PluginOpts
+    self.config = function(p, o)
         for _, fn in ipairs(p.pre) do
             o = fn(o)
         end
-        plugin.opts = o
+        p.opts = o
         if p.setup ~= false then
             if not p.main then
                 p.main = p.name:gsub("%.nvim", "")
@@ -48,8 +60,79 @@ M.add = function(self, url, opts, spec)
             fn()
         end
     end
-    table.insert(self.spec, plugin)
-    return plugin
+    return self
 end
 
-return M
+---Create a new Specification instance
+---@param url string
+---@param opts PluginOpts
+---@param spec LazyPluginSpec
+---@return Specification
+function Specification.interface.new(url, opts, spec)
+    local self = setmetatable(Config.interface.new(), Specification.metatable)
+    Specification.prototype(self, url, opts, spec)
+    return self
+end
+
+--- Specification Class Methods ---
+
+--- === Specifications ===
+
+---Specifications for all plugins
+---@class Specifications: Config
+---@field specifications Specification[]
+---
+---@field get fun(self: Specifications, name: string): Specification | nil 
+---@field add fun(self: Specifications, url: string, opts: PluginOpts, spec: LazyPluginSpec): Specification | nil
+local Specifications = {}
+Specifications.interface = {}
+Specifications.schema = {}
+Specifications.metatable = {
+    __index = Specifications.schema,
+}
+
+---Specifications Constructor
+---@param self Specifications
+---@return Specifications
+function Specifications.prototype(self)
+    self.specifications = {}
+    return self
+end
+
+---Create a new Specifications instance
+---@return Specifications
+function Specifications.interface.new()
+    local self = setmetatable(Config.interface.new(), Specifications.metatable)
+    Specifications.prototype(self)
+    return self
+end
+
+--- Specifications Class Methods ---
+
+---Get the specification for the plugin with the given name
+---@param self Specifications
+---@param name string
+---@return Specification | nil
+function Specifications.schema.get(self, name)
+    for _, spec in ipairs(self.specifications) do
+        local url = spec[1] --[[@as string]]
+        if url:find(name, 0, true) then
+            return spec
+        end
+    end
+    return nil
+end
+
+---Add a new specification
+---@param self Specifications
+---@param url string
+---@param opts PluginOpts
+---@param spec LazyPluginSpec
+---@return Specification
+function Specifications.schema.add(self, url, opts, spec)
+    spec = Specification.interface.new(url, opts, spec)
+    table.insert(self.specifications, spec)
+    return spec
+end
+
+return Specifications.interface

@@ -1,7 +1,7 @@
 local ft = "tml"
 local filetype = "toml"
 
-local path = CFG.paths.join(
+local path = CFG.paths:join(
     {
         "FileTypes",
         "toml",
@@ -22,7 +22,7 @@ CFG.lsp.servers[lsp] = {
         "taplo",
         "lsp",
         "--config",
-        path.join(
+        path:join(
             {
                 "taplo.toml",
             }
