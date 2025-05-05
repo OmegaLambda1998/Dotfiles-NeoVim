@@ -6,6 +6,13 @@ local filetypes = {
 
 vim.list_extend(CFG.treesitter.ensure_installed, filetypes)
 
+local dynomark = CFG.spec:add("k-lar/dynomark.nvim")
+dynomark.ft = filetypes
+dynomark.opts = {
+    auto_download = true,
+    results_view_location = "tab",
+}
+
 ---
 --- === CMP ===
 ---
@@ -14,6 +21,12 @@ local render = CFG.spec:add("MeanderingProgrammer/render-markdown.nvim")
 render.ft = filetypes
 
 render.opts.completions = {
+    win_options = {
+        conceallevel = {
+            default = 0,
+            rendered = 3,
+        },
+    },
     blink = {
         enabled = true,
     },
