@@ -1,10 +1,10 @@
 local filetype = "*"
-local lang = "en-AU"
 
 ---
 --- === LSP ===
 ---
 
+local lang = "en-AU"
 local path = vim.fn.stdpath("config") .. "/spell"
 local spellfile = path .. "/en.utf-8.add"
 CFG.set:opt("spellfile", spellfile)
@@ -14,7 +14,7 @@ for word in io.open(spellfile, "r"):lines() do
     table.insert(words, word)
 end
 
-local ltex_extra = CFG.spec:add("barreiroleo/ltex_extra.nvim")
+local ltex_extra = CFG.spec:add("OmegaLambda1998/ltex_extra.nvim")
 ltex_extra.branch = "dev"
 ltex_extra.ft = {
     "bib",
@@ -22,6 +22,7 @@ ltex_extra.ft = {
     "gitcommit",
     "html",
     "markdown",
+    "md",
     "org",
     "pandoc",
     "plaintex",
@@ -44,7 +45,7 @@ ltex_extra.opts.load_langs = {
 ltex_extra.opts.path = path
 ltex_extra.opts.log_level = CFG.verbose and "trace" or "info"
 
-table.insert(CFG.mason.ensure_installed, "ltex_plus")
+table.insert(CFG.mason.ensure_installed, "ltex-ls-plus")
 
 local lsp = "ltex_plus"
 local lsp_config = {
@@ -52,7 +53,7 @@ local lsp_config = {
         ltex = {
             enabled = ltex_extra.ft,
             language = lang,
-            completionEnabled = true,
+            completionEnabled = false,
             checkFrequency = "save",
             statusBarItem = true,
             dictionary = {

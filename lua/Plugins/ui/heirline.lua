@@ -14,6 +14,7 @@ heirline.pre:insert(
 
         opts.statusline = {
             lib.component.mode(),
+            lib.component.virtual_env(),
             lib.component.file_info(
                 {
                     filetype = false,
@@ -23,9 +24,11 @@ heirline.pre:insert(
             ),
 
             lib.component.fill(),
-            lib.component.lsp(),
-
             lib.component.cmd_info(),
+            lib.component.fill(),
+
+            lib.component.lsp(),
+            lib.component.treesitter(),
             lib.component.nav(),
         }
 

@@ -7,12 +7,14 @@ barbar.dependencies = {
     "nvim-tree/nvim-web-devicons",
 }
 
-barbar.opts.highlight_alternate = false
-barbar.opts.highlight_inactive_file_icons = true
+barbar.opts.tabpages = false
 
-barbar.opts.icons = {
-    buffer_index = true,
-}
+barbar.opts.highlight_alternate = false
+barbar.opts.highlight_inactive_file_icons = false
+barbar.opts.highlight_visible = true
+
+barbar.opts.icons = {}
+
 local lsp = CFG.spec:get("nvim-lspconfig")
 if lsp then
     local icons = lsp.opts.diagnostics.signs.text
@@ -24,16 +26,6 @@ if lsp then
         }
     end
 end
-
-barbar.opts.icons.filetypes = {
-    custom_colors = true,
-    enabled = true,
-}
-
-barbar.opts.icons.pinned = {
-    button = "",
-    filename = true,
-}
 
 barbar.pre:insert(
     function(opts)
